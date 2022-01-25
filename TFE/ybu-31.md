@@ -68,44 +68,47 @@ The EBS volume can also be increased if a larger workload is desired for a demon
 
 SSH connect into the EC2 once it is running to install the tools and the Platform server.
 
-### Install Replicated
+## Platform Server Configuration
 
-Before we can continue, check to ensure that the necessary tools are available in your EC2, namely `wget` and `curl`, with the commands, `wget --version` and `curl -version`.
+Now the the Platform server is running, the following steps will configure and install the Platform server.
 
-If these tools are not available, install them now.
+### Platform Server Initial Configuration
 
+1. Set the hostname `sudo hostnamectl set-hostname platform`
 
+2. Update the OS: `sudo yum -y update`
 
+3. Install `wget`: `sudo yum install -y wget`
 
-## Platform Installation
-
-## Create a Universe
-
-## Terminate a Universe
-
-# Create a Yugabyte Multi-Zone Universe using Platform (Anywhere) with AWS
-
-## Introduction
-
-In this guide, we will be deploying a three node cluster, with each node residing in a separate availability zone. A multi-zone deployment will enable the system to withstand a failure in one of the nodes with no impact on the system.
+4. Install `curl`: `sudo yum install -y curl`
 
 
+### Install Replicated on the Platform Server
 
-### Launch the EC2
+Yugabyte uses a 3rd party tool called Replicated, to manage license and version control for the Yugaware Platform component. This Replicated tool runs as a set of Docker containers, on a linux server. An install script is provided which installs the correct version of Docker, then downloads and runs the required containers from the Replicated repository. This tool is installed on the Platform server (the same server on which Yugaware Platform is to be installed).
 
-Once the VPC, Security Group, IAM role, In this guide, we will be using a `c5.2xlarge`. The specifications in this instance type allow for the amount of processing power, with 8 cores and 16GiB RAM necessary to demonstration Platform effectively.
+In order to complete this step the Platform 2.11(latest) license, `.rli` extension, from a Yugabyte representative must to received first.
 
-The EBS volume can also be increased if a large workload is necessary for a demonstration. 
+Logged in as the user, `centos`, run the following command on the Platform server to run the Yugaware Platform:
 
-For the VPC configuration, Security Group, and IAM roles details, please refer to the [Yugabyte docs page on cloud configuration for Platform.](https://docs.yugabyte.com/latest/yugabyte-platform/configure-yugabyte-platform/set-up-cloud-provider/aws/) 
-
-### Platform server 
-
-Before we can continue, check to ensure that the necessary tools are available in your EC2, namely `wget` and `curl`, with the commands, `wget --version` and `curl -version`.
-
-If these tools are not available, install them now.
-
+```bash
+curl -sSL https://get.replicated.com/docker | sudo bash
 ```
+
+To verify that the Replicated has successfully installed the Yugaware platform on your server, you will receive the following output in your terminal:
+
+```bash
+Operator installation successful
+To continue the installation, visit the following URL in your browser:
+  http://34.105.238.92:8800
+To create an alias for the replicated cli command run the following in your current shell or log out and log back in:
+  source /etc/replicated.alias
+```
+
+The url in your message will reflect the public IP of your server.
+
+The Yugaware Platform will now be available on port 8800. 
+Navigate to the interface to complete the Yugaware installation.
 
 
 ## Create a Universe
