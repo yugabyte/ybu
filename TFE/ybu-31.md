@@ -42,22 +42,31 @@ In this guide, we will focus on deployment with AWS.
 
 Once the VPC, Security Group, IAM role, Subnets, Routing Table, and Internet Gateway have been set up, we can proceed with launching the EC2 instance using an AMI.
 
-To begin, log into the Amazon account and navigate to the EC2 console.
+To begin, log into the Amazon account and navigate to the EC2 console to launch an instance with the following specifications:
 
-The specifications for the EC2 instance are as follows:
+* Instance type: c5.2xlarge
 
-Instance type: c5.2xlarge
-IAM instance template:  ami-00e87074e52e6c9f9: CentOS 7 (x86_64) - with Updates HVM 
-Disk storage: gp3
-SSH access key: <generate and save a new key if required>
+* IAM instance template: CentOS 7.9.2009 x86_64 - ami-00e87074e52e6c9f9 or a suitable privately created CentOS 7.9 image
+
+* Network VPC and Subnets: <as created in the prerequisite>
+
+* Disk storage: gp3 16GB for sample workloads, not ephemeral
+
+* VPC network: <as created in the prerequisite>
+
+* Security Group: <as created in the prerequisite>
+
+* SSH access key: <generate and save a new key if required>
 
 In this lab, we will be using a `c5.2xlarge`. The specifications of this instance type allow for the necessary processing power, 8 cores and 16GiB RAM, that are necessary to demonstrate Yugabyte Platform effectively as well as run sample workloads.
 
-> **Important:** On a production workload, it is recommended to use a minimum of 16 cores and 32 GiB memory if not more depending on the client, (i.e. AWS EC2 instance type c5.4xlarge)
+On a production workload, it is recommended to use a minimum of 16 cores and 32 GiB memory, if not more depending on the client. (i.e. AWS EC2 instance type c5.4xlarge)
 
-The EBS volume can also be increased if a larger workload is desired for a demonstration. 
+The EBS volume can also be increased if a larger workload is desired for a demonstration.
 
 > **Important:** When creating the EC2 instance, ensure the Public IP address setting is ENABLED if it is desired to connect to the Platform server from outside the AWS VPC (eg. from users’ workstations or applications running in Kubernetes environments).
+
+SSH connect into the EC2 once it is running to install the tools and the Platform server.
 
 ### Install Replicated
 
@@ -65,7 +74,7 @@ Before we can continue, check to ensure that the necessary tools are available i
 
 If these tools are not available, install them now.
 
-```
+
 
 
 ## Platform Installation
@@ -90,7 +99,7 @@ The EBS volume can also be increased if a large workload is necessary for a demo
 
 For the VPC configuration, Security Group, and IAM roles details, please refer to the [Yugabyte docs page on cloud configuration for Platform.](https://docs.yugabyte.com/latest/yugabyte-platform/configure-yugabyte-platform/set-up-cloud-provider/aws/) 
 
-### Install Replicated
+### Platform server 
 
 Before we can continue, check to ensure that the necessary tools are available in your EC2, namely `wget` and `curl`, with the commands, `wget --version` and `curl -version`.
 
