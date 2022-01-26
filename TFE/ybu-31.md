@@ -2,11 +2,12 @@
 
 ## Introduction
 
-In this hands-on deployment lab, you will create a Yugabyte Universe that consists of a three node cluster in a multi-zone topology. Each node will reside in the same region, but in a different availability zone. The purpose is to demonstrate YugabyteDBs ability to provide high availability and workload distribution. The added resiliency in a multi-zone architecture protects against potential failures in case resources in a single availability zone become unavailable. This topology can withstand a single zone failure, but not two or more.
+In this hands-on deployment lab, you will create a Yugabyte Universe that consists of a three node cluster in a multi-zone topology. Each node will reside in the same region, but in a different availability zone. The purpose is to demonstrate Yugabyte Platform's ability to provide high availability and workload distribution. The added resiliency in a multi-zone architecture protects against potential failures in case resources in a single availability zone become unavailable. This topology can withstand a single zone failure, but not two or more.
 
 The architecture of this three-node database cluster includes a stand-alone server that hosts the Platform management component and an additional driver server that will host test applications and tools. 
 
 > **TODO:** add screenshot of architecture diagram
+<!-- ![Architecture Diagram of a Multi-zone Three Node Yugabyte Universe](./assets/images/50-diagram.png) -->
 ## Prerequisites
 
 Before creating a universe, the cloud provider environment must first be configured according to the specifications found on the [Yugabyte docs page on cloud configuration.](https://docs.yugabyte.com/latest/yugabyte-platform/configure-yugabyte-platform/set-up-cloud-provider/aws/) This is to secure the database as well as create access points in the VPC to allow YugabyteDB to connect and communicate with the different nodes in the cluster.
@@ -28,6 +29,12 @@ In this lab, we will focus on deployment with AWS.
 5. Deploy the Yugaware platform onto the AWS provider
 
 6. Create a YugabyteDB Universe via Yugaware platform configure for a three node cluster in three availability zones
+
+### Important Terminology
+
+* Yugaware platform vs Yugabyte Platform
+
+* Universe vs Cluster
 
 
 <!-- ## User Stories
@@ -166,9 +173,70 @@ Once the internal setup has completed, the next screen will prompt you to Upload
 12. A dialog box will appear. Select the button "Settings Saved - Restart Now". This will begin the Yugaware installation process.
 
 13. The next screen will be the Replicated dashboard that indicates the status of the Yugaware installation. 
-    Once the status on the left panel has changed from "Starting" to "Started", select "Open
-    
+    Once the status on the left panel has changed from "Starting" to "Started", select "Open".
 
+> **Important:** You may receive a Bad Gateway 500 error the first time you select the link , then try again to display the Yugaware console which has been installed on port 80 on the server. Supported web browsers included Chrome, Firefox, and Safari.
+
+## Add the Cloud Provider
+
+In the last step, you installed Replicated, then used it to install Yugaware onto port 80 on the server. In this step, you will register as a user with Yugabyte Platform, accept the license agreement, add the cloud provider, AWS, and specify the region where the Yugabyte cluster will be deployed.
+
+Once you have navigated to the Yugaware console you will see the following which displays the registration form for the Yugabyte Platform:
+
+> **TODO:** Add Screenshot Yugabyte Platform Admin Console
+<!-- ![Yugabyte Platform Admin Console](./assets/images/200-admin_console_form.png) -->
+
+Keep these credentials handy to login since they will be necessary to authenticate into Yugabyte Platform.
+
+1. Select the `dev` Environment for this lab.
+
+2. Enter your credentials, check the End User License Agreement, then select "Register"
+
+3. On the next screen, enter the email and password then select "Login".
+
+4. Once your credentials have been authenticated, you will be navigated to the following screen:
+
+> **TODO:** Add Screenshot Yugabyte Platform Admin Console
+<!-- ![The Yugabyte Platform Admin Console](./assets/images/300-yugabyte-admin-console.png) -->
+
+### Configure the Cloud Provider
+
+> **Important:** To complete this step, you will need your access and secret keys for the EC2 instance.
+
+One or more cloud providers can be configured. A provider is a set of configuration properties for accessing physical resources on which to build YugabyteDB Universes. 
+
+Select the "Configure a Provider" button to add a provider on the Cloud Provider form. 
+This page can also be accessed by selecting the "Configs" option on the left hand menu panel.
+
+In this lab, we will continue using AWS as the cloud provider.
+
+> **TODO:** Add Screenshot Cloud Provider Configuration Form 
+<!-- ![The Cloud Provider Configuration Form](./assets/images/400-cloud_provider_configuration_form.png) -->
+
+> **Important:** Only use lower case characters and hyphens "-".
+
+1. Provider Name: <my AWS environment>
+
+2. Credential Type: <leave as default: "Input Access and Secret Keys>
+
+3. Access Key ID: <Enter the Access Key>
+
+4. Secret Access Key: <Enter the Secret Key>
+
+5. Keypairs Management: <leave at the default “allow YW to manage key pairs”>
+
+6. SSH Port: 22
+
+7. SSH User: centos
+
+8. Leave all subsequent fields default. (i.e. create VPC as default)
+
+9. Select “Add region” button. The following dialog box will be displayed:
+
+> **TODO:** Add screenshot of pop-up
+<!-- ![Add a region](./assets/images/500-add_region.png) -->
+
+10. Use the dropdown to select the AWS region that contains the server created in the previous steps.
 ## Create a Universe
 
 
