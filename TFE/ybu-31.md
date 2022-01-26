@@ -245,7 +245,7 @@ In this lab, we will continue using AWS as the cloud provider.
 
 In the last step, the cloud provider was configured and connected to the Yugabyte platform. In this step, you will deploy a multi-zone cluster in the selected AWS region.
 
-> **Important:** The process of creating a Universe is essentially the same for all provider types, whether it be AWS, GCP, or Azure.
+> **Important:** The process of creating a Universe is essentially the same for all provider types, whether it be AWS, GCP, Azure, VMware, Red Hat, or  On-Prem.
 
 1. Select the "Universes" option on the left menu.
 
@@ -260,12 +260,45 @@ This will display the following form:
 
 2. In the "Provider" field, select the cloud provider from a dropdown list that was created in the previous step.
 
-3. In the “Regions” field, select the same region from the dropdown list 
+3. In the “Regions” field, select the same region from the dropdown list that contains the server.
 
+Once the region has been selected, a new section of the page will appear with the three availability zones as configured in the provider, with the default distribution of one YugabyteDB node in each AZ. This will constitute a 3 node multi-zone universe.
 
+> **TODO:** Add screenshot of each AZ.
 
+> **Important:** To increase capacity, an option is to change the number of nodes to 2 per zone, to make 6 nodes in total (leave the Replication Factor at the default of 3).
 
+4. In the “Instance Type” field enter the EC2 instance type we created previously in this lab: c5.2xlarge. (8 cores and 16GiB RAM) 
 
+The completed form should look similar to the following image:
 
+> **TODO:** Screenshot of a completed form
+<!-- ![Completed Universe Creation form](./assets/images/700-completed_form.png) -->
+
+5. Select the "Create" button to deploy the configured universe onto the server.
+
+Once the process has begun, a progress bar will update the current status of the Universe being created. After several minutes, the process will complete and the status will update to "Ready". The following image verifies that the Universe has been successfully completed.
+
+> **TODO:** Screenshot of a multi-zone three node cluster
+<!-- ![Deployed multi-zone Universe](./assets/images/800-universe.png) -->
+
+## Automated Tooling
+
+* Automated alerts for failures and warnings that affect capacity.
+
+* Automated monitoring for Reads and Writes.
+
+* Cost monitoring for YugabyteDB Platform.
+
+* Health monitorizing
+
+* Backups
+
+* Replication
+
+* Queries
+
+* Nodes
 
 ## Terminate a Universe
+
