@@ -12,7 +12,7 @@ The architecture of this three-node database cluster includes a stand-alone serv
 
 Before creating a universe, the cloud provider environment must first be configured according to the specifications found on the [Yugabyte docs page on cloud configuration.](https://docs.yugabyte.com/latest/yugabyte-platform/configure-yugabyte-platform/set-up-cloud-provider/aws/) This is to secure the database as well as create access points in the VPC to allow YugabyteDB to connect and communicate with the different nodes in the cluster.
 
-> **Important:** Make a careful note which region contains the VPC and EC2 instance.
+> **Important:** Make a careful note whatever region that contains the VPC will be where the EC2 instance will be launched.
 
 In this lab, we will focus on deployment with AWS.
 
@@ -20,19 +20,19 @@ In this lab, we will focus on deployment with AWS.
 
 1. Complete AWS prerequisites (IAM role, access keys, Routing Table entry, Security Group, VPC + subnets, Internet Gateway)
 
-2. Obtain AWS IAM role access ID and secret keys
+2. Obtain AWS IAM role access ID and secret keys.
 
-3. Obtain Yugaware license file (.rli) from Yugabyte Representative
+3. Obtain Yugaware license file (.rli) from a Yugabyte Representative.
 
-4. Create AWS EC2 instance to run Yugaware platform
+4. Create AWS EC2 instance to run Yugaware platform.
 
-5. Deploy the Yugaware platform onto the AWS provider
+5. Deploy the Yugaware platform onto the AWS provider.
 
-6. Create a YugabyteDB Universe via Yugaware platform configure for a three node cluster in three availability zones
+6. Create a YugabyteDB Universe using Yugabyte Platform.
 
-### Important Terminology
+**TODO**### Important Terminology
 
-* Yugaware platform vs Yugabyte Platform
+* **TODO**Yugaware platform vs Yugabyte Platform 
 
 * Universe vs Cluster: A Universe is the term for a YugabyteDB primary database cluster, plus any associated objects, such as read replicas, backup targets, etc.
 
@@ -262,7 +262,7 @@ This will display the following form:
 
 3. In the “Regions” field, select the same region from the dropdown list that contains the server.
 
-Once the region has been selected, a new section of the page will appear with the three availability zones as configured in the provider, with the default distribution of one YugabyteDB node in each AZ. This will constitute a 3 node multi-zone universe.
+Once the region has been selected, a new section of the page will appear with the three availability zones as configured in the provider, with the default distribution of one YugabyteDB node in each AZ. Note that since the RF or Replication Factor was set at 3, we will create a 3 node cluster.
 
 > **TODO:** Add screenshot of each AZ.
 
@@ -290,7 +290,7 @@ Once the process has begun, a progress bar will update the current status of the
 
 * Cost monitoring for YugabyteDB Platform.
 
-* Health monitorizing
+* Health monitoring
 
 * Backups
 
@@ -300,5 +300,5 @@ Once the process has begun, a progress bar will update the current status of the
 
 * Nodes
 
-## Terminate a Universe
+> **TODO:** Terminate a Universe
 
