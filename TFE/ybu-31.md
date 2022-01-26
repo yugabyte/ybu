@@ -34,7 +34,7 @@ In this lab, we will focus on deployment with AWS.
 
 * Yugaware platform vs Yugabyte Platform
 
-* Universe vs Cluster
+* Universe vs Cluster: A Universe is the term for a YugabyteDB primary database cluster, plus any associated objects, such as read replicas, backup targets, etc.
 
 
 <!-- ## User Stories
@@ -197,7 +197,7 @@ Keep these credentials handy to login since they will be necessary to authentica
 4. Once your credentials have been authenticated, you will be navigated to the following screen:
 
 > **TODO:** Add Screenshot Yugabyte Platform Admin Console
-<!-- ![The Yugabyte Platform Admin Console](./assets/images/300-yugabyte-admin-console.png) -->
+<!-- ![The Yugabyte Platform Admin Console](./assets/images/300-yugabyte_admin_console.png) -->
 
 ### Configure the Cloud Provider
 
@@ -237,7 +237,34 @@ In this lab, we will continue using AWS as the cloud provider.
 <!-- ![Add a region](./assets/images/500-add_region.png) -->
 
 10. Use the dropdown to select the AWS region that contains the server created in the previous steps.
-## Create a Universe
+
+> **Important:** For multi-region deployment, more than one region can be selected.
+
+11. Select "Save" to connect Yugabyte Platform to the cloud provider. 
+## Create a YugabyteDB Universe in Platform
+
+In the last step, the cloud provider was configured and connected to the Yugabyte platform. In this step, you will deploy a multi-zone cluster in the selected AWS region.
+
+> **Important:** The process of creating a Universe is essentially the same for all provider types, whether it be AWS, GCP, or Azure.
+
+1. Select the "Universes" option on the left menu.
+
+2. Select "Create Universe" button on the top right of this screen.
+
+This will display the following form:
+
+> **TODO:** Screenshot of Universe Form
+<!-- ![Add a region](./assets/images/600-create_universe.png) -->
+
+1. In the "Name" field, enter the name of the Universe: Only use lower case letters and dashes.
+
+2. In the "Provider" field, select the cloud provider from a dropdown list that was created in the previous step.
+
+3. In the “Regions” field, select the same region from the dropdown list 
+
+
+
+
 
 
 
