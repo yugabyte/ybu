@@ -6,8 +6,8 @@ In this hands-on deployment lab, you will create a Yugabyte Universe that consis
 
 The architecture of this three-node database cluster includes a stand-alone server that hosts the Platform management component and an additional driver server that will host test applications and tools. 
 
-> **TODO:** add screenshot of architecture diagram
-<!-- ![Architecture Diagram of a Multi-zone Three Node Yugabyte Universe](./assets/images/50-diagram.png) -->
+<!-- > **TODO:** add screenshot of architecture diagram -->
+![Architecture Diagram of a Multi-zone Three Node Yugabyte Universe](./assets/images/50-diagram.png)
 ## Prerequisites
 
 Before creating a universe, the cloud provider environment must first be configured according to the specifications found on the [Yugabyte docs page on cloud configuration.](https://docs.yugabyte.com/latest/yugabyte-platform/configure-yugabyte-platform/set-up-cloud-provider/aws/) This is to secure the database as well as create access points in the VPC to allow YugabyteDB to connect and communicate with the different nodes in the cluster.
@@ -183,8 +183,8 @@ In the last step, you installed Replicated, then used it to install Yugaware ont
 
 Once you have navigated to the Yugaware console you will see the following which displays the registration form for the Yugabyte Platform:
 
-> **TODO:** Add Screenshot Yugabyte Platform Admin Console
-<!-- ![Yugabyte Platform Admin Console](./assets/images/200-admin_console_form.png) -->
+<!-- > **TODO:** Add Screenshot Yugabyte Platform Admin Console -->
+![Yugabyte Platform Admin Console](./assets/images/200-admin_console_form.png)
 
 Keep these credentials handy to login since they will be necessary to authenticate into Yugabyte Platform.
 
@@ -196,8 +196,8 @@ Keep these credentials handy to login since they will be necessary to authentica
 
 4. Once your credentials have been authenticated, you will be navigated to the following screen:
 
-> **TODO:** Add Screenshot Yugabyte Platform Admin Console
-<!-- ![The Yugabyte Platform Admin Console](./assets/images/300-yugabyte_admin_console.png) -->
+<!-- > **TODO:** Add Screenshot Yugabyte Platform Admin Console -->
+![The Yugabyte Platform Admin Console](./assets/images/300-yugabyte_admin_console.png)
 
 ### Configure the Cloud Provider
 
@@ -210,8 +210,8 @@ This page can also be accessed by selecting the "Configs" option on the left han
 
 In this lab, we will continue using AWS as the cloud provider.
 
-> **TODO:** Add Screenshot Cloud Provider Configuration Form 
-<!-- ![The Cloud Provider Configuration Form](./assets/images/400-cloud_provider_configuration_form.png) -->
+<!-- > **TODO:** Add Screenshot Cloud Provider Configuration Form  -->
+![The Cloud Provider Configuration Form](./assets/images/400-cloud_provider_configuration_form.png)
 
 > **Important:** Only use lower case characters and hyphens "-".
 
@@ -233,8 +233,8 @@ In this lab, we will continue using AWS as the cloud provider.
 
 9. Select “Add region” button. The following dialog box will be displayed:
 
-> **TODO:** Add screenshot of pop-up
-<!-- ![Add a region](./assets/images/500-add_region.png) -->
+<!-- > **TODO:** Add screenshot of pop-up -->
+![Add a region](./assets/images/500-add_region.png)
 
 10. Use the dropdown to select the AWS region that contains the server created in the previous steps.
 
@@ -253,8 +253,8 @@ In the last step, the cloud provider was configured and connected to the Yugabyt
 
 This will display the following form:
 
-> **TODO:** Screenshot of Universe Form
-<!-- ![Add a region](./assets/images/600-create_universe.png) -->
+<!-- > **TODO:** Screenshot of Universe Form -->
+![Add a region](./assets/images/600-create_universe.png)
 
 1. In the "Name" field, enter the name of the Universe: Only use lower case letters and dashes.
 
@@ -272,15 +272,15 @@ Once the region has been selected, a new section of the page will appear with th
 
 The completed form should look similar to the following image:
 
-> **TODO:** Screenshot of a completed form
-<!-- ![Completed Universe Creation form](./assets/images/700-completed_form.png) -->
+<!-- > **TODO:** Screenshot of a completed form -->
+![Completed Universe Creation form](./assets/images/700-completed_form.png)
 
 5. Select the "Create" button to deploy the configured universe onto the server.
 
 Once the process has begun, a progress bar will update the current status of the Universe being created. After several minutes, the process will complete and the status will update to "Ready". The following image verifies that the Universe has been successfully completed.
 
-> **TODO:** Screenshot of a multi-zone three node cluster
-<!-- ![Deployed multi-zone Universe](./assets/images/800-universe.png) -->
+<!-- > **TODO:** Screenshot of a multi-zone three node cluster -->
+![Deployed multi-zone Universe](./assets/images/800-universe.png)
 
 ## Automated Tooling
 
