@@ -2,12 +2,12 @@
 
 ## Introduction
 
-In this hands-on deployment lab, you will create a Yugabyte Universe that consists of a three node cluster in a multi-zone topology. Each node will reside in the same region, but in a different availability zone. The purpose is to demonstrate Yugabyte Platform's ability to provide high availability and workload distribution. The added resiliency in a multi-zone architecture protects against potential failures in case resources in a single availability zone become unavailable. This topology can withstand a single zone failure, but not two or more.
+In this hands-on deployment lab, you will create a Yugabyte Universe that consists of a three node cluster in a multi-zone topology. Each node will reside in the same region, but in a different availability zone. The purpose is to demonstrate Yugabyte Platform's ability to provide high availability and workload distribution. The added resiliency in a multi-zone topology protects against potential failures in case resources in a single availability zone become unavailable. This topology can withstand a single zone failure, but not two or more.
 
-The architecture of this three-node database cluster includes a stand-alone server that hosts the Platform management component and an additional driver server that will host test applications and tools. 
+The topology of this three-node database cluster includes a stand-alone server that hosts the Platform management component and an additional driver server that will host test applications and tools. 
 
-<!-- > **TODO:** add screenshot of architecture diagram -->
-![Architecture Diagram of a Multi-zone Three Node Yugabyte Universe](./assets/images/50-diagram.png)
+> **TODO:** Add screenshot of network topology
+<!-- ![Architecture Diagram of a Multi-zone Three Node Yugabyte Universe](./assets/images/50-diagram.png) -->
 ## Prerequisites
 
 Before creating a universe, the cloud provider environment must first be configured according to the specifications found on the [Yugabyte docs page on cloud configuration.](https://docs.yugabyte.com/latest/yugabyte-platform/configure-yugabyte-platform/set-up-cloud-provider/aws/) This is to secure the database as well as create access points in the VPC to allow YugabyteDB to connect and communicate with the different nodes in the cluster.
@@ -18,19 +18,19 @@ In this lab, we will focus on deployment with AWS.
 
 ## Checklist of necessary steps to install Yugabyte Platform
 
-1. Complete AWS prerequisites (IAM role, access keys, Routing Table entry, Security Group, VPC + subnets, Internet Gateway)
+* Complete AWS prerequisites (IAM role, access keys, Routing Table entry, Security Group, VPC + subnets, Internet Gateway)
 
-2. Obtain AWS IAM role access ID and secret keys.
+* Obtain AWS IAM role access ID and secret keys.
 
-3. Obtain Yugaware license file (.rli) from a Yugabyte Representative.
+* Obtain Yugaware license file (.rli) from a Yugabyte Representative.
 
-4. Create AWS EC2 instance to run Yugaware platform.
+* Create AWS EC2 instance to run Yugaware platform.
 
-5. Deploy the Yugaware platform onto the AWS provider.
+* Deploy the Yugaware platform onto the AWS provider.
 
-6. Create a YugabyteDB Universe using Yugabyte Platform.
+* Create a YugabyteDB Universe using Yugabyte Platform.
 
-**TODO**### Important Terminology
+**TODO** ### Important Terminology
 
 * **TODO**Yugaware platform vs Yugabyte Platform 
 
@@ -53,17 +53,17 @@ To begin, log into the Amazon account and navigate to the EC2 console to launch 
 
 * IAM instance template: CentOS 7.9.2009 x86_64 - ami-00e87074e52e6c9f9 or a suitable privately created CentOS 7.9 image
 
-* Network VPC and subnets: <as created in the prerequisite>
+* Network VPC and subnets: (as created in the prerequisite)
 
 * Disk storage: gp3 16GB for sample workloads, not ephemeral
 
-* VPC network: <as created in the prerequisite>
+* VPC network: (as created in the prerequisite)
 
-* Security Group: <as created in the prerequisite>
+* Security Group: (as created in the prerequisite)
 
-* SSH access key: <generate and save a new key if required>
+* SSH access key: (Generate and save a new key if required)
 
-In this lab, we will be using a `c5.2xlarge`. The specifications of this instance type allow for the necessary processing power, 8 cores and 16GiB RAM, that are necessary to demonstrate Yugabyte Platform effectively as well as run sample workloads.
+In this lab, we will be using a `c5.4xlarge`. The specifications of this instance type allow for the necessary processing power, 8 cores and 16GiB RAM, that are necessary to demonstrate Yugabyte Platform effectively as well as run sample workloads.
 
 On a production workload, it is recommended to use a minimum of 16 cores and 32 GiB memory, if not more depending on the client. (i.e. AWS EC2 instance type c5.4xlarge)
 
@@ -108,7 +108,12 @@ curl -sSL https://get.replicated.com/docker | sudo bash
 Once the script has run, a series of prompts will appear in the terminal.
 
 ```bash
-Do you want to the IP address of the machine?
+The installer will use service address '54.177.132.12' (discovered from EC2 metadata service)
+The installer has automatically detected the service IP address of this machine as 54.177.132.12.
+Do you want to:
+[0] default: use 54.177.132.12
+[1] enter new address
+Enter desired number (0-1): 0
 ```
 
 Reply with the default answer: Yes
@@ -133,7 +138,7 @@ To create an alias for the replicated cli command run the following in your curr
 
 The url in your message will reflect the public IP of your server. At port 8800, the Replicated console that will allow us to pull the Yugaware image from the Replicated registry.
 
-### Complete the Yugaware Installation with the .rli license
+### Complete the Yugaware Installation with the Yugabyte Platform license
 
 In the last step, we configured the server and installed Replicated. In the next step, we will pull the Yugaware platform image from the Replicated registry once the license has been authenticated.
 
@@ -300,5 +305,5 @@ Once the process has begun, a progress bar will update the current status of the
 
 * Nodes
 
-> **TODO:** Terminate a Universe
+> **TODO:** Troubleshooting
 
