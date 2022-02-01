@@ -62,7 +62,7 @@ sudo docker run -d yugabytedb/yb-sample-apps --workload SqlInserts --nodes <my-n
 
 The prompt in the CLI will change to reflect the user `centos`, if the connection was established.
 
-The docker container will run in the background on each of the three nodes, evidenced by their unique IP addresses on port 5433 in the `--nodes` flag.
+The proceeding script will run a docker container in the background on each of the three nodes, evidenced by their unique IP addresses on port 5433 in the `--nodes` flag.
 
 This will run the workload `SqlInserts`. This is a sample key-value app built on PostgreSQL with concurrent readers and writers. The app inserts unique string keys into the table `postgresqlkeyvalue`.
 
@@ -85,5 +85,3 @@ Select the "Tables" tab to see that a table, `postgresqlkeyvalue`. Review the "H
 The purpose of this lab was to demonstrate how to execute a YSQL workload on the three node multi-zone Universe.
 
 Multiple workloads can now be added to the Universe to benchmark performance. High availability and resiliency can also be demonstrated by removing a node. 
-
-If you wish to open the YSQL shell to review logs realtime on the nodes, take a look at the Yugabyte documents.
