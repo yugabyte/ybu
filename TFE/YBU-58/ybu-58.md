@@ -20,7 +20,7 @@ Sign into Yugabyte Platform with your credentials to be taken to the Universes d
 
 ![Description of this action.](./assets/images/60-universe_dashboard_1600x700.png)
 
-Select the Universe that will be running the workload. This will take you to the Universe details pages as shown in the following image:
+Select the Universe that will be running the workload. This will take you to the Universe details page as shown in the following image:
 
 ![Description of this action.](./assets/images/70-universe_details_1600x700.png)
 
@@ -38,11 +38,13 @@ This opens the following dialog box:
 
 * Select the YSQL option(default view).
 
-* Copy this script to execute later in the CLI, once you SSH into the EC2 instance that contains Yugabyte Platform.
+* Copy and make a note of this script to execute later in the CLI, once you SSH into the EC2 instance that contains Yugabyte Platform.
+
+> **Important:** In order for the script to run, `sudo` must be prefixed to the proceeding command.
 
 ## Run a YSQL Workload
 
-In the last step, you verified that the Universe is up and running and retrieved the YSQL script that will run the workload. In this step, you will run a sample workload on nodes on the deployed Universe.
+In the last step, you verified that the Universe is up and running and retrieved the YSQL script that will run the workload. In this step, you will connect to the EC2 instance to run a sample workload on the nodes of the deployed Universe.
 
 ### Connect to the Platform Server
 
@@ -50,15 +52,15 @@ SSH into the EC2 instance that hosts Yugabyte Platform using the EC2's public IP
 
 > **Important:** In order to connect to the Platform server, you will need the `.pem` key that was downloaded when the EC2 instance was launched. 
 
-Once connected to the EC2 instance in the CLI, execute the YSQL script saved from the last step:
+Once connected to the EC2 instance in the CLI, execute the following YSQL script saved from the last step:
 
 ```bash
-docker run -d yugabytedb/yb-sample-apps --workload SqlInserts --nodes <my-node-ip>:5433,<my-node-ip>:5433,<my-node-ip>:5433
+sudo docker run -d yugabytedb/yb-sample-apps --workload SqlInserts --nodes <my-node-ip>:5433,<my-node-ip>:5433,<my-node-ip>:5433
 ```
 
 > **Important:** In order to run the proceeding workload script on a Universe that has a password authenticated YSQL database or TLS encryption in transit, it is necessary to add the user, password, and path of the locally stored `.crt` and `.key` files. By default the user is `yugabyte`. For more details for [TLS encryption in transit, review the Yugabyte official docs.](https://docs.yugabyte.com/latest/yugabyte-platform/security/enable-encryption-in-transit/) 
 
-The prompt in the CLI will change to reflect the user `centos` if the connection was established.
+The prompt in the CLI will change to reflect the user `centos`, if the connection was established.
 
 The docker container will run in the background on each of the three nodes, evidenced by their unique IP addresses on port 5433 in the `--nodes` flag.
 
@@ -70,12 +72,18 @@ There are a total of 21 sample workloads that can be run from the `yugabytedb/yb
 
 In the last step, you ran a YSQL workload on our Yugabyte Universe. In this step, you will verify the workload is running and review the metrics tools. 
 
-Navigate back to the Yugabyte Platform Console and select the Universe that contains the workload. On the Universe details page in the "Overview" tab, you can see activity in the "Read/Write" window. 
+Navigate back to the Yugabyte Platform Console and select the Universe that contains the workload. On the Universe details page in the "Overview" tab, you can see following activity:
 
-Select the "Tables" tab to see that a table has been created in the Universe, `postgresqlkeyvalue`. Review the "Health" and "Metrics" tabs to measure the performance of Yugabyte.
+![The Universe details page displays the metrics of the workload.](./assets/images/200-workload_metrics_1366x768.png)
+
+On the "Overview" tab, the "Total Ops/Sec" displays the reads and writes being performed by the workload. In the "Tables" window, we can see a YSQL table has been inserted into the database.
+
+Select the "Tables" tab to see that a table, `postgresqlkeyvalue`. Review the "Health" and "Metrics" tabs to measure the performance of Yugabyte.
 
 ## Reflection
 
 The purpose of this lab was to demonstrate how to execute a YSQL workload on the three node multi-zone Universe.
 
-Multiple workloads can now to added to the Universe to benchmark performance as well as demonstrate resiliency in case of resource failures and how to remove/add nodes for high availability.
+Multiple workloads can now be added to the Universe to benchmark performance. High availability and resiliency can also be demonstrated by removing a node. 
+
+If you wish to open the YSQL shell to review logs realtime on the nodes, take a look at the Yugabyte documents.
