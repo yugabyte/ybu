@@ -2,28 +2,26 @@
 
 ## Introduction
 
-In this hands-on deployment lab, you will create a Yugabyte Universe that consists of a three node cluster in a multi-zone topology. Each node will reside in the same region, but in a different availability zone. The purpose is to demonstrate Yugabyte Platform's ability to provide high availability and workload distribution. The added resiliency in a multi-zone topology protects against potential failures in case resources in a single availability zone become unavailable. This topology can withstand a single zone failure, but not two or more.
-
-The topology of this three-node database cluster includes a node in each availability zone in a single region as shown in the following diagram:
+In this hands-on deployment lab, you will create a Yugabyte Universe that consists of a three node cluster in a multi-zone topology. Each node will reside in the same region, but in a different availability zone as shown in the following diagram:
 
 ![Architecture Diagram of a Multi-zone Three Node Yugabyte Universe](./assets/images/50-multi_zone_topology_1600x700.png)
 
+The purpose of a creating a multi-zone topology is to demonstrate Yugabyte Platform's ability to provide high availability and workload distribution. The added resiliency in a multi-zone topology protects against potential failures in case resources in a single availability zone become unavailable. This topology can withstand a single zone failure, but not two or more.
+
 ### Objective
+
 As an engineer, I want to install Yugabyte Platform on AWS to demonstrate how to deploy a three node cluster in a multi-zone topology.
 ## Prerequisites
 
-Before creating a universe, the cloud provider environment must first be configured according to the specifications found on the [Yugabyte docs page on cloud configuration.](https://docs.yugabyte.com/latest/yugabyte-platform/configure-yugabyte-platform/set-up-cloud-provider/aws/) This is to secure the database as well as create access points in the VPC to allow YugabyteDB to connect and communicate with the different nodes in the cluster.
+Before creating a universe, the cloud provider environment must first be configured according to the specifications found on the [Yugabyte Technical Field enablement lab.](YBU-59) This is to secure the database as well as create access points in the VPC to allow YugabyteDB to connect and communicate with the different nodes in the cluster.
 
 > **Important:** Make a careful note whatever region that contains the VPC will be where the EC2 instance will be launched.
 
-In this lab, we will focus on deployment with AWS.
+In this lab, you will focus on deployment with AWS.
 
-Therefore the access key ID and secret id key for programmatic access for your IAM user will be necessary to obtain from your AWS account.
-
-Obtain the Yugabyte Platform license file (.rli) from your Yugabyte representative to download the Yugabyte Platform Management Console.
 ## Checklist of necessary steps to install Yugabyte Platform
 
-* Complete AWS prerequisites (IAM role, access keys, Routing Table entry, Security Group, VPC + subnets, Internet Gateway)
+* Complete AWS prerequisites (IAM role, access keys, Routing Table entry, Security Group, VPC + subnets, Internet Gateway). Details can be found in the lab YBU-59.
 
 * Obtain the AWS IAM user's access key ID and secret access key. These must specifically be enabled for programmatic access so the Yugabyte Platform can create the nodes in your region. [For more information about the access key ID and secret access key review the AWS docs on AWS credentials.](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html)
 
@@ -37,21 +35,23 @@ Obtain the Yugabyte Platform license file (.rli) from your Yugabyte representati
 
 ### Launch the EC2
 
-Once the VPC, security group, IAM role, subnets, routing table entry, and Internet Gateway have been set up as required in us-west-2, we can proceed with launching the EC2 instance using an AMI. The EC2 instance will perform as the server that will host the Yugabyte Platform Management Console.
+Once the VPC, security group, IAM role, subnets, routing table entry, and Internet Gateway have been set up as required in the region us-west-2, you can proceed with launching the EC2 instance using an AMI. The EC2 instance will perform as the server that will host the Yugabyte Platform Management Console.
 
 To begin, log into the Amazon account and navigate to the EC2 console to launch an instance with the following specifications:
 
-| Type      | Description |
+| Property Type      | Value |
 | ----------- | ----------- |
 | Instance Type      | c5.4xlarge       |
 | AMI   | ami-00e87074e52e6c9f9        |
 | OS   | CentOS 7.9.2009 x86_64        |
 | Region   | us-west-2       |
 | Disk Storage      | 32GiB, gp3       |
-| VPC   | (Prerequisite-YBU-59)        |
-| Security Group   | (Prerequisite-YBU-59)        |
-| Tags   | Name : <my-first-four-letters-of-gmail-address>-YBU-platform-dev-us-west-2        |
+| Network | vpc-(Prerequisite-YBU-59)|
+| Auto-assign Public IP | Enable |
 | IAM role   | YBU-iamrole-usw1        |
+| Security Group   | (Prerequisite-YBU-59)        |
+| Tags   | Name: \<my-first-four-letters-of-gmail-address>-YBU-platform-dev-us-west-2        |
+| Example| Name: mkim-YBU-platform-dev-us-west-2 |
 | SSH access key   | Generate and save       |
 | Security Key Pair  | ybu-yugaware \| RSA  - download from course player    |
 
@@ -59,7 +59,9 @@ The following image can be found in the AWS marketplace in most regions:
 
 ![AWS Marketplace has the CentOS 7 AMI.](./assets/images/60-ec2-ami_1600x700.png)
 
-In this lab, we will be using a `c5.4xlarge`, in order to demo production level workloads. The specifications of this instance type allow for the necessary processing power, 16 cores with 32GiB RAM, that are necessary to demonstrate Yugabyte Platform effectively when running production workloads.
+In this lab, you will use a `c5.4xlarge`, in order to demo production level workloads. The specifications of this instance type allow for the necessary processing power, 16 cores with 32GiB RAM, that are necessary to demonstrate Yugabyte Platform effectively when running production workloads.
+
+The centOS AMI can be found in the AWS Marketplace.
 
 > **Important:** When creating the EC2 instance, ensure the Public IP address setting is ENABLED if it is desired to connect to the EC2 instance from outside the AWS VPC (eg. from users’ workstations or applications running in Kubernetes environments).
 
@@ -67,7 +69,7 @@ The Configure Instance Details page will look similar to the following image:
 
 ![EC2 configuration details page will have similar values including the IAM role and auto-assignment of the public IP.](./assets/images/70-configure_ec2_1600x700.png)
 
-> **Important:** Select "Delete on Termination", when selecting the additional storage for a demo otherwise the EBS volume will remain even after the EC2 instance is terminated. 
+> **Important:** Select "Delete on Termination", when selecting the additional storage for a demo otherwise the EBS volume will continue to  even after the EC2 instance is terminated. 
 
 SSH into the EC2 once it is running to configure the environment for the Yugabyte Platform Management Console.
 
@@ -135,7 +137,7 @@ The URL in your message will reflect the public IP of your EC2 instance. Navigat
 
 ### Upload the Yugabyte Platform license to Install
 
-In the last step, we configured the EC2 instance and installed Replicated. In this step, you will pull the Yugabyte Platform image from the Replicated registry once the license has been authenticated.
+In the last step, you configured the EC2 instance and installed Replicated. In this step, you will pull the Yugabyte Platform image from the Replicated registry once the license has been authenticated.
 
 Navigate to the IP address of your EC2 instance at port 8800 in your browser to connect to the Replicated console as noted in the proceeding CLI message.
 
@@ -151,7 +153,7 @@ Proceed with the Yugabyte Platform installation process with the following instr
 
 * Select "Advanced" and then select "Proceed to <my public IP(unsafe)>. 
    
-> **Important:** There will not be any security risks in this process since we are used a self-signed SSL/TLS Certificate to secure the communication between your local machine and the Yugabyte Platform Console.
+> **Important:** There will not be any security risks in this process since you will use a self-signed SSL/TLS Certificate to secure the communication between your local machine and the Yugabyte Platform Console.
 
 * Select "Use the Self-Signed Cert", on the next page titled "HTTPS for admin console" as shown in the following image:
 
@@ -188,7 +190,7 @@ Once the status on the left panel has changed from "Starting" to "Started", sele
 
 ## Add the Cloud Provider
 
-In the last step, you installed Replicated, then used it to install Yugabyte Platform onto port 80 on the EC2 instance. In this step, you will register as a user with Yugabyte Platform, accept the license agreement, add the cloud provider, AWS, and specify the region where the Yugabyte Universe will be deployed. To complete this step, you will need the AWS access and secrets keys to your AWS account to allow Yugabyte Platform to create the AWS infrastructure for the three cluster node.
+In the last step, you installed Replicated, then used it to install Yugabyte Platform onto port 80 on the EC2 instance. In this step, you will register as a user with Yugabyte Platform, accept the license agreement, add the cloud provider, AWS, and specify the region where the Yugabyte Universe will be deployed. To complete this step, you will need the AWS access and secrets keys to your AWS account to allow Yugabyte Platform to create the AWS infrastructure for the three nodes in your cluster.
 
 Once you have navigated to the Yugabyte Platform console you will see the following which displays the registration form for the Yugabyte Platform:
 
@@ -217,6 +219,8 @@ This page can also be accessed by selecting the "Configs" option on the left han
 
 > **Important:** Only use lower case characters and hyphens "-".
 
+Fill the proceeding form with the following values:
+
 | Property Name | Value
 |--------|---------|
 | Provider Name | aws |
@@ -231,8 +235,7 @@ This page can also be accessed by selecting the "Configs" option on the left han
 | VPC Setup | Create a new VPC |
 | Add region | us-west-2 |
 
-Select "Add region". 
-Select "Save".
+Select "Add region", then select "Save".
 ## Create a YugabyteDB Universe in Platform
 
 In the last step, the cloud provider was configured and connected to the Yugabyte Platform. In this step, you will deploy a multi-zone cluster in the selected AWS region.
@@ -269,7 +272,9 @@ This will display the following form:
 Select "Create" to deploy the three node cluster into AWS.
 This process will create three EC2 instances in your region in three separate availability zones.
 
-> **Important:** Password authorization has been disabled for the databases and encryption to the Nodes for demonstration purposes only to enable a simple deployment and is not recommended for production. In order to enable in-transit encryption and database password authorization, toggle these values on. Note that the default database user is `yugabyte` when accessing the databases with the password.
+> **Important:** Password authorization has been disabled for the databases and encryption to the Nodes for demonstration purposes only to facilitate easy access to the databases to demo workloads and benchmarking. It is not recommended for production. In order to enable in-transit encryption and database password authorization, toggle these values on. Note that the default database user is `yugabyte` when accessing the databases with the password.
 
-Once the process has begun, a progress bar will update the current status of the Universe being created. After several minutes, the process will complete and the status will update to "Ready". The following image verifies that the Universe has been successfully completed.
+Once the process has begun, a progress bar will update the current status of the Universe being created. After several minutes, the process will complete and the status will update to "Ready". If this hasn't occurred after a prolonged amount of time, refresh the page to update the state of the Universe. The following image verifies that the Universe has been successfully deployed to AWS:
+
+![The three node Universe has been deployed and is ready for use.](./assets/images/800-deployed_universe_1600x700.png)
 
