@@ -14,9 +14,9 @@ In this hands-on lab, you will run a PostgreSQL workload on a multi-node Yugabyt
 
 ## Verify the Universe is Operational
 
-Verify that the Universe is running by navigating to the Yugabyte Platform Console and selecting the Universe that will be running the sample workload. You can get to the Yugabyte Platform Console from the browser by navigating to the public IP of the [EC2 instance](https://us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#Instances:instanceState=running) that hosts Platform management component.
+Verify that the Universe is running by navigating to the Yugabyte Platform Console and selecting the Universe that will be running the sample workload. You can get to the Yugabyte Platform Console from the browser by navigating to the public IP of the [EC2 instance](https://us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#Instances:instanceState=running) that hosts Yugabyte Platform management console.
 
-Sign into Yugabyte Platform with your credentials to be taken to the Universes dashboard page as shown in the following image:
+On the Yugabyte Platform, sign in with your credentials to be taken to the Universes dashboard page as shown in the following image:
 
 ![Description of this action.](./assets/images/60-universe_dashboard_1600x700.png)
 
