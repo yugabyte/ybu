@@ -4,6 +4,10 @@
 
 In this hands-on lab, you will run a PostgreSQL workload on a multi-node Yugabyte Universe. In this example, you will use a three node cluster in a multi-zone topology that was set up in a previous lab. Each node will reside in the same region, but in a different availability zone. The purpose is to validate the Yugabyte Universe is functioning properly as well as examine the metric tools on the Yugabyte Platform.
 
+### Objective
+
+As a sales engineer, I want to run a workload on Yugabyte three node Universe on Yugabyte Platform to verify the Universe is functioning properly and to examine the metrics tools on Yugabyte Platform.
+
 ## Prerequisites
 
 * Verify the Universe is running.
