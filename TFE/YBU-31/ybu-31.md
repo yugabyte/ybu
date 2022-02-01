@@ -278,3 +278,4 @@ Once the process has begun, a progress bar will update the current status of the
 
 ![The three node Universe has been deployed and is ready for use.](./assets/images/800-deployed_universe_1600x700.png)
 
+To find out how to run a workload on this Universe, review lab YBU-58 for more details.
