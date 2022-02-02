@@ -4,5 +4,8 @@
         "xlarge",
         "Yugabyte",
         "Yugaware"
+    ],
+    "cSpell.ignoreWords": [
+        "YSQL"
     ]
 }
