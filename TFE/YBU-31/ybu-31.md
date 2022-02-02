@@ -13,13 +13,13 @@ The purpose of a creating a multi-zone topology is to demonstrate Yugabyte Platf
 As an engineer, I want to install Yugabyte Platform on AWS to demonstrate how to deploy a three node cluster in a multi-zone topology.
 ## Prerequisites
 
-Before creating a universe, the cloud provider environment must first be configured according to the specifications found on the [Yugabyte Technical Field enablement lab.](YBU-59) This is to secure the database as well as create access points in the VPC to allow YugabyteDB to connect and communicate with the different nodes in the cluster.
+Before creating a universe, the cloud provider environment must first be configured according to the specifications found in a previous Yugabyte Technical Field enablement lab. This is to secure the database as well as create access points in the VPC to allow YugabyteDB to connect and communicate with the different nodes in the cluster.
 
 > **Important:** Make a careful note whatever region that contains the VPC will be where the EC2 instance will be launched.
 
 In this lab, you will focus on deployment with AWS.
 
-## Checklist of necessary steps to install Yugabyte Platform
+## Checklist of Steps to Install Yugabyte Platform
 
 * Complete AWS prerequisites (IAM role, access keys, Routing Table entry, Security Group, VPC + subnets, Internet Gateway). Details can be found in the lab YBU-59.
 
@@ -35,7 +35,7 @@ In this lab, you will focus on deployment with AWS.
 
 ### Launch the EC2
 
-Once the VPC, security group, IAM role, subnets, routing table entry, and Internet Gateway have been set up as required in the region us-west-2, you can proceed with launching the EC2 instance using an AMI. The EC2 instance will perform as the server that will host the Yugabyte Platform Management Console.
+Once the VPC, security group, IAM role, subnets, routing table entry, and internet gateway have been set up as required in the region us-west-2, you can proceed with launching the EC2 instance using an AMI. The EC2 instance will perform as the server that will host the Yugabyte Platform Management Console.
 
 To begin, log into the Amazon account and navigate to the EC2 console to launch an instance with the following specifications:
 
