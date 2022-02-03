@@ -122,30 +122,35 @@ Keep all the default values except the Namespace. This value is the name of the 
 
 > **Important:** Several backups can be created that target particular namespaces. Backups can also be set on an automated schedule.
 
-In a few moments, the backup of the namespace will complete. Refresh the page to update the status of the backup. Once the status is "Completed", you will drop the table and restore it from the backup to verify the process is working properly.
+In a few moments, the backup of the database will complete. Refresh the page to update the status of the backup. Once the status is "Completed", you will proceed to the next steps; to drop the table and restore it from the backup.
 
-In order to do this, you will need the SSH command to connect to a node in the cluster.
+To verify the backup was stored in the S3 bucket, you can run the view the S3 console to view the backup in the S3 bucket:
 
-Navigate to the "Nodes" tab on the Universes details page and select the "Actions" drop down located in the Primary Cluster window as shown in the following image:
+![The backup folder in the S3 bucket has been newly created.](./assets/images/800-universe_backup_1366x768.png)
+
+Now that the backup has been verified, the next step is to drop the table. To do this, you need to connect to the database with the YSQL shell. Since the table is distributed on the nodes, you will need the connect to a node in the cluster first.
+
+To get the SSH command to connect to a node, navigate to the "Nodes" tab on the Universes details page and select the "Actions" drop down located in the Primary Cluster window as shown in the following image:
 
 ![Select the dropdown for a node in the cluster.](./assets/images/460-node_connect_1600x700.png)
 
-Select "Connect" and copy the command to ssh into this node.
+Select "Connect" and copy the command to SSH into this node.
 
 ```bash
 sudo ssh -i /opt/yugabyte/yugaware/data/keys/be5f73e4-3bfe-4b55-8c1c-0aa144be10d6/yb-dev-aws_be5f73e4-3bfe-4b55-8c1c-0aa144be10d6-key.pem -ostricthostkeychecking=no -p 22 yugabyte@<node-IP>
 ```
 
-As can be seen the the proceeding statement, the `.pem` key for the node instance is located on the EC2 instance that contains Yugabyte Platform. You are accessing the node through port 22 with the user name `yugabyte`.
+As can be seen the the proceeding statement, the `.pem` key for the node instance is located on the EC2 instance that contains Yugabyte Platform. This value was automatically generated when the Universe was created. You will be accessing the node through port 22 with the user name `yugabyte`.
 
-Make a note of this command since it will be used by you to SSH into the node.
+Make a note of this command since you will use it to SSH into the node.
+
 ## Drop the Table
 
 In the last step you created a backup of the database, `postgres` that contains the table, `postgresqlkeyvalue`. In this step, you will drop the table, then restore the table from the backup in the S3 bucket.
 
 In this step, you will need the `.pem` file to SSH into the EC2 instance.
 
-In order to drop the table, you will SSH into the EC2 instance that contains the Yugabyte Platform console and connect to a node. 
+In order to drop the table, you will SSH into the EC2 instance that contains the Yugabyte Platform console, connect to a node, then connect to the YSQL shell. 
 
 ### Connect to the Node
 
@@ -163,9 +168,9 @@ The connection is established if the prompt in the CLI reflects the user, `yugab
 [yugabyte@ip-172-151-37-55 ~]$
 ```
 
-### Connect to the YSQL Shell
+### Connect to the Database with the YSQL Shell
 
-In the last step we connected to the node. In this step we will open the YSQL shell in order to connect to the database and drop the table.
+In the last step, you connected to the node. In this step we will open the YSQL shell in order to connect to the database and drop the table.
 
 Run the following command to connect to the YSQL shell:
 
@@ -175,7 +180,7 @@ Run the following command to connect to the YSQL shell:
 
 In the proceeding command, you ran the binary file `ysqlsh` with the declarations for the host, port, and user.
 
-> **Deep Dive:** for a closer look at the `ysqlsh` and the commands, visit the official Yugabyte docs for more detailed instructions.
+> **Deep Dive:** [For a closer look at the `ysqlsh` and the shell commands, visit the official Yugabyte docs for more detailed instructions.](https://docs.yugabyte.com/latest/admin/ysqlsh/)
 
 You have successfully connected to the YSQL shell if the prompt now looks like this:
 
@@ -185,13 +190,13 @@ yugabyte=#
 
 Now you can directly connect to the table, view logs, and use PostgreSQL DDL or DML to make changes to the data layer.
 
-First run the following command to list the databases:
+First, run the following command to list the databases:
 
 ```bash
 \l
 ```
 
-will result in the following response in the CLI:
+This will result in the following response in the CLI:
 
 ```bash
                                    List of databases
@@ -223,7 +228,7 @@ You are now connected to database "postgres" as user "yugabyte".
 postgres=#
 ```
 
-> **Pro Tip:** As a general practice, it is good to turn on the `\timing` feature to measure response time of the SQL statement.
+> **Pro Tip:** As a general practice, it is good to turn on the `\timing` feature to measure response time of the SQL operations.
 
 To list the tables, run the following command in the ysqlsh:
 
@@ -260,6 +265,8 @@ Time: 2850.394 ms (00:02.850)
 postgres=#
 ```
 
+Note there are 2,000,001 rows in this table.
+
 Now that you have established the table is present and populated with data, you will drop this table with the following command:
 
 ```bash
@@ -276,12 +283,58 @@ postgres=#
 
 ### Verify the Table has been Dropped
 
-Now run the `\dt` command or the `SELECT count(*) from postgresqlkeyvalue;` commands to verify the table is no longer available. The CLI will result in the following response:
+Now run the `\dt` or `SELECT count(*) from postgresqlkeyvalue;` commands to verify the table is no longer available. The CLI will result in the following response:
 
 ```bash
 Did not find any relations
 ```
 
-Navigate back to the Yugabyte Platform console in the browser to see that the `postgresqlkeyvalue` table is no longer available. 
+Leave this YSQL shell open so you can verify the table has been restored.
+
+Navigate back to the Yugabyte Platform console in the browser to verify that the `postgresqlkeyvalue` table is no longer available. Select the "Tables" tab in the Universe Details page to see the following image:
+
+![Description of this action.](./assets/images/500-drop_table_1366x768.png)
+
+Note in the proceeding image that there are no longer any available tables in this Universe.
 
 ## Restore the Table
+
+In the last step, you dropped the table then verified the table is no longer present in the Universe. In this step, you will restore the table and verify the data remains consistent with the data prior to the DROP command.
+
+On the Yugabyte Platform console, in the Universe details page, select the "Backups" tab. This will display the following image: 
+
+![Select the backup to restore the table.](./assets/images/700-restore_backup_1600x700.png)
+
+In the proceeding image, you will see the backup you created in a previous step. Select the "Actions" button for this backup and choose the "Restore Backup" option as shown in the following image:
+
+![Restore this backup to the current universe.](./assets/images/750-restore_data_1600x700.png)
+
+In the proceeding form, select the default options for the current Universe and the keyspace or database, `postgres`, keeping the same number of parallel threads. 
+
+> **Pro Tip:** Increasing the parallel thread capacity will result in a faster backup or backup restore. This decision depends on the size of the backup as well as the resource capacity of the EC2 instances.
+
+Once the backup restore has completed, check the "Tables" tab in the Universes details page to see if the table has been restored.
+
+### Verify the Table has been Restored
+
+In the last step, the table was restored. In this step you will verify the data was restored with no data loss.
+
+Navigate back to the CLI that is connected to the database via the YSQL shell. Run the following command:
+
+```bash
+SELECT count(*) from postgresqlkeyvalue;
+```
+
+You will see the following response in the CLI:
+
+```bash
+---------
+ 2000001
+(1 row)
+```
+
+From the proceeding response from the SQL query, we have verified that the table has been restored and there has been no data loss from the backup and restore process.
+
+## Reflection
+
+In this lab, you created a backup of the YSQL database and restored it. You also connected to a node to access the database in order to remove the table.
