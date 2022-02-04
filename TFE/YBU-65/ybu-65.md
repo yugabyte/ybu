@@ -217,9 +217,7 @@ Run the following command to connect to the YSQL shell:
 
 In the preceding command, you ran the binary file `ysqlsh` with the declarations for the host, port, and user.
 
-<!-- TODO tserver vs master -->
-
-> **Deep Dive:** [For a closer look at the `ysqlsh` and the shell commands, visit the official Yugabyte docs for more detailed instructions.](https://docs.yugabyte.com/latest/admin/ysqlsh/)
+Also notice that you are connecting to the `tserver` process, which is short for tablet server, which is responsible for hosting/serving user data on the tables. For more information on how this process relates to the `master` process and their relationship to the Raft Consensus algorithm to maintain high availability, take a look at the [Yugabyte Official documentation on Universe operations.](https://docs.yugabyte.com/latest/architecture/concepts/universe/)
 
 You have successfully connected to the YSQL shell if the prompt now looks like this:
 
@@ -298,6 +296,8 @@ Time: 2850.394 ms (00:02.850)
 ```
 
 Note there are 2,000,001 rows in this table.
+
+> **Deep Dive:** [For a closer look at the `ysqlsh` and the shell commands, visit the official Yugabyte docs for more detailed instructions.](https://docs.yugabyte.com/latest/admin/ysqlsh/)
 
 Now that you have established the table is present and populated with data, drop this table with the following command:
 
