@@ -12,7 +12,7 @@ As a sales engineer, I will demonstrate how to create a backup of the database a
 
 * A deployed Yugabyte Universe on AWS containing a populated YSQL table. For information on how to deploy a Yugabyte Universe on Platform, review the previous labs on Universe deployment for a multi-zone cluster.
 
-* In this lab, the workload `SqlInserts` has been run on the Universe. This has created a table named `postgresqlkeyvalue`. This workload was downloaded along with Platform as a docker container image, `yugabytedb/yb-sample-apps`. Details on how to run a workload on a Yugabyte Universe can be found in a previous lab.
+* The workload `SqlInserts` has created a table named `postgresqlkeyvalue` in the Universe. This workload was downloaded along with Platform as a docker container image, `yugabytedb/yb-sample-apps`. Details on how to run a workload on a Yugabyte Universe can be found in a previous lab.
 
 * AWS credentials to access the S3 bucket, namely the access key ID and the secret access key for the IAM user account.
 
@@ -105,7 +105,11 @@ On the left hand menu of the Yugabyte Platform console, select the "Configs" opt
 
 ![The Configs option contains the configuration for the cloud infrastructure, the backup, and the security.](./assets/images/210-cloud_provider_configs_1600x700.png)
 
-On the "Configs" page, select the "Backup" tab and select the "Create S3 Backup" button. This will display the following form:
+On the "Configs" page, select the "Backup" tab. Keep the default option for Amazon S3 as shown in the following image:
+
+![Use the Amazon S3 option to create a database backup.](./assets/images/220-create_s3_backup_1600x700.png)
+
+On the preceding page, select the "Create S3 Backup" button. This will display the following form:
 
 ![The backup configuration will designate the S3 bucket we created to store the backup.](./assets/images/240-backup_config_1366x768.png)
 
@@ -122,17 +126,17 @@ Fill out the preceding form with the following values:
 
 Select "Save" to set the S3 bucket as the backup location.
 
-Next, you will designate the database to backup.
+Now that the S3 bucket has been configured in the Universe as the backup location, the next step will be to designate the database to backup.
 
 ### Assign the Database for Backup
 
-Navigate to the Universes Dashboard and select the Universe that contains the YSQL table you wish to backup.
+Navigate to the Universes Dashboard page and select the Universe that contains the YSQL table you wish to backup.
 
 Select the "Backups" tab on the Universe details page to display the following image:
 
 ![On the Backups tab, create a backup of the database.](./assets/images/300-create_backup_1600x700.png)
 
-Select the "Create Backup" button in the preceding page to navigate to a form as shown in the following image:
+Select the "Create Backup" button on the preceding page to navigate to a form as shown in the following image:
 
 ![Description of this action.](./assets/images/450-create_backup_form_1600x700.png)
 
@@ -147,7 +151,7 @@ In the preceding form, enter the following property values:
 | Parallel Threads | 8 | Yes |
 | Number of Days to Retain Backup | n/a | Yes |
 
-Keep all the default values except the Namespace. This value is the name of the database that you will backup, `postgres`, as we noted in the previous step. There is also an option to backup multiple databases if needed. 
+Keep all the default values except the Namespace. This designates the name of the database that will be backed up, in this case, `postgres`, as we noted in the previous step. There is also an option to backup multiple databases if needed. 
 
 > **Important:** Several backups can be created that target particular databases. Backups can also be set on an automated schedule.
 
