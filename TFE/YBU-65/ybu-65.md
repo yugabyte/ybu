@@ -232,7 +232,7 @@ Now you can directly connect to the table, view logs, and use PostgreSQL DDL or 
 First, run the following command to list the databases:
 
 ```bash
-\l
+yugabyte=# \l
 ```
 
 This will result in the following response in the CLI:
@@ -249,30 +249,26 @@ This will result in the following response in the CLI:
                  |          |          |         |             | postgres=CTc/postgres
  yugabyte        | postgres | UTF8     | C       | en_US.UTF-8 |
 (5 rows)
-
-yugabyte=#
 ```
 
 Connect to the `postgres` database with the following command:
 
 ```bash
-\c postgres
+yugabyte=# \c postgres
 ```
 
 The preceding command will return the following result:
 
 ```bash
-yugabyte=# \c postgres
 You are now connected to database "postgres" as user "yugabyte".
-postgres=#
 ```
 
 > **Pro Tip:** As a general practice, it is good to turn on the `\timing` feature to measure response time of the SQL operations.
 
-To list the tables, run the following command in `ysqlsh` also known as the YSQL shell:
+To list the tables, run the following command in YSQL shell also known as the YSQL shell:
 
 ```bash
-\dt
+postgres=# \dt
 ```
 
 This will result in the following response in the CLI.
@@ -283,14 +279,12 @@ This will result in the following response in the CLI.
 --------+--------------------+-------+----------
  public | postgresqlkeyvalue | table | postgres
 (1 row)
-
-postgres=#
 ```
 
 Determine the number of rows in this table with the following command:
 
 ```SQL
-SELECT count(*) from postgresqlkeyvalue;
+postgres=# SELECT count(*) from postgresqlkeyvalue;
 ```
 
 This will create the following response in the CLI:
@@ -301,7 +295,6 @@ This will create the following response in the CLI:
 (1 row)
 
 Time: 2850.394 ms (00:02.850)
-postgres=#
 ```
 
 Note there are 2,000,001 rows in this table.
@@ -309,7 +302,7 @@ Note there are 2,000,001 rows in this table.
 Now that you have established the table is present and populated with data, drop this table with the following command:
 
 ```SQL
-DROP TABLE postgresqlkeyvalue;
+postgres=# DROP TABLE postgresqlkeyvalue;
 ```
 
 This command will result in the following response in the CLI:
@@ -317,7 +310,6 @@ This command will result in the following response in the CLI:
 ```bash
 DROP TABLE
 Time: 199.763 ms
-postgres=#
 ```
 
 ### Verify the Table has been Dropped
@@ -364,7 +356,7 @@ In the last step, the table was restored. In this step, you will verify the data
 Navigate back to the CLI that is connected to the database via the YSQL shell. Run the following command:
 
 ```bash
-SELECT count(*) from postgresqlkeyvalue;
+postgres=# SELECT count(*) from postgresqlkeyvalue;
 ```
 
 You will see the following response in the CLI:
