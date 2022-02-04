@@ -1,8 +1,17 @@
 {
     "cSpell.words": [
+        "Ctype",
+        "keyspace",
+        "Keyspace",
         "Kubernetes",
+        "ostricthostkeychecking",
+        "postgresqlkeyvalue",
+        "tserver",
         "xlarge",
+        "YCQL",
+        "ysqlsh",
         "Yugabyte",
+        "yugabytedb",
         "Yugaware"
     ],
     "cSpell.ignoreWords": [
