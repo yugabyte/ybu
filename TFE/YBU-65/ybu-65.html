@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"> </script>
-<script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [['$','$'], ['\\(','\\)']]}});</script>
-<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS": {"availableFonts":["TeX"],"scale": 150}});</script>
+
 
 <style>
 /*---------------------------------------------------------------------------------------------
@@ -375,8 +369,7 @@ blockquote {
 
 </style>
 
-</head>
-<body>
+
 <h1 id="storage-backup-and-restore-on-yugabyte-platform">Storage Backup and Restore on Yugabyte Platform</h1>
 <h2 id="introduction">Introduction</h2>
 <p>In this hands-on lab, you will learn how to create a backup of a database, then restore the database using Yugabyte Platform. The ability to backup and restore data in a straight forward and simple process is important illustrate Yugabyte's ability to weather failures, migrations, or other outage situations. In this lab, you will backup and restore a YSQL database, but understand the process for a YCQL database is nearly identical.</p>
@@ -709,6 +702,3 @@ Time: 199.763 ms
 <p>From the preceding SQL query response, we have verified that the table has been restored and there has been no data loss from the backup and restore process.</p>
 <h2 id="reflection">Reflection</h2>
 <p>In this lab, you created a backup of the YSQL database and restored it. You also connected to a YSQL shell on the node to access the database in order to remove the table.</p>
-
-</body>
-</html>
