@@ -46,7 +46,7 @@ Select the "Nodes" tab on the Universe details page to see that the new node has
 
 ![A new node has been successfully added to the Yugabyte Universe.](./assets/images/200-four_node_1600x700.png)
 
-Notice in the preceding image that within a few minutes, the new node has successfully begun to rebalance the workload from the other nodes. The new node is actively participating in the Universe by receiving read and write operations. The SST or Sorted String Tables have also been distributed to the new node. Notice that the `TServer` process, but not the `Master` process is running on the new node. This is due to the Raft consensus algorithm which allocates the number of Master process in direction relation to the Replication Factor, which is three in this Universe. For more details on this, review the [blog post regarding the Raft Consensus Replication Protocol.](https://blog.yugabyte.com/how-does-the-raft-consensus-based-replication-protocol-work-in-yugabyte-db/)
+Notice in the preceding image that within a few minutes, the new node has successfully begun to rebalance the workload from the other nodes. The new node is actively participating in the Universe by receiving read and write operations. The SST or Sorted String Tables have also been distributed to the new node. Notice that the `TServer` process, but not the `Master` process is running on the new node. This is due to the Raft consensus algorithm which ties the number of `Master` processes in a cluster to the Replication Factor, which is three in this Universe. For more details on this, review the [blog post regarding the Raft Consensus Replication Protocol.](https://blog.yugabyte.com/how-does-the-raft-consensus-based-replication-protocol-work-in-yugabyte-db/)
 
 ## Scale Down a Yugabyte Universe
 
@@ -58,10 +58,22 @@ Navigate to the "Nodes" tab on the Yugabyte Platform console to view the current
 
 Select the "Actions" button for the new node that was added in the last step.
 
-Select "Remove Node" as shown in the following image:
+Select "Remove Node" from the dropdown list.
+
+In a few minutes, the new node will be removed from the Universe with the "Removed" status as shown in the following image:
 
 ![Remove a node from the cluster.](./assets/images/400-remove_node_1600x700.png)
 
 As the Universe removes the node, notice that the read and write operations are automatically rebalanced on the remaining nodes in the cluster. Within a few minutes, the Universe has rebalanced the workload including the SST files onto the remaining working nodes.
 
+Notice on the Universe Overview page in the following image, that the latency of the read and write operations were only momentarily affected by the removal of a node:
+
+![A momentary change in the average latency.](./assets/images/300-latency_1600x700.png)
+
 > **Pro Tip:** Note that a node can also be removed by editing the Universe and reducing the number of nodes, similar to the process of adding a node that was completed in a previous step in this lab.
+
+## Reflection
+
+In this lab, you added a node to increase the capacity of a Yugabyte Universe and noted how the workloads were auto balanced within a few minutes.
+
+You also removed a node from the Universe and discovered how the SST files and read/write capacity were evenly distributed between the remaining nodes to maintain consistent read and write operations regardless of the cluster's specific topology. 
