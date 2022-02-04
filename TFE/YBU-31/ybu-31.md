@@ -2,9 +2,9 @@
 
 ## Introduction
 
-In this hands-on deployment lab, you will create a Yugabyte Universe that consists of a three node cluster in a multi-zone topology. Each node will reside in the same region, but in a different availability zone as shown in the following diagram:
+In this hands-on deployment lab, you will create a Yugabyte universe that consists of a three node cluster in a multi-zone topology. Each node will reside in the same region, but in a different availability zone as shown in the following diagram:
 
-![Architecture Diagram of a Multi-zone Three Node Yugabyte Universe](./assets/images/50-multi_zone_topology_1600x700.png)
+![Architecture Diagram of a Multi-zone Three Node Yugabyte universe](./assets/images/50-multi_zone_topology_1600x700.png)
 
 The purpose of a creating a multi-zone topology is to demonstrate Yugabyte Platform's ability to provide high availability and workload distribution. The added resiliency in a multi-zone topology protects against potential failures in case resources in a single availability zone become unavailable. This topology can withstand a single zone failure, but not two or more.
 
@@ -31,7 +31,7 @@ In this lab, you will focus on deployment with AWS.
 
 * Deploy Yugabyte Platform onto the cloud provider, AWS.
 
-* Create a YugabyteDB Universe using Yugabyte Platform.
+* Create a YugabyteDB universe using Yugabyte Platform.
 
 ### Launch the EC2
 
@@ -190,7 +190,7 @@ Once the status on the left panel has changed from "Starting" to "Started", sele
 
 ## Add the Cloud Provider
 
-In the last step, you installed Replicated, then used it to install Yugabyte Platform onto port 80 on the EC2 instance. In this step, you will register as a user with Yugabyte Platform, accept the license agreement, add the cloud provider, AWS, and specify the region where the Yugabyte Universe will be deployed. To complete this step, you will need the AWS access and secrets keys to your AWS account to allow Yugabyte Platform to create the AWS infrastructure for the three nodes in your cluster.
+In the last step, you installed Replicated, then used it to install Yugabyte Platform onto port 80 on the EC2 instance. In this step, you will register as a user with Yugabyte Platform, accept the license agreement, add the cloud provider, AWS, and specify the region where the Yugabyte universe will be deployed. To complete this step, you will need the AWS access and secrets keys to your AWS account to allow Yugabyte Platform to create the AWS infrastructure for the three nodes in your cluster.
 
 Once you have navigated to the Yugabyte Platform console you will see the following which displays the registration form for the Yugabyte Platform:
 
@@ -240,11 +240,11 @@ Select "Add region", then select "Save".
 
 In the last step, the cloud provider was configured and connected to the Yugabyte Platform. In this step, you will deploy a multi-zone cluster in the selected AWS region.
 
-> **Important:** The process of creating a Universe is essentially the same for all provider types, whether it be AWS, GCP, Azure, VMware, Red Hat, or  On-Prem.
+> **Important:** The process of creating a universe is essentially the same for all provider types, whether it be AWS, GCP, Azure, VMware, Red Hat, or  On-Prem.
 
 * Select the "Universes" option on the left menu, underneath the Dashboard option.
 
-* Select "Create Universe" button underneath the profile icon located in the top right corner of the Universes page.
+* Select "Create Universe" button underneath the profile icon located in the top right corner of the universe details page.
 
 This will display the following form:
 
@@ -274,11 +274,11 @@ This process will create three EC2 instances in your region in three separate av
 
 > **Important:** Password authorization has been disabled for the databases and encryption to the Nodes for demonstration purposes only to facilitate easy access to the databases to demo workloads and benchmarking. It is not recommended for production. In order to enable in-transit encryption and database password authorization, toggle these values on. Note that the default database user is `yugabyte` when accessing the databases with the password.
 
-Once the process has begun, a progress bar will update the current status of the Universe being created. After several minutes, the process will complete and the status will update to "Ready". If this hasn't occurred after a prolonged amount of time, refresh the page to update the state of the Universe. The following image verifies that the Universe has been successfully deployed to AWS:
+Once the process has begun, a progress bar will update the current status of the universe being created. After several minutes, the process will complete and the status will update to "Ready". If this hasn't occurred after a prolonged amount of time, refresh the page to update the state of the universe. The following image verifies that the universe has been successfully deployed to AWS:
 
-![The three node Universe has been deployed and is ready for use.](./assets/images/800-deployed_universe_1600x700.png)
+![The three node universe has been deployed and is ready for use.](./assets/images/800-deployed_universe_1600x700.png)
 
 
 ## Next Steps
 
-To find out how to run a workload on this Universe, review lab YBU-58 for more details.
+To find out how to run a workload on this universe, review lab YBU-58 for more details.
