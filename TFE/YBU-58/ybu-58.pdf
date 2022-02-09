@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"> </script>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [['$','$'], ['\\(','\\)']]}});</script>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS": {"availableFonts":["TeX"],"scale": 150}});</script>
+
+<style>
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: "Segoe WPC", "Segoe UI", "SFUIText-Light", "HelveticaNeue-Light", sans-serif, "Droid Sans Fallback";
+	font-size: 14px;
+	padding: 0 12px;
+	line-height: 22px;
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	color: #4080D0;
+	text-decoration: none;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+h1 code,
+h2 code,
+h3 code,
+h4 code,
+h5 code,
+h6 code {
+	font-size: inherit;
+	line-height: auto;
+}
+
+a:hover {
+	color: #4080D0;
+	text-decoration: underline;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left: 5px solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 14px;
+	line-height: 19px;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+.mac code {
+	font-size: 12px;
+	line-height: 18px;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+/** Theming */
+
+.vscode-light,
+.vscode-light pre code {
+	color: rgb(30, 30, 30);
+}
+
+.vscode-dark,
+.vscode-dark pre code {
+	color: #DDD;
+}
+
+.vscode-high-contrast,
+.vscode-high-contrast pre code {
+	color: white;
+}
+
+.vscode-light code {
+	color: #A31515;
+}
+
+.vscode-dark code {
+	color: #D7BA7D;
+}
+
+.vscode-light pre:not(.hljs),
+.vscode-light code > div {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre:not(.hljs),
+.vscode-dark code > div {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre:not(.hljs),
+.vscode-high-contrast code > div {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+.vscode-light blockquote,
+.vscode-dark blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.vscode-high-contrast blockquote {
+	background: transparent;
+	border-color: #fff;
+}
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+</style>
+
+</head>
+<body>
+<h1 id="run-a-workload-on-a-multi-node-universe">Run a Workload on a Multi-node Universe</h1>
+<h2 id="introduction">Introduction</h2>
+<p>In this hands-on lab, you will run a PostgreSQL workload on a multi-node Yugabyte Universe. In this example, you will use a three node cluster in a multi-zone topology that was set up in a previous lab. Each node will reside in the same region, but in a different availability zone. The purpose is to validate the Yugabyte Universe is functioning properly as well as examine the metric tools on the Yugabyte Platform.</p>
+<h3 id="objective">Objective</h3>
+<p>As a sales engineer, I want to run a workload on Yugabyte three node Universe on Yugabyte Platform to verify the Universe is functioning properly and to examine the metrics tools on Yugabyte Platform.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>
+<p>Verify the Universe is running.</p>
+</li>
+<li>
+<p>Yugabyte Platform credentials.</p>
+</li>
+<li>
+<p>The <code>.pem</code> key file to connect the Platform server.</p>
+</li>
+</ul>
+<h2 id="verify-the-universe-is-operational">Verify the Universe is Operational</h2>
+<p>Verify that the Universe is running by navigating to the Yugabyte Platform Console and selecting the Universe that will be running the sample workload. You can get to the Yugabyte Platform Console from the browser by navigating to the public IP of the <a href="https://us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#Instances:instanceState=running">EC2 instance</a> that hosts Yugabyte Platform management console.</p>
+<p>On the Yugabyte Platform, sign in with your credentials to be taken to the Universes dashboard page as shown in the following image:</p>
+<p><img src="file:///Users/markkim/Documents/YBU_repos/YBU_public/TFE/YBU-58/assets/images/60-universe_dashboard_1600x700.png" alt="Description of this action."></p>
+<p>Select the Universe that will be running the workload. This will take you to the Universe details page as shown in the following image:</p>
+<p><img src="file:///Users/markkim/Documents/YBU_repos/YBU_public/TFE/YBU-58/assets/images/70-universe_details_1600x700.png" alt="Description of this action."></p>
+<p>There will be a green &quot;Ready&quot; displayed next to the Universe name at the top of the page if it is operational. Also verify that the Primary Cluster has 3 nodes whose status is &quot;Live&quot; by selecting the &quot;Nodes&quot; tab.</p>
+<h3 id="retrieve-the-workload-script">Retrieve the Workload Script</h3>
+<p>In the upper right corner of the page underneath the profile icon on the Universes details page is the &quot;Actions&quot; button. Selecting this will open a drop down menu.</p>
+<p>Select the &quot;Run Sample Apps&quot; option.</p>
+<p>This opens the following dialog box:</p>
+<p><img src="file:///Users/markkim/Documents/YBU_repos/YBU_public/TFE/YBU-58/assets/images/100-workload_ysql_1366x768.png" alt="The docker command to run the SqlInserts application."></p>
+<ul>
+<li>
+<p>Select the YSQL option(default view).</p>
+</li>
+<li>
+<p>Copy and make a note of this script to execute later in the CLI, once you SSH into the EC2 instance that contains Yugabyte Platform.</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Important:</strong> In order for the script to run, <code>sudo</code> must be prefixed to the proceeding command.</p>
+</blockquote>
+<h2 id="run-a-ysql-workload">Run a YSQL Workload</h2>
+<p>In the last step, you verified that the Universe is up and running and retrieved the YSQL script that will run the workload. In this step, you will connect to the EC2 instance to run a sample workload on the nodes of the deployed Universe.</p>
+<h3 id="connect-to-the-platform-server">Connect to the Platform Server</h3>
+<p>SSH into the EC2 instance that hosts Yugabyte Platform using the EC2's public IPv4.  For details on this <a href="https://us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#ConnectToInstance:instanceId=i-0fd7ae16524e527a1">review the AWS documentation</a>.</p>
+<blockquote>
+<p><strong>Important:</strong> In order to connect to the Platform server, you will need the <code>.pem</code> key that was downloaded when the EC2 instance was launched.</p>
+</blockquote>
+<p>Once connected to the EC2 instance in the CLI, execute the following YSQL script saved from the last step:</p>
+<pre class="hljs"><code><div>sudo docker run -d yugabytedb/yb-sample-apps --workload SqlInserts --nodes &lt;my-node-ip&gt;:5433,&lt;my-node-ip&gt;:5433,&lt;my-node-ip&gt;:5433
+</div></code></pre>
+<blockquote>
+<p><strong>Important:</strong> In order to run the proceeding workload script on a Universe that has a password authenticated YSQL database or TLS encryption in transit, it is necessary to add the user, password, and path of the locally stored <code>.crt</code> and <code>.key</code> files. By default the user is <code>yugabyte</code>. For more details for <a href="https://docs.yugabyte.com/latest/yugabyte-platform/security/enable-encryption-in-transit/">TLS encryption in transit, review the Yugabyte official docs.</a></p>
+</blockquote>
+<p>The prompt in the CLI will change to reflect the user <code>centos</code>, if the connection was established.</p>
+<p>The proceeding script will run a docker container in the background on each of the three nodes, evidenced by their unique IP addresses on port 5433 in the <code>--nodes</code> flag.</p>
+<p>This will run the workload <code>SqlInserts</code>. This is a sample key-value app built on PostgreSQL with concurrent readers and writers. The app inserts unique string keys into the table <code>postgresqlkeyvalue</code>.</p>
+<p>There are a total of 21 sample workloads that can be run from the <code>yugabytedb/yb-sample-apps</code> docker image. For a full description, visit the <a href="https://github.com/yugabyte/yb-sample-apps">GitHub repo for yb-sample-apps</a>. Note that in addition to PostgreSQL; Cassandra and Redis workloads are also available.</p>
+<h3 id="verify-workload-is-running-in-the-universe">Verify Workload is Running in the Universe</h3>
+<p>In the last step, you ran a YSQL workload on our Yugabyte Universe. In this step, you will verify the workload is running and review the metrics tools.</p>
+<p>Navigate back to the Yugabyte Platform Console and select the Universe that contains the workload. On the Universe details page in the &quot;Overview&quot; tab, you can see following activity:</p>
+<p><img src="file:///Users/markkim/Documents/YBU_repos/YBU_public/TFE/YBU-58/assets/images/200-workload_metrics_1366x768.png" alt="The Universe details page displays the metrics of the workload."></p>
+<p>On the &quot;Overview&quot; tab, the &quot;Total Ops/Sec&quot; displays the reads and writes being performed by the workload. In the &quot;Tables&quot; window, we can see a YSQL table has been inserted into the database.</p>
+<p>Select the &quot;Tables&quot; tab to see that a table, <code>postgresqlkeyvalue</code>. Review the &quot;Health&quot; and &quot;Metrics&quot; tabs to measure the performance of Yugabyte.</p>
+<h2 id="reflection">Reflection</h2>
+<p>The purpose of this lab was to demonstrate how to execute a YSQL workload on the three node multi-zone Universe.</p>
+<p>Multiple workloads can now be added to the Universe to benchmark performance. High availability and resiliency can also be demonstrated by removing a node.</p>
+
+</body>
+</html>
