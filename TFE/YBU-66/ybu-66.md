@@ -54,7 +54,7 @@ In the last step, you scaled up a Yugabyte universe by adding a node. This demon
 
 Navigate to the "Nodes" tab on the Yugabyte Platform console to view the current configuration of four nodes as shown in the following image:
 
-![A four node cluster has auto balanced the read and write operations.](./assets/images/200-four_node_1600x700.png)
+![A four node cluster has auto balanced the read and write operations.](./assets/images/250-four_node_1600x700.png)
 
 Select the "Actions" button for the new node that was added in the last step.
 
