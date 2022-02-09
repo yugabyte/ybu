@@ -8,7 +8,7 @@ In this hands-on lab, you will learn how to create a backup of a database, then 
 
 As a sales engineer, I will demonstrate how to create a backup of the database and restore it. 
 
-## Prerequisites
+## Requirements
 
 * A deployed Yugabyte Universe on AWS containing a populated YSQL table. For information on how to deploy a Yugabyte Universe on Platform, review the previous labs on Universe deployment for a multi-zone cluster.
 
@@ -48,14 +48,14 @@ Name the bucket using the first four letters of your email address. For example,
 
 Next, use the default settings listed below and select the "Create Bucket" button.
 
-| Property Name | Value |
-|----|-----|
-| AWS Region | us-west-2 (Oregon) |
-| ACLs | Disabled |
-| Block all public access | Enabled |
-| Bucket Versioning | Disable |
-| Default encryption | Disable |
-| Object Lock| Disable |
+| Property Name           | Value              |
+| ----------------------- | ------------------ |
+| AWS Region              | us-west-2 (Oregon) |
+| ACLs                    | Disabled           |
+| Block all public access | Enabled            |
+| Bucket Versioning       | Disable            |
+| Default encryption      | Disable            |
+| Object Lock             | Disable            |
 
 ### Bucket Permissions
 
@@ -115,14 +115,14 @@ On the preceding page, select the "Create S3 Backup" button. This will display t
 
 Fill out the preceding form with the following values:
 
-| Property Name | Property Value |
-|---|----|
-| Configuration Name | ybu-storage-backup-us-west-2 |
-| IAM Role | Disabled |
-| Access Key | \<my-access-key> |
-| Access Secret | \<my-access-secret> |
-| S3 Bucket | s3://\<email>-ybu-storage-backup-us-west-2 |
-| S3 Bucket Host Base | s3:amazonaws.com |
+| Property Name       | Property Value                             |
+| ------------------- | ------------------------------------------ |
+| Configuration Name  | ybu-storage-backup-us-west-2               |
+| IAM Role            | Disabled                                   |
+| Access Key          | \<my-access-key>                           |
+| Access Secret       | \<my-access-secret>                        |
+| S3 Bucket           | s3://\<email>-ybu-storage-backup-us-west-2 |
+| S3 Bucket Host Base | s3:amazonaws.com                           |
 
 Select "Save" to set the S3 bucket as the backup location.
 
@@ -142,14 +142,14 @@ Select the "Create Backup" button on the preceding page to navigate to a form as
 
 In the preceding form, enter the following property values:
 
-| Property Name | Property Value | Default |
-|----|----|----|
-| Language | YSQL | Yes |
-| Storage | S3 Storage | Yes |
-| Namespace | postgres | No |
-| Encrypt Backup | Disabled | Yes |
-| Parallel Threads | 8 | Yes |
-| Number of Days to Retain Backup | n/a | Yes |
+| Property Name                   | Property Value | Default |
+| ------------------------------- | -------------- | ------- |
+| Language                        | YSQL           | Yes     |
+| Storage                         | S3 Storage     | Yes     |
+| Namespace                       | postgres       | No      |
+| Encrypt Backup                  | Disabled       | Yes     |
+| Parallel Threads                | 8              | Yes     |
+| Number of Days to Retain Backup | n/a            | Yes     |
 
 Keep all the default values except the Namespace. This designates the name of the database that will be backed up, in this case, `postgres`, as we noted in the previous step. There is also an option to backup multiple databases if needed. 
 
