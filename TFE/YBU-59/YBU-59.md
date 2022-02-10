@@ -10,6 +10,7 @@ In this hands-on lab, you'll create the following AWS cloud infrastructure resou
 - Internet gateway
 - Security group
 - Key Pair
+- AWS user with AWS secrets
 
 
 ### Lab requirements
@@ -367,6 +368,27 @@ cat ~/.ssh/kp-${MY_4_CHAR}-aws.pem
 ```
 
 
+### Create an AWS User for AWS Secrets
+In AWS, create an IAM user to generate an AWS access key ID and secret access key.
+
+> Security Notice: You need your AWS Secrets for programmtic access to kept secure. Do not share these credential outside of Yugabyte. Only share these secrets internally using Keybase (not Slack, GDrive, or email).  
+
+
+Here are the stesp to create a user with AWS secrets: 
+* In the global navigation bar, search for Users, and then select **Features** → **Users**.
+* In **Users** (IAM users), select **Add Users**.
+* In the **Add Users** wizard, for **User name**, enter your email address,<NAME@YUGABYTE.COM>.
+* In **Select AWS credential type*, select **Access key - Programmatic access**.
+* Select **Next: Permission**.
+* In **Add user to group**, select **ats-admin**.
+* Select **Next: Tags**.
+* You do not need to add any additional tags. Select **Next: Review**.
+* Select **Create user**.
+* Select **Download.cvs**. The name of the download file is `new_user_credentials.csv`. Keep this file secure.
+* Select **Close**.
+
+
+
 ## All done!
 You did it! You created the following AWS cloud infrastructure resources and objects required to deploy Yugabyte Platform and a Yugabyte Universe in a given AWS region:
 - VPC
@@ -375,8 +397,10 @@ You did it! You created the following AWS cloud infrastructure resources and obj
 - Internet gateway
 - Security group
 - Key Pair
+- AWS user with AWS secrets
 
-You are now ready to create your EC2 instance for Yugabyte Platform.
+
+That was a lot! But now you are now ready to start your journey with installing, configuring, and deploying Yugabyte and Yugabyte Platform.
 
 In other labs, you'll be asked to create resources in additional AWS regions. If you get stuck, remember to refer back to his lab.
 
