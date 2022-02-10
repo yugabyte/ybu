@@ -1,369 +1,4 @@
 <style>
-  /*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-
-  body {
-    font-family: "Segoe WPC", "Segoe UI", "SFUIText-Light",
-      "HelveticaNeue-Light", sans-serif, "Droid Sans Fallback";
-    font-size: 14px;
-    padding: 0 12px;
-    line-height: 22px;
-    word-wrap: break-word;
-  }
-
-  #code-csp-warning {
-    position: fixed;
-    top: 0;
-    right: 0;
-    color: white;
-    margin: 16px;
-    text-align: center;
-    font-size: 12px;
-    font-family: sans-serif;
-    background-color: #444444;
-    cursor: pointer;
-    padding: 6px;
-    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
-  }
-
-  #code-csp-warning:hover {
-    text-decoration: none;
-    background-color: #007acc;
-    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
-  }
-
-  body.scrollBeyondLastLine {
-    margin-bottom: calc(100vh - 22px);
-  }
-
-  body.showEditorSelection .code-line {
-    position: relative;
-  }
-
-  body.showEditorSelection .code-active-line:before,
-  body.showEditorSelection .code-line:hover:before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: -12px;
-    height: 100%;
-  }
-
-  body.showEditorSelection li.code-active-line:before,
-  body.showEditorSelection li.code-line:hover:before {
-    left: -30px;
-  }
-
-  .vscode-light.showEditorSelection .code-active-line:before {
-    border-left: 3px solid rgba(0, 0, 0, 0.15);
-  }
-
-  .vscode-light.showEditorSelection .code-line:hover:before {
-    border-left: 3px solid rgba(0, 0, 0, 0.4);
-  }
-
-  .vscode-dark.showEditorSelection .code-active-line:before {
-    border-left: 3px solid rgba(255, 255, 255, 0.4);
-  }
-
-  .vscode-dark.showEditorSelection .code-line:hover:before {
-    border-left: 3px solid rgba(255, 255, 255, 0.6);
-  }
-
-  .vscode-high-contrast.showEditorSelection .code-active-line:before {
-    border-left: 3px solid rgba(255, 160, 0, 0.7);
-  }
-
-  .vscode-high-contrast.showEditorSelection .code-line:hover:before {
-    border-left: 3px solid rgba(255, 160, 0, 1);
-  }
-
-  img {
-    max-width: 100%;
-    max-height: 100%;
-  }
-
-  a {
-    color: #4080d0;
-    text-decoration: none;
-  }
-
-  a:focus,
-  input:focus,
-  select:focus,
-  textarea:focus {
-    outline: 1px solid -webkit-focus-ring-color;
-    outline-offset: -1px;
-  }
-
-  hr {
-    border: 0;
-    height: 2px;
-    border-bottom: 2px solid;
-  }
-
-  h1 {
-    padding-bottom: 0.3em;
-    line-height: 1.2;
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-  }
-
-  h1,
-  h2,
-  h3 {
-    font-weight: normal;
-  }
-
-  h1 code,
-  h2 code,
-  h3 code,
-  h4 code,
-  h5 code,
-  h6 code {
-    font-size: inherit;
-    line-height: auto;
-  }
-
-  a:hover {
-    color: #4080d0;
-    text-decoration: underline;
-  }
-
-  table {
-    border-collapse: collapse;
-  }
-
-  table > thead > tr > th {
-    text-align: left;
-    border-bottom: 1px solid;
-  }
-
-  table > thead > tr > th,
-  table > thead > tr > td,
-  table > tbody > tr > th,
-  table > tbody > tr > td {
-    padding: 5px 10px;
-  }
-
-  table > tbody > tr + tr > td {
-    border-top: 1px solid;
-  }
-
-  blockquote {
-    margin: 0 7px 0 5px;
-    padding: 0 16px 0 10px;
-    border-left: 5px solid;
-  }
-
-  code {
-    font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New",
-      monospace, "Droid Sans Fallback";
-    font-size: 14px;
-    line-height: 19px;
-  }
-
-  body.wordWrap pre {
-    white-space: pre-wrap;
-  }
-
-  .mac code {
-    font-size: 12px;
-    line-height: 18px;
-  }
-
-  pre:not(.hljs),
-  pre.hljs code > div {
-    padding: 16px;
-    border-radius: 3px;
-    overflow: auto;
-  }
-
-  /** Theming */
-
-  .vscode-light,
-  .vscode-light pre code {
-    color: rgb(30, 30, 30);
-  }
-
-  .vscode-dark,
-  .vscode-dark pre code {
-    color: #ddd;
-  }
-
-  .vscode-high-contrast,
-  .vscode-high-contrast pre code {
-    color: white;
-  }
-
-  .vscode-light code {
-    color: #a31515;
-  }
-
-  .vscode-dark code {
-    color: #d7ba7d;
-  }
-
-  .vscode-light pre:not(.hljs),
-  .vscode-light code > div {
-    background-color: rgba(220, 220, 220, 0.4);
-  }
-
-  .vscode-dark pre:not(.hljs),
-  .vscode-dark code > div {
-    background-color: rgba(10, 10, 10, 0.4);
-  }
-
-  .vscode-high-contrast pre:not(.hljs),
-  .vscode-high-contrast code > div {
-    background-color: rgb(0, 0, 0);
-  }
-
-  .vscode-high-contrast h1 {
-    border-color: rgb(0, 0, 0);
-  }
-
-  .vscode-light table > thead > tr > th {
-    border-color: rgba(0, 0, 0, 0.69);
-  }
-
-  .vscode-dark table > thead > tr > th {
-    border-color: rgba(255, 255, 255, 0.69);
-  }
-
-  .vscode-light h1,
-  .vscode-light hr,
-  .vscode-light table > tbody > tr + tr > td {
-    border-color: rgba(0, 0, 0, 0.18);
-  }
-
-  .vscode-dark h1,
-  .vscode-dark hr,
-  .vscode-dark table > tbody > tr + tr > td {
-    border-color: rgba(255, 255, 255, 0.18);
-  }
-
-  .vscode-light blockquote,
-  .vscode-dark blockquote {
-    background: rgba(127, 127, 127, 0.1);
-    border-color: rgba(0, 122, 204, 0.5);
-  }
-
-  .vscode-high-contrast blockquote {
-    background: transparent;
-    border-color: #fff;
-  }
-
-  /* Tomorrow Theme */
-  /* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
-  /* Original theme - https://github.com/chriskempson/tomorrow-theme */
-
-  /* Tomorrow Comment */
-  .hljs-comment,
-  .hljs-quote {
-    color: #8e908c;
-  }
-
-  /* Tomorrow Red */
-  .hljs-variable,
-  .hljs-template-variable,
-  .hljs-tag,
-  .hljs-name,
-  .hljs-selector-id,
-  .hljs-selector-class,
-  .hljs-regexp,
-  .hljs-deletion {
-    color: #c82829;
-  }
-
-  /* Tomorrow Orange */
-  .hljs-number,
-  .hljs-built_in,
-  .hljs-builtin-name,
-  .hljs-literal,
-  .hljs-type,
-  .hljs-params,
-  .hljs-meta,
-  .hljs-link {
-    color: #f5871f;
-  }
-
-  /* Tomorrow Yellow */
-  .hljs-attribute {
-    color: #eab700;
-  }
-
-  /* Tomorrow Green */
-  .hljs-string,
-  .hljs-symbol,
-  .hljs-bullet,
-  .hljs-addition {
-    color: #718c00;
-  }
-
-  /* Tomorrow Blue */
-  .hljs-title,
-  .hljs-section {
-    color: #4271ae;
-  }
-
-  /* Tomorrow Purple */
-  .hljs-keyword,
-  .hljs-selector-tag {
-    color: #8959a8;
-  }
-
-  .hljs {
-    display: block;
-    overflow-x: auto;
-    color: #4d4d4c;
-    padding: 0.5em;
-  }
-
-  .hljs-emphasis {
-    font-style: italic;
-  }
-
-  .hljs-strong {
-    font-weight: bold;
-  }
-
-  /*
- * Markdown PDF CSS
- */
-
-  pre {
-    background-color: #f8f8f8;
-    border: 1px solid #cccccc;
-    border-radius: 3px;
-    overflow-x: auto;
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
-  }
-
-  pre:not(.hljs) {
-    padding: 23px;
-    line-height: 19px;
-  }
-
-  blockquote {
-    background: rgba(127, 127, 127, 0.1);
-    border-color: rgba(0, 122, 204, 0.5);
-  }
-
-  .emoji {
-    height: 1.4em;
-  }
-
-  /* for inline code */
-  :not(pre):not(.hljs) > code {
-    color: #c9ae75; /* Change the old color so it seems less like an error */
-    font-size: inherit;
-  }
-
   td,
   tr {
     padding: 8px;
@@ -372,36 +7,33 @@
   blockquote {
     margin: 0 7px 0 5px;
     padding: 0 16px 0 10px;
-    /* border-left: 5px solid; */
-    /* font-weight: bold;
-    border: 2px 2px 2px 0 solid black;
-    color: rgb(217, 0, 0); */
   }
 
   blockquote p {
-    font-weight: bold;
-    border: 2px 2px 2px 0 solid black;
-    color: rgb(217, 0, 0);
+    box-shadow: 2px 2px 10px grey;
+    padding-left: 4px;
+    padding: 10px 4px;
   }
 
   img {
-    border: 2px solid black;
+    border: 1px solid black;
   }
 
   .code-highlight2 {
-    font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New",
-      monospace, "Droid Sans Fallback";
-    font-size: 14px;
+    font-family: "Courier New", monospace;
+    font-size: 16px;
     padding-left: 4px;
     color: rgb(217, 0, 0);
   }
 
   .bash {
     background: black;
-    font: white;
-    font-family: Courier, Courier new, Serif;
+    color: white;
+    font-weight: bold;
+    font-family: "Courier New", monospace;
     width: auto;
     height: auto;
+    padding: 0 10px;
   }
 </style>
 
@@ -574,7 +206,7 @@
   />
 </p>
 <p>
-  In this lab, you will use a <code>c5.4xlarge</code>, in order to demo
+  In this lab, you will use a <code class="code-highlight2">c5.4xlarge</code>, in order to demo
   production level workloads. The specifications of this instance type allow for
   the necessary processing power, 16 cores with 32GiB RAM, that are necessary to
   demonstrate Yugabyte Platform effectively when running production workloads.
@@ -625,19 +257,19 @@
 </p>
 <ul>
   <li>
-    <p>Set the hostname: <code>sudo hostnamectl set-hostname platform</code></p>
+    <p>Set the hostname: <code class="code-highlight2"> sudo hostnamectl set-hostname platform</code></p>
   </li>
   <li>
     <p>
       Update the Operating System on the EC2 instance:
-      <code>sudo yum -y update</code>
+      <code class="code-highlight2">sudo yum -y update</code>
     </p>
   </li>
   <li>
-    <p>Install <code>wget</code>: <code>sudo yum install -y wget</code></p>
+    <p>Install <code class="code-highlight2">wget</code>: <code class="code-highlight2">sudo yum install -y wget</code></p>
   </li>
   <li>
-    <p>Install <code>curl</code>: <code>sudo yum install -y curl</code></p>
+    <p>Install <code class="code-highlight2">curl</code>: <code class="code-highlight2">sudo yum install -y curl</code></p>
   </li>
 </ul>
 <h3 id="install-replicated-on-the-ec2-instance">
@@ -655,30 +287,25 @@
 </p>
 <p>
   In order to complete this step, the Platform 2.11 (latest) license file, which
-  ends in a <code>.rli</code> extension, must be obtained from a Yugabyte
+  ends in a <code class="code-highlight2">.rli</code> extension, must be obtained from a Yugabyte
   representative.
 </p>
 <p>
-  Logged in as the user, <code>centos</code> (default), runs the following
+  Logged in as the user, <code class="code-highlight2">centos</code> (default), runs the following
   command on the EC2 instance to install Replicated and Docker:
 </p>
-<pre
-  class="hljs"
-><code><div>curl -sSL https://get.replicated.com/docker | sudo bash
-</div></code></pre>
+<div class="highlight"><pre><code class="language-bash">curl -sSL https://get.replicated.com/docker | sudo bash
+</code></pre></div>
 <p>Once the script has run, a series of prompts will appear in the CLI.</p>
-<pre
-  class="hljs"
-><code><div>The installer will use service address <span class="hljs-string">'&lt;my EC2 public IP address&gt;'</span> (discovered from EC2 metadata service)
-The installer has automatically detected the service IP address of this machine as <span class="hljs-string">'&lt;my EC2 public IP address&gt;'</span>.
+<div class="bash">The installer will use service address '&lt;my EC2 public IP address&gt;' (discovered from EC2 metadata service)
+The installer has automatically detected the service IP address of this machine as '&lt;my EC2 public IP address&gt;'.
 Do you want to:
-[0] default: use <span class="hljs-string">'&lt;my EC2 public IP address&gt;'</span>
+[0] default: use '&lt;my EC2 public IP address&gt;'
 [1] enter new address
 Enter desired number (0-1): 0
-</div></code></pre>
-<pre class="hljs"><code><div>Do you need a proxy to connect to the internet?
+</div>
+<div class="bash">Do you need a proxy to connect to the internet?
 No
-</div></code></pre>
 <p>
   Once these questions have been answered, Replicated and Docker will be
   installed on your EC2 instance.
@@ -687,11 +314,11 @@ No
   To verify the installation on your EC2 instance has completed, you will
   receive the following output in your CLI:
 </p>
-<pre class="hljs"><code><div>Operator installation successful
-To <span class="hljs-built_in">continue</span> the installation, visit the following URL <span class="hljs-keyword">in</span> your browser:
+<div class="bash">Operator installation successful
+To continue the installation, visit the following URL in your browser:
   http://&lt;my-public-IP&gt;:8800
-To create an <span class="hljs-built_in">alias</span> <span class="hljs-keyword">for</span> the replicated cli <span class="hljs-built_in">command</span> run the following <span class="hljs-keyword">in</span> your current shell or <span class="hljs-built_in">log</span> out and <span class="hljs-built_in">log</span> back <span class="hljs-keyword">in</span>:
-  <span class="hljs-built_in">source</span> /etc/replicated.alias
+To create an alias for the replicated CLI command run the following in your current shell or log out and log back in:
+  source /etc/replicated.alias
 </div></code></pre>
 <p>
   The URL in your message will reflect the public IP of your EC2 instance.
@@ -769,7 +396,7 @@ To create an <span class="hljs-built_in">alias</span> <span class="hljs-keyword"
   <li>
     <p>
       Select &quot;Choose license&quot; to upload the
-      <code>&lt;my-license&gt;.rli</code> file from your machine as shown in the
+      <code class="code-highlight2">&lt;my-license&gt;.rli</code> file from your machine as shown in the
       following image:
     </p>
   </li>
@@ -881,7 +508,7 @@ To create an <span class="hljs-built_in">alias</span> <span class="hljs-keyword"
 </p>
 <ul>
   <li>
-    <p>Select the <code>dev</code> Environment for this lab.</p>
+    <p>Select the <code class="code-highlight2">dev</code> Environment for this lab.</p>
   </li>
   <li>
     <p>
@@ -1112,7 +739,7 @@ To create an <span class="hljs-built_in">alias</span> <span class="hljs-keyword"
     facilitate easy access to the databases to demo workloads and benchmarking.
     It is not recommended for production. In order to enable in-transit
     encryption and database password authorization, toggle these values on. Note
-    that the default database user is <code>yugabyte</code> when accessing the
+    that the default database user is <code class="code-highlight2">yugabyte</code> when accessing the
     databases with the password.
   </p>
 </blockquote>
