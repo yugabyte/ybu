@@ -1,5 +1,7 @@
 ---
 ---
+
+
 ## About this lab
 In this hands-on lab, you'll create the following AWS cloud infrastructure resources and objects required to deploy Yugabyte Platform and a Yugabyte Universe in a given AWS region:
 - VPC
@@ -8,28 +10,26 @@ In this hands-on lab, you'll create the following AWS cloud infrastructure resou
 - Internet gateway
 - Security group
 - Key Pair
-- EC2
+
+
+### Lab requirements
+For this lab, you'll need a user account that is associated with the ATS presales AWS account. Connect with IT Support (#it-support Slack channel). The IT Support team will provide access to this AWS account using Okta.
 
 
 
-## Requirements
-Most importantly, you need a user account that is associated with  the ATS presales AWS account. Connect with IT Support (#it-support Slack channel). The IT Support team will provide access to this AWS account using Okta.
-
-
-
-### About AWS resources, the Name tag, and the recommended naming convention
+## About AWS resources, the Name tag, and the recommended naming convention
 An object or resource in AWS Cloud has one or more **Tags**. A **Tag** is a key-value pair. Most objects have a default tag, the **Name** tag. The key is `Name`. You specify the value for this key.
 
 The Name tag helps you identify the resources and objects that you create. As a matter of practice, always specify a value for the **Name** tag using a recommended naming convention. The recommended naming convention in this lab encapsulates the object type, you as a the creator, and the region and/or availability zone where the resource or object exists.
 
-#### Why?
-You are responsible for terminating and deleting your cloud resources. Therefore, you need to be able to easily identify the resources and objects that you create. Using the recommended naming convention, you will easily be able to identify what is yours among possibly hundreds of objects in the AWS account.  
+### Why name resoureces?
+You are responsible for termnating and deleting your cloud resources. Therefore, you need to be able to easily identify the resourecs and objects that you create. Using the recommended naming convention, you will easily be able to identify what is yours among possibly hundreds of objects in the AWS account.  
 
 > **Warning:** To avoid accidentally terminating or deleting the incorrect resources, please embrace the practice of using a recommended naming conventions.  Don't be the new team member that deletes the resources for a live POC !!! 
 
 
-#### Recommended naming convention
-Since you'll need to identify and later terminate or delete the resources and objects that your create in AWS, you must employ a standardized naming convention for all your resources and objects that you create. 
+### Recommended naming convention
+Since you'll need to identifiy and later terminate or delete the resources and objects that your create in AWS, you must employ a standardized naming convention for all your resources and objects that you create. 
 
 The recommended naming convention consists of several elements or parts, in this order, when applicable:
 * an object or resource abbreviation and prefix
@@ -39,18 +39,18 @@ The recommended naming convention consists of several elements or parts, in this
 
 The following sections will start with a personal identifier. An object or resource name is typically a composite of all elements or parts.
 
-##### Personal identifier abbreviation
-For your personal identifier, you'll use the first 4 letters of your Yugabyte email address. If your email is less than four characters, you can add additional letters, A to Z. Here are some examples:
+#### Personal identifier abbreviation
+For your personal indentifier, you'll use the first 4 letters of your Yugabyte email address. If your email is less than four characters, you can add additional letters, A to Z. Here are some examples:
 
-| Email | Personal identifier|
+| Email | Personal identifier abbreviation |
 |:-|:-|
 | sluersen@yugabyte.com | SLUE |
 | mkim@yugabyte.com | MKIM |
 | rao@yugabyte.com | RAOZ |
 
 
-##### Region abbreviation
-Using an abbreviation for a region name will help you quickly identify a resource or object in a given region. Quick identification minimizes costly mistakes. Here are examples of region abbreviations for AWS:
+#### Region abbreviation
+Using an abbreviation for a region name will help you quickly identify a resource or object in a given region. Quick identification minmizes costly mistakes. Here are examples of region abbreviations for AWS:
 
 | Region | Region abbreviation | 
 |:-|:-|
@@ -64,8 +64,8 @@ Using an abbreviation for a region name will help you quickly identify a resourc
 
 
 
-##### Availability zone abbreviation
-An availability zone (AZ) represents an data center in a given region. There is often two or more availability zones in a given region. Here are some examples of availability zone abbreviations:
+#### Availablity zone abbreviation
+An availablity zone (AZ) represents an data center in a given region. There is often two or more avialablity zones in a given region. Here are some examples of availablity zone abbreviations:
 
 | Availability zone | AZ short name | Region + AZ short name |
 |:-|:-|:--|
@@ -78,7 +78,7 @@ An availability zone (AZ) represents an data center in a given region. There is 
 
 
 
-##### Resource and object prefix and abbreviations
+#### Resource and object prefix and abbreviations
 In most cases, you can use a prefix for the object identifier, with Security Group names being one of the exceptions. As such, resource and object tag names are composite names that include your personal identifier, region, and when appblicable, an availability zone. Here are some examples:
 
 
@@ -96,7 +96,7 @@ In most cases, you can use a prefix for the object identifier, with Security Gro
 | EC2| ec2 | `ec2-SLUE-use1-1a-az4-platform` | With EC2, you can create  virtual machines, or instances, that run on the AWS Cloud. This example includes ther region, the zone, and the purpose of the ec2 instances, for example `platform`.|
 
 
-#### Summary
+#### Naming summary
 When completing the labs in this course, practice using the recommended naming convention. You'll find that this practice will helps you minimize errors and find objects quickly.
 
 --- 
@@ -129,11 +129,11 @@ Here are the steps to create your VPC:
 * In the global navigation bar, search for VPC, and then select **Services** → **VPC**.
 * Next, select the **VPCs** card.
 * In **Your VPCs**, select **Create VPC**.
-* Specify the following properties:
+* In **Create VPC**, specify the following properties:
 
 | Property | Value |
 |:-|:-|
-| Name tag | Use a composite name for your VPC that includes your prefix and the select region, such as: `vpc-SLUE-use1`|
+| Name tag | Use a composite name for your VPC that includes your prefix and the select region, such as: `vpc-<MY_4_CHAR>-use1`. Replace `<MY_4_CHAR>` with the first four characters of your @yugabyte.com email address.|
 | IPv4 CIDR block | `IPv4 CIDR manual inut` |
 | IPv4 CIDR | Enter a value for private range that allows for one or more  subnet ranges |
 
@@ -172,7 +172,7 @@ Your VPC IPv4 CIDR block must be able to accomadate one or more subnets within t
 * Select **Save Changes**.
 * In the **Your VPCs** list view, find your VPC, and select the **VPC ID** link.
 * In Details, select **Actions → Edit DNS resolution**.
-* In Edit DNS resolution, select **Enable**.
+* In **Edit DNS resolution**, select **Enable**.
 * Select **Save Changes**.
 
 
@@ -187,8 +187,8 @@ Your VPC IPv4 CIDR block must be able to accomadate one or more subnets within t
 | Property | Value |
 |:-|:-|
 | VPC - VPC ID | In the drop down list, select your VPC. |
-| Subnet settings - Subnet name |  Specify the name of your subnet using the recommended naming convention for the region and availablity zone, for example, `sb-SLUE-use1-1a-az4` |
-| Subnet settings - Avaiablity zone | Select the availablity zone for the subnet. Make sure your Subnet name encodes this selection, for example, `sb-SLUE-use1-1f-az5`. |
+| Subnet settings - Subnet name |  Specify the name of your subnet using the recommended naming convention for the region and availablity zone, for example, `sb-<MY_4_CHAR>-use1-1a-az4`. Replace `<MY_4_CHAR>` with the first four characters of your @yugabyte.com email address. |
+| Subnet settings - Avaiablity zone | Select the availablity zone for the subnet. Make sure your Subnet name encodes this selection, for example, `sb-<MY_4_CHAR>-use1-1f-az5`. Replace `<MY_4_CHAR>` with the first four characters of your @yugabyte.com email address. |
 | Subnet settings -IPv4 CIDR blockInfo | Specify the IPv4 CIDR block for the subnet so that is does not conflict with any other subnets| 
 
  Here is an example of a VPC IPv4 Class B private range with non-conflicting subnets:
@@ -207,7 +207,7 @@ A route table specifies how packets are forwarded between the subnets within you
 Here are the steps to edit the properties of the exisitng route table:
 
 * In the left sidebar, in Virtual Private Cloud, select **Your VPCs**.
-* In Filter VPCS, enter the name of your VPC, e.g, `vpc-SLUE-use1`.
+* In Filter VPCs, enter the name of your VPC, e.g., `vpc-SLUE-use1`.
 * In the list view, select your VPC row.
 * In the tabs view, in the Details tab,in Main route table, select the route table link.
 * In Route tables, select **Actions → View details**.
@@ -216,11 +216,11 @@ Here are the steps to edit the properties of the exisitng route table:
 
 | Property | Value |
 |:-|:-|
-| Tags - Key - Name | Specify the name of your route table using the recommended naming convention for the region, for example, `rt-SLUE-use1` |
+| Tags - Key - Name | Specify the name of your route table using the recommended naming convention for the region, for example, `rt-<MY_4_CHAR>-use1`.  Replace `<MY_4_CHAR>` with the first four characters of your @yugabyte.com email address. |
 
 * Select **Save**.
 * In Details, select **Actions → Edit subnet associations**.
-* In Edit subnet associations, select your subnets in the list view.
+* In **Edit subnet associations**, select your subnets in the list view.
 * Verify the Selected subnets.
 * Select **Save associations**.
 
@@ -234,7 +234,7 @@ An internet gateway is a virtual router that connects your VPC to the internet. 
 
 | Property | Value |
 |:-|:-|
-| Internet gateway settings - Name tag | Specify the name of your internet gateway using the recommended naming convention for the region, for example, `igw-SLUE-use1` |
+| Internet gateway settings - Name tag | Specify the name of your internet gateway using the recommended naming convention for the region, for example, `igw-<MY_4_CHAR>-use1`. Replace `<MY_4_CHAR>` with the first four characters of your @yugabyte.com email address.|
 
 * In the Internet gateway details,  select **Actions → Attach to VPC**.
 * In Attach to VPC, in VPC, in the drop down list, select your VPC.
@@ -254,7 +254,7 @@ An internet gateway is a virtual router that connects your VPC to the internet. 
 | Column | Value | Comment | 
 |:-|:-|:-|
 | Destination | `0.0.0.0/0` | This is the IPv4 address for the entire internet, meaning this is a public internet route |
-| Target | `igw-SLUE-use1` | First select Internet Gateway in the list. Then select your internet gateway that you just created. |
+| Target | `igw-<MY_4_CHAR>-use1` |  Replace `<MY_4_CHAR>` with the first four characters of your @yugabyte.com email address. First select Internet Gateway in the list. Then select your internet gateway that you just created. |
 
 * Select **Save changes**.
 * In the Routes tab view, confirm that there is a noew route destination of `0.0.0.0/0` with your  internet gateway.
@@ -268,7 +268,7 @@ When you created your subnet, AWS created a Network ACL (Access Control List) fo
 * In the list view, select the Network ACL for your subnet.
 * Select **Actions → Manage tags**.
 * For the key property, enter `Name`.
-* For the value property, enter the name of your Network ACL, such as `acl-SLUE-use1` .
+* For the value property, enter the name of your Network ACL, such as `acl-<MY_4_CHAR>-use1` .
 * Select **Save**.
 
 
@@ -279,14 +279,14 @@ A security group acts as a virtual firewall for your instance to control inbound
 
 Here are the steps to create your security group for your VPC:
 * In the left sidebar, in Security, select **Security Groups**.
-* Select **Create security group**.
-* In Create security group, in Basic details, specifc the following properties:
+* In **Security Groups**, select **Create security group**.
+* In **Create security group**, in Basic details, specifc the following properties:
 
 
 | Property | Value |
 |:-|:-|
-| Basic details - Security group name  | Specify the name of your security group using the recommended naming convention, for example, `SLUE-sg-use1` |
-| Basic details - Description | Enter a short description, for example, `sg-SLUE-use1`. |
+| Basic details - Security group name  | Specify the name of your security group using the recommended naming convention, for example, `<MY_4_CHAR>-sg-use1`.  Replace `<MY_4_CHAR>` with the first four characters of your @yugabyte.com email address. |
+| Basic details - Description | Enter a short description, for example, `sg-<MY_4_CHAR>-use1`.  Replace `<MY_4_CHAR>` with the first four characters of your @yugabyte.com email address. |
 
 * In Inbound rules, select **Add rule** to create a new rule row for the following:
 
@@ -311,12 +311,12 @@ Here are the steps to create your security group for your VPC:
 
 * In Outbound rules, leave the **All traffic** `0.0.0.0/0 `  settings.
 * In Tags - optional, select Add new tag. 
-* In the Tag row, enter `Name` for the key, and for the value, specify the name of the resource, such as `sg-SLUE-use1`. 
+* In the Tag row, enter `Name` for the key, and for the value, specify the name of the resource, such as `sg-<MY_4_CHAR>-use1`. 
 * Select **Create security group**.
 * Verify the succesfuly creation of the security group.
 
 
-##### Additional resources
+#### Additional resources
 Here are some helpful links in Yugabyte documentation related to Security Groups:
 - [https://docs.yugabyte.com/latest/reference/configuration/default-ports/#root](https://docs.yugabyte.com/latest/reference/configuration/default-ports/#root)
 - [https://docs.yugabyte.com/latest/yugabyte-platform/install-yugabyte-platform/prepare-environment/aws/#create-a-new-security-group-optional](https://docs.yugabyte.com/latest/reference/configuration/default-ports/#root)
@@ -324,7 +324,61 @@ Here are some helpful links in Yugabyte documentation related to Security Groups
 
 
 
-TODO: Create Key pair
+### Create your Key Pair for your EC2 instances
+A key pair, consisting of a private key and a public key, is a set of security credentials that you use to prove your identity when connecting to an EC2 instance. A key pair results in a private key file format, either a `.pem` or `.ppk` file.  A `.pem` file is for Bash shell. A `.ppk` file is for [PuTTY](https://www.putty.org/). 
 
-TODO: * Optional: Depending on your region, add at least one more subnet by selecting **Add new subnet** and specify the subnet properties. 
-* Select **Create subnet**.
+> Security Notice: You need your private key file to secure shell (SSH) into a EC2 instance. Obviously, you need to keep your private key file secure. Only share it internally using Keybase (not Slack, GDrive, or email).  
+
+In AWS, you can copy a key pair from one region to another region. For this reason, the steps here detail how to create and name a global key pair file for AWS Cloud to be used acrossed regions.
+* In the global navigation bar, search for EC2, and then select **Services** → **EC2**.
+* In the left sidebar, in Network & Security, select **Key Pairs**.
+* In **Key pairs**, select **Create key pair**.
+* In **Create key pair**, specify the following properties:
+
+| Property | Value |
+|:-|:-|
+| Name | Specify the name of your key pair using the recommended naming convention, for example, `kp-<MY_4_CHAR>-aws`. Replace `<MY_4_CHAR>` with the first four characters of your @yugabyte.com email address. |
+| Key pair type | Select RSA |
+| Private key file format | Select`.pem`.  Using PuTTYGen with Pageant in Windows, you can convert a `.pem` key into a `.ppk` file. |
+
+* Select **Create key pair**.
+* Verify that your browser successfully downloaded your `.pem` file.
+* Filter the list view using your key pair name and verify the result.
+
+
+#### Move your private key file to a hidden ssh directory
+You'll now move your `.pem` file to a hidden `.ssh` directory and change the file permissions. Here are the steps:
+
+* Open Terminal or similar such as [iTerm2](https://iterm2.com/).
+* From your user path (default), create a hidden `.ssh` directory, and confirm that it exists.
+* Change the file permissions for you `.pem` file in your browser download directory.
+* Copy the `.pem` to you `.ssh` directory.
+* In the following example, replace `<MY_4_CHAR>` with the first four characters of your @yugabyte.com email address.
+
+```bash
+MY_4_CHAR = '<MY_4_CHAR>'
+echo $MY_4_CHAR
+cd
+mkdir .ssh
+ls -a | grep .ssh
+chmod 400 ~/Downloads/kp-${MY_4_CHAR}-aws.pem
+mv ~/Downloads/kp-${MY_4_CHAR}-aws.pem ~/.ssh/kp-${MY_4_CHAR}-aws.pem
+cat ~/.ssh/kp-${MY_4_CHAR}-aws.pem
+```
+
+
+## All done!
+You did it! You created the following AWS cloud infrastructure resources and objects required to deploy Yugabyte Platform and a Yugabyte Universe in a given AWS region:
+- VPC
+- Routing table
+- Subnet
+- Internet gateway
+- Security group
+- Key Pair
+
+You are now ready to create your EC2 instance for Yugabyte Platform.
+
+In other labs, you'll be asked to create resources in additional AWS regions. If you get stuck, remember to refer back to his lab.
+
+
+
