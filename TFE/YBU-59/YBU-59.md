@@ -14,7 +14,7 @@ In this hands-on lab, you'll create the following AWS cloud infrastructure resou
 
 
 ### Lab requirements
-For this lab, you'll need a user account that is associated with the ATS presales AWS account. Connect with IT Support (#it-support Slack channel). The IT Support team will provide access to this AWS account using Okta.
+For this lab, you'll need a user account that is associated with the ATS pre-sales AWS account. Connect with IT Support (#it-support Slack channel). The IT Support team will provide access to this AWS account using Okta.
 
 
 
@@ -23,8 +23,8 @@ An object or resource in AWS Cloud has one or more **Tags**. A **Tag** is a key-
 
 The Name tag helps you identify the resources and objects that you create. As a matter of practice, always specify a value for the **Name** tag using a recommended naming convention. The recommended naming convention in this lab encapsulates the object type, you as a the creator, and the region and/or availability zone where the resource or object exists.
 
-### Why name resoureces?
-You are responsible for termnating and deleting your cloud resources. Therefore, you need to be able to easily identify the resourecs and objects that you create. Using the recommended naming convention, you will easily be able to identify what is yours among possibly hundreds of objects in the AWS account.  
+### Why name resources?
+You are responsible for terminating and deleting your cloud resources. Therefore, you need to be able to easily identify the resources and objects that you create. Using the recommended naming convention, you will easily be able to identify what is yours among possibly hundreds of objects in the AWS account.  
 
 > **Warning:** To avoid accidentally terminating or deleting the incorrect resources, please embrace the practice of using a recommended naming conventions.  Don't be the new team member that deletes the resources for a live POC !!! 
 
@@ -41,7 +41,7 @@ The recommended naming convention consists of several elements or parts, in this
 The following sections will start with a personal identifier. An object or resource name is typically a composite of all elements or parts.
 
 #### Personal identifier abbreviation
-For your personal indentifier, you'll use the first 4 letters of your Yugabyte email address. If your email is less than four characters, you can add additional letters, A to Z. Here are some examples:
+For your personal identifier, you'll use the first 4 letters of your Yugabyte email address. If your email is less than four characters, you can add additional letters, A to Z. Here are some examples:
 
 | Email | Personal identifier abbreviation |
 |:-|:-|
@@ -51,7 +51,7 @@ For your personal indentifier, you'll use the first 4 letters of your Yugabyte e
 
 
 #### Region abbreviation
-Using an abbreviation for a region name will help you quickly identify a resource or object in a given region. Quick identification minmizes costly mistakes. Here are examples of region abbreviations for AWS:
+Using an abbreviation for a region name will help you quickly identify a resource or object in a given region. Quick identification minimizes costly mistakes. Here are examples of region abbreviations for AWS:
 
 | Region | Region abbreviation | 
 |:-|:-|
@@ -65,8 +65,8 @@ Using an abbreviation for a region name will help you quickly identify a resourc
 
 
 
-#### Availablity zone abbreviation
-An availablity zone (AZ) represents an data center in a given region. There is often two or more avialablity zones in a given region. Here are some examples of availablity zone abbreviations:
+#### Availability zone abbreviation
+An availability zone (AZ) represents an data center in a given region. There is often two or more availability zones in a given region. Here are some examples of availability zone abbreviations:
 
 | Availability zone | AZ short name | Region + AZ short name |
 |:-|:-|:--|
@@ -80,7 +80,7 @@ An availablity zone (AZ) represents an data center in a given region. There is o
 
 
 #### Resource and object prefix and abbreviations
-In most cases, you can use a prefix for the object identifier, with Security Group names being one of the exceptions. As such, resource and object tag names are composite names that include your personal identifier, region, and when appblicable, an availability zone. Here are some examples:
+In most cases, you can use a prefix for the object identifier, with Security Group names being one of the exceptions. As such, resource and object tag names are composite names that include your personal identifier, region, and when applicable, an availability zone. Here are some examples:
 
 
 | Resource / Object | Prefix  | Example Name |  Description | 
@@ -92,9 +92,9 @@ In most cases, you can use a prefix for the object identifier, with Security Gro
 | NAT Gateway | nat | `nat-SLUE-use1` | A highly available, managed Network Address Translation (NAT) service that instances in private subnets can use to connect to services in other VPCs, on-premises networks, or the internet. [Info](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html) | 
 | Peering connection | pcx | `pcx-SLUE-use1` | A VPC peering connection is a networking connection between two VPCs that enables you to route traffic between them privately. [Info](https://docs.aws.amazon.com/en_us/console/vpc/peering/create) | 
 | Network ACLs | acl | `acl-SLUE-use1` | A network ACL is an optional layer of security that acts as a firewall for controlling traffic in and out of a subnet. [Info](https://docs.aws.amazon.com/en_us/console/vpc/network-acls#CreateACL) | 
-| Security Group | sg | `SLUE-sg-use1` | A security group acts as a virtual firewall for your instance to control inbound and outbound traffic. It is specific to a region. You can not use **sg** as a prefix, so use your personal identifer as the prefix and then **sg**. [Info](https://docs.aws.amazon.com/en_us/console/ec2/security-groups) | 
+| Security Group | sg | `SLUE-sg-use1` | A security group acts as a virtual firewall for your instance to control inbound and outbound traffic. It is specific to a region. You can not use **sg** as a prefix, so use your personal identifier as the prefix and then **sg**. [Info](https://docs.aws.amazon.com/en_us/console/ec2/security-groups) | 
 | Key Pair | kp | `kp-SLUE-aws` | A key pair, consisting of a private key and a public key, is a set of security credentials that you use to prove your identity when connecting to an EC2 instance. A key pair results in a private key file format, either a `.pem` or `.ppk` file. You need this file to secure shell (SSH) into a EC2 instance. You need to keep this private key file secure. Only share it internally using Keybase (not Slack, GDrive, or email).  In AWS, you can copy a key pair from one region to another region. For this reason, the example shows the cloud provider name, `aws`, rather than a regional identifier. | 
-| EC2| ec2 | `ec2-SLUE-use1-1a-az4-platform` | With EC2, you can create  virtual machines, or instances, that run on the AWS Cloud. This example includes ther region, the zone, and the purpose of the ec2 instances, for example `platform`.|
+| EC2| ec2 | `ec2-SLUE-use1-1a-az4-platform` | With EC2, you can create  virtual machines, or instances, that run on the AWS Cloud. This example includes the region, the zone, and the purpose of the ec2 instances, for example `platform`.|
 
 
 #### Naming summary
@@ -119,14 +119,14 @@ In this lab, you will create and edit various resources and objects required in 
 To sign in using SSO and Okta, follow these steps:
 * In Google Chrome, open [Yugabyte Okta Applications](https://yugabyte.okta.com/app/UserHome).
 * Select **AWS SSO**.
-* In the Single Sign-On AWS App, select **AWS Account → yugabyte-ats-presales → Managament console**.
+* In the Single Sign-On AWS App, select **AWS Account → yugabyte-ats-presales → Management console**.
 
 
 ### Create your VPC for the us-east-1 region
 After signing in, you can start creating your resources. The first resource that you will create is your Virtual Private Cloud (VPC). A VPC is an isolated portion of the AWS Cloud populated by your AWS objects, such as Amazon EC2 instances. 
 
 Here are the steps to create your VPC:
-* In the AWS Console, in the global navigation bar, in the Region drop down list, select **US East (N. Virgina) us-east-1**.
+* In the AWS Console, in the global navigation bar, in the Region drop down list, select **US East (N. Virginia) us-east-1**.
 * In the global navigation bar, search for VPC, and then select **Services** → **VPC**.
 * Next, select the **VPCs** card.
 * In **Your VPCs**, select **Create VPC**.
@@ -150,7 +150,7 @@ Subnets are typically private, so use a private range. Here are some examples:
 | Class C | `192.168.0.0 – 192.168.255.255` |
 
 
-Your VPC IPv4 CIDR block must be able to accomadate one or more subnets within the range without create conflicts for the subnet ranges.  Here is an example of a VPC IPv4 Class B private range with non-conflicting ranges for three subnets:
+Your VPC IPv4 CIDR block must be able to accommodate one or more subnets within the range without create conflicts for the subnet ranges.  Here is an example of a VPC IPv4 Class B private range with non-conflicting ranges for three subnets:
 
 | Type | IPv4 CIDR | 
 |:- |:-|
@@ -188,8 +188,8 @@ Your VPC IPv4 CIDR block must be able to accomadate one or more subnets within t
 | Property | Value |
 |:-|:-|
 | VPC - VPC ID | In the drop down list, select your VPC. |
-| Subnet settings - Subnet name |  Specify the name of your subnet using the recommended naming convention for the region and availablity zone, for example, `sb-<MY_4_CHAR>-use1-1a-az4`. Replace `<MY_4_CHAR>` with the first four characters of your @yugabyte.com email address. |
-| Subnet settings - Avaiablity zone | Select the availablity zone for the subnet. Make sure your Subnet name encodes this selection, for example, `sb-<MY_4_CHAR>-use1-1f-az5`. Replace `<MY_4_CHAR>` with the first four characters of your @yugabyte.com email address. |
+| Subnet settings - Subnet name |  Specify the name of your subnet using the recommended naming convention for the region and availability zone, for example, `sb-<MY_4_CHAR>-use1-1a-az4`. Replace `<MY_4_CHAR>` with the first four characters of your @yugabyte.com email address. |
+| Subnet settings - Availability zone | Select the availability zone for the subnet. Make sure your Subnet name encodes this selection, for example, `sb-<MY_4_CHAR>-use1-1f-az5`. Replace `<MY_4_CHAR>` with the first four characters of your @yugabyte.com email address. |
 | Subnet settings -IPv4 CIDR blockInfo | Specify the IPv4 CIDR block for the subnet so that is does not conflict with any other subnets| 
 
  Here is an example of a VPC IPv4 Class B private range with non-conflicting subnets:
@@ -205,7 +205,7 @@ Your VPC IPv4 CIDR block must be able to accomadate one or more subnets within t
 ### Define VPC route table properties
 A route table specifies how packets are forwarded between the subnets within your VPC, the internet, and your VPN connection. When you created your VPC, AWS automatically creates a main route table for your VPC. You need to give this main route table a name and also explicitly associate your subnet or subnets with it.
 
-Here are the steps to edit the properties of the exisitng route table:
+Here are the steps to edit the properties of the existing route table:
 
 * In the left sidebar, in Virtual Private Cloud, select **Your VPCs**.
 * In Filter VPCs, enter the name of your VPC, e.g., `vpc-SLUE-use1`.
@@ -250,7 +250,7 @@ An internet gateway is a virtual router that connects your VPC to the internet. 
 * Select your route table in the list view.
 * In the tab view, first select the **Routes** tab an then select **Edit routes**.
 * In Edit routes, select **Add route**.
-* In the new row, specifc the following column values:
+* In the new row, specific the following column values:
 
 | Column | Value | Comment | 
 |:-|:-|:-|
@@ -276,12 +276,12 @@ When you created your subnet, AWS created a Network ACL (Access Control List) fo
 ### Create a Security Group
 A security group acts as a virtual firewall for your instance to control inbound and outbound traffic. It is specific to a region and consists of various rules for allowed traffic over certain internet protocols and ports.
 
-> Note: You can not use **sg** as a prefix for the security group name, so use your personal identifer as the prefix and then **sg**. You can, however, use **sg** as a prefix for the object name.
+> Note: You can not use **sg** as a prefix for the security group name, so use your personal identifier as the prefix and then **sg**. You can, however, use **sg** as a prefix for the object name.
 
 Here are the steps to create your security group for your VPC:
 * In the left sidebar, in Security, select **Security Groups**.
 * In **Security Groups**, select **Create security group**.
-* In **Create security group**, in Basic details, specifc the following properties:
+* In **Create security group**, in Basic details, specific the following properties:
 
 
 | Property | Value |
@@ -299,12 +299,12 @@ Here are the steps to create your security group for your VPC:
 | Custom      | TCP  | 5433  | Anywhere IpV4 | `0.0.0.0/0 ` | API endpoint YSQL |
 | Custom TCP  | TCP  | 9042  | Anywhere IpV4 | `0.0.0.0/0 ` | API endpoint YCQL |
 | Custom TCP  | TCP  | 7000  | Anywhere IpV4 | `0.0.0.0/0 ` | Web YB-Master Admin |
-| Custom TCP  | TCP  | 7100  | Custom | Your VPC IPv4 CIDR Block  |  Internodal RPC YB-Master |
+| Custom TCP  | TCP  | 7100  | Custom | Your VPC IPv4 CIDR Block  |  Inter-nodal RPC YB-Master |
 | Custom TCP  | TCP  | 8080  | Anywhere IpV4 | `0.0.0.0/0 ` |  Web YB Platform Http Alternate |
 | Custom TCP  | TCP  | 8800  | Anywhere IpV4 | `0.0.0.0/0 ` |  Web Replicated for Platform
 | Custom TCP  | TCP  | 9000  | Anywhere IpV4 | `0.0.0.0/0 ` |  Web YB-TServer Admin
 | Custom TCP  | TCP  | 9090  | Anywhere IpV4 | `0.0.0.0/0 ` |  Web Prometheus
-| Custom TCP  | TCP  | 9100  | Custom | Your VPC IPv4 CIDR Block  |  Internodal RPC YB-TServer |
+| Custom TCP  | TCP  | 9100  | Custom | Your VPC IPv4 CIDR Block  |  Inter-nodal RPC YB-TServer |
 | Custom TCP  | TCP  | 9300  | Anywhere IpV4 | `0.0.0.0/0 ` |   Prometheus Node targets |
 | Custom TCP  | TCP	 | 12000 | Custom | Your VPC IPv4 CIDR Block  |    YB-TServer API YCQL |
 | Custom TCP  | TCP	 | 13000 | Custom | Your VPC IPv4 CIDR Block  |   YB-TServer API YSQL|
@@ -314,7 +314,7 @@ Here are the steps to create your security group for your VPC:
 * In Tags - optional, select Add new tag. 
 * In the Tag row, enter `Name` for the key, and for the value, specify the name of the resource, such as `sg-<MY_4_CHAR>-use1`. 
 * Select **Create security group**.
-* Verify the succesfuly creation of the security group.
+* Verify the successfully creation of the security group.
 
 
 #### Additional resources
@@ -330,7 +330,7 @@ A key pair, consisting of a private key and a public key, is a set of security c
 
 > Security Notice: You need your private key file to secure shell (SSH) into a EC2 instance. Obviously, you need to keep your private key file secure. Only share it internally using Keybase (not Slack, GDrive, or email).  
 
-In AWS, you can copy a key pair from one region to another region. For this reason, the steps here detail how to create and name a global key pair file for AWS Cloud to be used acrossed regions.
+In AWS, you can copy a key pair from one region to another region. For this reason, the steps here detail how to create and name a global key pair file for AWS Cloud that you can use across regions.
 * In the global navigation bar, search for EC2, and then select **Services** → **EC2**.
 * In the left sidebar, in Network & Security, select **Key Pairs**.
 * In **Key pairs**, select **Create key pair**.
@@ -371,7 +371,7 @@ cat ~/.ssh/kp-${MY_4_CHAR}-aws.pem
 ### Create an AWS User for AWS Secrets
 In AWS, create an IAM user to generate an AWS access key ID and secret access key.
 
-> Security Notice: You need your AWS Secrets for programmtic access to kept secure. Do not share these credential outside of Yugabyte. Only share these secrets internally using Keybase (not Slack, GDrive, or email).  
+> Security Notice: You need your AWS Secrets for programmatic access to kept secure. Do not share these credential outside of Yugabyte. Only share these secrets internally using Keybase (not Slack, GDrive, or email).  
 
 
 Here are the stesp to create a user with AWS secrets: 
