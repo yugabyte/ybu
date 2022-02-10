@@ -35,18 +35,18 @@ The recommended naming convention consists of several elements or parts, in this
 * an object or resource abbreviation and prefix
 * a personal identifier
 * a region abbreviation
-* an availablity zone abbreviation, when applicable
+* an availability zone abbreviation, when applicable
 
-The following sections will start with a personal identifer. An object or resource name is typically a composite of all elements or parts.
+The following sections will start with a personal identifier. An object or resource name is typically a composite of all elements or parts.
 
 ##### Personal identifier abbreviation
-For your personal indentifier, you'll use the first 4 letters of your Yugabyte email address. If your email is less than four characters, you can add additional letters, A to Z. Here are some examples:
+For your personal identifier, you'll use the first 4 letters of your Yugabyte email address. If your email is less than four characters, you can add additional letters, A to Z. Here are some examples:
 
-| Email | Personal indentifier|
+| Email | Personal identifier|
 |:-|:-|
 | sluersen@yugabyte.com | SLUE |
 | mkim@yugabyte.com | MKIM |
-| rao@yygabyte.com | RAOZ |
+| rao@yugabyte.com | RAOZ |
 
 
 ##### Region abbreviation
