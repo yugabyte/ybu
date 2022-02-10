@@ -20,16 +20,16 @@ Most importantly, you need a user account that is associated with  the ATS presa
 ### About AWS resources, the Name tag, and the recommended naming convention
 An object or resource in AWS Cloud has one or more **Tags**. A **Tag** is a key-value pair. Most objects have a default tag, the **Name** tag. The key is `Name`. You specify the value for this key.
 
-The Name tage helps you dentify the resources and objects that you create. As a matter of practice, always specify a value for the **Name** tag using a recommended naming convention. The recommended naming convention in this lab encapsulates the object type, you as a the creator, and the region and/or availablity zone where the resource or object exists.
+The Name tag helps you identify the resources and objects that you create. As a matter of practice, always specify a value for the **Name** tag using a recommended naming convention. The recommended naming convention in this lab encapsulates the object type, you as a the creator, and the region and/or availability zone where the resource or object exists.
 
 #### Why?
-You are responsible for termnating and deleting your cloud resources. Therefore, you need to be able to easily identify the resourecs and objects that you create. Using the recommended naming convention, you will easily be able to identify what is yours among possibly hundreds of objects in the AWS account.  
+You are responsible for terminating and deleting your cloud resources. Therefore, you need to be able to easily identify the resources and objects that you create. Using the recommended naming convention, you will easily be able to identify what is yours among possibly hundreds of objects in the AWS account.  
 
-> Warning: To avoid accidentally terminating or deleting the incorrect resources, please embrace the practice of using a recommended naming conventions.  Don't be the new team member that deletes the resources for a live POC !!! 
+> **Warning:** To avoid accidentally terminating or deleting the incorrect resources, please embrace the practice of using a recommended naming conventions.  Don't be the new team member that deletes the resources for a live POC !!! 
 
 
 #### Recommended naming convention
-Since you'll need to identifiy and later terminate or delete the resources and objects that your create in AWS, you must employ a standardized naming convention for all your resources and objects that you create. 
+Since you'll need to identify and later terminate or delete the resources and objects that your create in AWS, you must employ a standardized naming convention for all your resources and objects that you create. 
 
 The recommended naming convention consists of several elements or parts, in this order, when applicable:
 * an object or resource abbreviation and prefix
@@ -50,9 +50,9 @@ For your personal identifier, you'll use the first 4 letters of your Yugabyte em
 
 
 ##### Region abbreviation
-Using an abbreviation for a region name will help you quickly identify a resource or object in a given region. Quick identification minmizes costly mistakes. Here are examples of region abbreviations for AWS:
+Using an abbreviation for a region name will help you quickly identify a resource or object in a given region. Quick identification minimizes costly mistakes. Here are examples of region abbreviations for AWS:
 
-| Region | Region a | 
+| Region | Region abbreviation | 
 |:-|:-|
 | US East (N. Virginia) us-east-1 | use1 |
 | US East (Ohio) us-east-2 | use2 |
@@ -64,8 +64,8 @@ Using an abbreviation for a region name will help you quickly identify a resourc
 
 
 
-##### Availablity zone abbreviation
-An availablity zone (AZ) represents an data center in a given region. There is often two or more avialablity zones in a given region. Here are some examples of availablity zone abbreviations:
+##### Availability zone abbreviation
+An availability zone (AZ) represents an data center in a given region. There is often two or more availability zones in a given region. Here are some examples of availability zone abbreviations:
 
 | Availability zone | AZ short name | Region + AZ short name |
 |:-|:-|:--|
