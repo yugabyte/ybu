@@ -117,7 +117,7 @@ Fill out the preceding form with the following values:
 
 | Property Name       | Property Value                             |
 | ------------------- | ------------------------------------------ |
-| Configuration Name  | ybu-storage-backup-us-west-2               |
+| Configuration Name  | s3-storage-backup-use1               |
 | IAM Role            | Disabled                                   |
 | Access Key          | \<my-access-key>                           |
 | Access Secret       | \<my-access-secret>                        |
