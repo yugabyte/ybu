@@ -6,8 +6,8 @@
 		}
 		
 		blockquote {
-			margin: 0 7px 0 5px;
-			padding: 0 16px 0 10px;
+			margin: 15px 0;
+			padding: 15px 0;
 		}
 		
 		blockquote p {
@@ -32,9 +32,8 @@
 			color: white;
 			font-weight: bold;
 			font-family: "Courier New", monospace;
-			width: auto;
-			height: auto;
-			padding: 0 10px;
+			width: 50%;
+			padding: 10px;
 		}
 
 	</style>
@@ -53,9 +52,9 @@
 
 	<p>As an engineer, I want to install Yugabyte Platform on AWS to demonstrate how to deploy a three node cluster in a multi-zone topology.</p>
 
-	<h2 id="prerequisites">Prerequisites</h2>
+	<h2 id="requirements">Requirements</h2>
 
-	<p>Before creating a universe, the cloud provider environment must first be configured according to the specifications found in a previous Yugabyte Technical Field enablement lab. This is to secure the database as well as create access points in the VPC to allow YugabyteDB to connect and communicate with the different nodes in the cluster.</p>
+	<p>Before creating a universe, the cloud provider environment must first be configured according to the specifications found in a previous Yugabyte Technical Field enablement lab, ybu-58. In this hands-on lab, the VPC, Security Group, Subnets, CIDR blocks, Internet Gateway, and more have been configured so we will not review that in this lab. This is to secure the database as well as create access points in the VPC to allow YugabyteDB to connect and communicate with the different nodes in the cluster.</p>
 
 	<blockquote>
 
@@ -121,7 +120,7 @@
 			</tr>
 			<tr>
 				<td>Region</td>
-				<td>us-west-2</td>
+				<td>us-east-1</td>
 			</tr>
 			<tr>
 				<td>Disk Storage</td>
@@ -129,7 +128,7 @@
 			</tr>
 			<tr>
 				<td>Network</td>
-				<td>vpc-(Prerequisite-YBU-59)</td>
+				<td>vpc-&lt;MY_4_CHAR&gt;-use1</td>
 			</tr>
 			<tr>
 				<td>Auto-assign Public IP</td>
@@ -141,11 +140,11 @@
 			</tr>
 			<tr>
 				<td>Security Group</td>
-				<td>(Prerequisite-YBU-59)</td>
+				<td>sg-&lt;MY_4_CHAR&gt;-use1</td>
 			</tr>
 			<tr>
 				<td>Tags</td>
-				<td>Name: ec2-&lt;my-first-four-letters-of-email-address&gt;-use1-1a-az4-platform</td>
+				<td>Name: ec2-&lt;MY_4_CHAR&gt;-use1-1a-az4-platform</td>
 			</tr>
 			<tr>
 				<td>Example</td>
@@ -157,7 +156,7 @@
 			</tr>
 			<tr>
 				<td>Security Key Pair</td>
-				<td>ybu-yugaware | RSA - download from course player</td>
+				<td>kp-&lt;MY_4_CHAR&gt;-use1 | RSA</td>
 			</tr>
 		</tbody>
 	</table>
@@ -167,6 +166,8 @@
 	<p><img src="https://files.cdn.thinkific.com/file_uploads/540012/images/9b5/632/356/60-ec2-ami_1600x700.png" style="width: auto; max-width: 100%; height: auto; margin: 5px auto 5px 0px; text-align: left;" class="fr-fic fr-dib fr-fil" srcset="https://files.cdn.thinkific.com/file_uploads/540012/images/9b5/632/356/60-ec2-ami_1600x700.png?width=1920 1x, https://files.cdn.thinkific.com/file_uploads/540012/images/9b5/632/356/60-ec2-ami_1600x700.png?width=1920&dpr=2 2x, https://files.cdn.thinkific.com/file_uploads/540012/images/9b5/632/356/60-ec2-ami_1600x700.png?width=1920&dpr=3 3x"></p>
 
 	<p>As stated previously, the specifics for the VPC and the naming conventions are located in a previous lab. In this lab, you will use the EC2 instance type, <code class="code-highlight">c5.4xlarge</code>, in order to demo production level workloads. The specifications of this instance type allow for the necessary processing power, 16 cores with 32GiB RAM, that are necessary to demonstrate Yugabyte Platform effectively when running production workloads.</p>
+
+	<p>You will create a personal Security Key Pair which should be stored locally on your machine in the ~/.ssh folder for easy access. You will need this security key pair to install Yugabyte Platform.</p>
 
 	<p>The centOS AMI can be found in the AWS Marketplace.</p>
 
@@ -430,7 +431,7 @@
 			</tr>
 			<tr>
 				<td>Add region</td>
-				<td>us-west-2</td>
+				<td>us-east-1</td>
 			</tr>
 		</tbody>
 	</table>
@@ -471,7 +472,7 @@
 		<tbody>
 			<tr>
 				<td>Name</td>
-				<td>&lt;first four letters in you email address&gt;-ybu-platform-us-west-2</td>
+				<td>ec2-&lt;MY_4_CHAR&gt;-use1-1a-az4-platform</td>
 			</tr>
 			<tr>
 				<td>Provider</td>
@@ -479,7 +480,7 @@
 			</tr>
 			<tr>
 				<td>Regions</td>
-				<td>US West (Oregon)</td>
+				<td>US East (Virginia)</td>
 			</tr>
 			<tr>
 				<td>Nodes</td>
@@ -540,14 +541,18 @@
 
 	<blockquote>
 
-		<p><strong>Important:</strong> Password authorization has been disabled for the databases and encryption to the Nodes for demonstration purposes only to facilitate easy access to the databases to demo workloads and benchmarking. It is not recommended for production. In order to enable in-transit encryption and database password authorization, toggle these values on. Note that the default database user is <code class="code-highlight">yugabyte</code> when accessing the databases with the password.</p>
+		<p><strong>Important:</strong> Password authorization has been disabled for the databases and encryption to the Nodes for demonstration purposes only to facilitate easy access to the databases to demo workloads and benchmarking. It is not recommended for production, but for demo purposes only. In order to enable in-transit encryption and database password authorization, toggle these values on. Note that the default database user is <code class="code-highlight">yugabyte</code> when accessing the databases with the password.</p>
 	</blockquote>
 
 	<p>Once the process has begun, a progress bar will update the current status of the universe being created. After several minutes, the process will complete and the status will update to &quot;Ready&quot;. If this hasn&#39;t occurred after a prolonged amount of time, refresh the page to update the state of the universe. The following image verifies that the universe has been successfully deployed to AWS:</p>
 
 	<p><img src="https://files.cdn.thinkific.com/file_uploads/540012/images/bfb/f78/ea1/800-deployed_universe_1600x700.png" style="width: auto; max-width: 100%; height: auto; margin: 5px auto 5px 0px; text-align: left;" class="fr-fic fr-dib fr-fil" srcset="https://files.cdn.thinkific.com/file_uploads/540012/images/bfb/f78/ea1/800-deployed_universe_1600x700.png?width=1920 1x, https://files.cdn.thinkific.com/file_uploads/540012/images/bfb/f78/ea1/800-deployed_universe_1600x700.png?width=1920&dpr=2 2x, https://files.cdn.thinkific.com/file_uploads/540012/images/bfb/f78/ea1/800-deployed_universe_1600x700.png?width=1920&dpr=3 3x"></p>
 
-	<h2 id="next-steps">Next Steps</h2>
+	<h2 id="reflection">Reflection</h2>
 
-	<p>To find out how to run a workload on this universe, review lab YBU-58 for more details.</p>
+	<p>In this lab, you went through a series of steps to deploy a multi-zone Yugabyte Universe using Platform. This involved launching an EC2 instance using a preconfigured VPC. Then installing the Yugabyte Platform Management console to deploy a universe.</p>
+		
+	<p>So you deployed universe, now what? 
+	Now, you can run a workload and gain experience with the metrics tools as shown in the following lab, ybu-59.
+	</p>
 </div>
