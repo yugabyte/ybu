@@ -1,0 +1,143 @@
+<style>
+	td,
+	tr {
+		padding: 8px;
+	}
+
+	blockquote {
+		margin: 0 7px 0 5px;
+		padding: 0 16px 0 10px;
+	}
+
+	blockquote p {
+		box-shadow: 2px 2px 10px grey;
+		padding-left: 4px;
+		padding: 10px 4px;
+	}
+
+	img {
+		border: 1px solid black;
+	}
+
+	.code-highlight2 {
+		font-family: 'Courier New', monospace;
+		font-size: 16px;
+		padding-left: 4px;
+		color: rgb(217, 0, 0);
+	}
+
+	.bash {
+		background: black;
+		color: white;
+		font-weight: bold;
+		font-family: 'Courier New', monospace;
+		width: auto;
+		height: auto;
+		padding: 0 10px;
+	}
+</style>
+<h1 id="run-a-workload-on-a-multi-node-universe">Run a Workload on a Multi-node Universe</h1>
+<h2 id="introduction">Introduction</h2>
+<p>In this hands-on lab, you will run a PostgreSQL workload on a multi-node Yugabyte Universe. In this example, you will
+	use a three node cluster in a multi-zone topology that was set up in a previous lab. Each node will reside in the
+	same region, but in a different availability zone. The purpose is to validate the Yugabyte Universe is functioning
+	properly as well as examine the metric tools on the Yugabyte Platform.</p>
+<h3 id="objective">Objective</h3>
+<p>As a sales engineer, I want to run a workload on Yugabyte three node Universe on Yugabyte Platform to verify the
+	Universe is functioning properly and to examine the metrics tools on Yugabyte Platform.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+	<li>
+		<p>Verify the Universe is running.</p>
+	</li>
+	<li>
+		<p>Yugabyte Platform credentials.</p>
+	</li>
+	<li>
+		<p>The <code class=”code-highlight2”>.pem</code> key file to connect the Platform server.</p>
+	</li>
+</ul>
+<h2 id="verify-the-universe-is-operational">Verify the Universe is Operational</h2>
+<p>Verify that the Universe is running by navigating to the Yugabyte Platform Console and selecting the Universe that
+	will be running the sample workload. You can get to the Yugabyte Platform Console from the browser by navigating to
+	the public IP of the <a
+		href="https://us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#Instances:instanceState=running">EC2
+		instance</a> that hosts Yugabyte Platform management console.</p>
+<p>On the Yugabyte Platform, sign in with your credentials to be taken to the Universes dashboard page as shown in the
+	following image:</p>
+<p><img src="file:///Users/markkim/Documents/YBU_repos/YBU_public/TFE/YBU-58/assets/images/60-universe_dashboard_1600x700.png"
+		alt="Description of this action."></p>
+<p>Select the Universe that will be running the workload. This will take you to the Universe details page as shown in
+	the following image:</p>
+<p><img src="file:///Users/markkim/Documents/YBU_repos/YBU_public/TFE/YBU-58/assets/images/70-universe_details_1600x700.png"
+		alt="Description of this action."></p>
+<p>There will be a green &quot;Ready&quot; displayed next to the Universe name at the top of the page if it is
+	operational. Also verify that the Primary Cluster has 3 nodes whose status is &quot;Live&quot; by selecting the
+	&quot;Nodes&quot; tab.</p>
+<h3 id="retrieve-the-workload-script">Retrieve the Workload Script</h3>
+<p>In the upper right corner of the page underneath the profile icon on the Universes details page is the
+	&quot;Actions&quot; button. Selecting this will open a drop down menu.</p>
+<p>Select the &quot;Run Sample Apps&quot; option.</p>
+<p>This opens the following dialog box:</p>
+<p><img src="file:///Users/markkim/Documents/YBU_repos/YBU_public/TFE/YBU-58/assets/images/100-workload_ysql_1366x768.png"
+		alt="The docker command to run the SqlInserts application."></p>
+<ul>
+	<li>
+		<p>Select the YSQL option(default view).</p>
+	</li>
+	<li>
+		<p>Copy and make a note of this script to execute later in the CLI, once you SSH into the EC2 instance that
+			contains Yugabyte Platform.</p>
+	</li>
+</ul>
+<blockquote>
+	<p><strong>Important:</strong> In order for the script to run, <code class=”code-highlight2”>sudo</code> must be prefixed to the proceeding
+		command.</p>
+</blockquote>
+<h2 id="run-a-ysql-workload">Run a YSQL Workload</h2>
+<p>In the last step, you verified that the Universe is up and running and retrieved the YSQL script that will run the
+	workload. In this step, you will connect to the EC2 instance to run a sample workload on the nodes of the deployed
+	Universe.</p>
+<h3 id="connect-to-the-platform-server">Connect to the Platform Server</h3>
+<p>SSH into the EC2 instance that hosts Yugabyte Platform using the EC2's public IPv4. For details on this <a
+		href="https://us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#ConnectToInstance:instanceId=i-0fd7ae16524e527a1">review
+		the AWS documentation</a>.</p>
+<blockquote>
+	<p><strong>Important:</strong> In order to connect to the Platform server, you will need the <code class=”code-highlight2”>.pem</code> key
+		that was downloaded when the EC2 instance was launched.</p>
+</blockquote>
+<p>Once connected to the EC2 instance in the CLI, execute the following YSQL script saved from the last step:</p>
+<div class="highlight"><pre><code class="language-bash">sudo docker run -d yugabytedb/yb-sample-apps --workload SqlInserts --nodes &lt;my-node-ip&gt;:5433,&lt;my-node-ip&gt;:5433,&lt;my-node-ip&gt;:5433
+</div></code></pre>
+<blockquote>
+	<p><strong>Important:</strong> In order to run the proceeding workload script on a Universe that has a password
+		authenticated YSQL database or TLS encryption in transit, it is necessary to add the user, password, and path of
+		the locally stored <code class=”code-highlight2”>.crt</code> and <code class=”code-highlight2”>.key</code> files. By default the user is <code class=”code-highlight2”>yugabyte</code>.
+		For more details for <a
+			href="https://docs.yugabyte.com/latest/yugabyte-platform/security/enable-encryption-in-transit/">TLS
+			encryption in transit, review the Yugabyte official docs.</a></p>
+</blockquote>
+<p>The prompt in the CLI will change to reflect the user <code class=”code-highlight2”>centos</code>, if the connection was established.</p>
+<p>The proceeding script will run a docker container in the background on each of the three nodes, evidenced by their
+	unique IP addresses on port 5433 in the <code class=”code-highlight2”>--nodes</code> flag.</p>
+<p>This will run the workload <code class=”code-highlight2”>SqlInserts</code>. This is a sample key-value app built on PostgreSQL with
+	concurrent readers and writers. The app inserts unique string keys into the table <code class=”code-highlight2”>postgresqlkeyvalue</code>.
+</p>
+<p>There are a total of 21 sample workloads that can be run from the <code class=”code-highlight2”>yugabytedb/yb-sample-apps</code> docker
+	image. For a full description, visit the <a href="https://github.com/yugabyte/yb-sample-apps">GitHub repo for
+		yb-sample-apps</a>. Note that in addition to PostgreSQL; Cassandra and Redis workloads are also available.</p>
+<h3 id="verify-workload-is-running-in-the-universe">Verify Workload is Running in the Universe</h3>
+<p>In the last step, you ran a YSQL workload on our Yugabyte Universe. In this step, you will verify the workload is
+	running and review the metrics tools.</p>
+<p>Navigate back to the Yugabyte Platform Console and select the Universe that contains the workload. On the Universe
+	details page in the &quot;Overview&quot; tab, you can see following activity:</p>
+<p><img src="file:///Users/markkim/Documents/YBU_repos/YBU_public/TFE/YBU-58/assets/images/200-workload_metrics_1366x768.png"
+		alt="The Universe details page displays the metrics of the workload."></p>
+<p>On the &quot;Overview&quot; tab, the &quot;Total Ops/Sec&quot; displays the reads and writes being performed by the
+	workload. In the &quot;Tables&quot; window, we can see a YSQL table has been inserted into the database.</p>
+<p>Select the &quot;Tables&quot; tab to see that a table, <code class=”code-highlight2”>postgresqlkeyvalue</code>. Review the &quot;Health&quot;
+	and &quot;Metrics&quot; tabs to measure the performance of Yugabyte.</p>
+<h2 id="reflection">Reflection</h2>
+<p>The purpose of this lab was to demonstrate how to execute a YSQL workload on the three node multi-zone Universe.</p>
+<p>Multiple workloads can now be added to the Universe to benchmark performance. High availability and resiliency can
+	also be demonstrated by removing a node.</p>
