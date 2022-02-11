@@ -3,14 +3,7 @@
 
 
 ## About this lab
-In this hands-on lab, you'll create the following AWS cloud infrastructure resources and objects required to deploy Yugabyte Platform and a Yugabyte Universe in a given AWS region:
-- VPC
-- Routing table
-- Subnet
-- Internet gateway
-- Security group
-- Key Pair
-- AWS user with AWS secrets
+In this hands-on lab, you'll create the following AWS cloud infrastructure resources and objects required to deploy Yugabyte Platform and a Yugabyte Universe in a given AWS region.
 
 
 ### Lab requirements
@@ -23,10 +16,10 @@ An object or resource in AWS Cloud has one or more **Tags**. A **Tag** is a key-
 
 The Name tag helps you identify the resources and objects that you create. As a matter of practice, always specify a value for the **Name** tag using a recommended naming convention. The recommended naming convention in this lab encapsulates the object type, you as a the creator, and the region and/or availability zone where the resource or object exists.
 
-### Why name resources?
+### Why name my resources?
 You are responsible for terminating and deleting your cloud resources. Therefore, you need to be able to easily identify the resources and objects that you create. Using the recommended naming convention, you will easily be able to identify what is yours among possibly hundreds of objects in the AWS account.  
 
-> **Warning:** To avoid accidentally terminating or deleting the incorrect resources, please embrace the practice of using a recommended naming conventions.  Don't be the new team member that deletes the resources for a live POC !!! 
+> **Warning:** To avoid accidentally terminating or deleting the incorrect resources, please embrace the practice of using a recommended naming conventions.  Don't be the new team member that deletes the resources for a live PoC!!! 
 
 
 ### Recommended naming convention
@@ -45,9 +38,9 @@ For your personal identifier, you'll use the first 4 letters of your Yugabyte em
 
 | Email | Personal identifier abbreviation |
 |:-|:-|
-| sluersen@yugabyte.com | SLUE |
-| mkim@yugabyte.com | MKIM |
-| rao@yugabyte.com | RAOZ |
+| `sluersen@yugabyte.com` | `SLUE` |
+| `mkim@yugabyte.com` | `MKIM` |
+| `rao@yugabyte.com` | `RAOZ` |
 
 
 #### Region abbreviation
@@ -55,13 +48,13 @@ Using an abbreviation for a region name will help you quickly identify a resourc
 
 | Region | Region abbreviation | 
 |:-|:-|
-| US East (N. Virginia) us-east-1 | use1 |
-| US East (Ohio) us-east-2 | use2 |
-| US West (N. California) us-west-1 | usw1 |
-| US West (Oregon)  us-west-2 | usw2 |
-| Europe (Frankfurt)  eu-central-1 | euc1 |
-| Europe (Ireland)  eu-west-1 | euw1 |
-| Europe (London)  eu-west-2 | euw2 |
+| US East (N. Virginia) us-east-1 | `use1` |
+| US East (Ohio) us-east-2 | `use2` |
+| US West (N. California) us-west-1 | `usw1` |
+| US West (Oregon) us-west-2 | `usw2` |
+| Europe (Frankfurt) eu-central-1 | `euc1` |
+| Europe (Ireland) eu-west-1 | `euw1` |
+| Europe (London) eu-west-2 | `euw2` |
 
 
 
@@ -70,12 +63,12 @@ An availability zone (AZ) represents an data center in a given region. There is 
 
 | Availability zone | AZ short name | Region + AZ short name |
 |:-|:-|:--|
-| US East (N. Virginia) us-east-1a | 1a-az4 |use1-1a-az4|
-| US East (N. Virginia) us-east-1b | 1b-az6 |use1-1b-az6|
-| US East (N. Virginia) us-east-1c | 1c-az1 |use1-1c-az1|
-| US East (N. Virginia) us-east-1d | 1d-az2 |use1-1d-az2|
-| US East (N. Virginia) us-east-1e | 1e-az3 |use1-1e-az3|
-| US East (N. Virginia) us-east-1f | 1f-az5 |use1-1f-az5|
+| US East (N. Virginia) us-east-1a | `1a-az4` | `use1-1a-az4` |
+| US East (N. Virginia) us-east-1b | `1b-az6` | `use1-1b-az6` |
+| US East (N. Virginia) us-east-1c | `1c-az1` | `use1-1c-az1` |
+| US East (N. Virginia) us-east-1d | `1d-az2` | `use1-1d-az2` |
+| US East (N. Virginia) us-east-1e | `1e-az3` | `use1-1e-az3` |
+| US East (N. Virginia) us-east-1f | `1f-az5` | `use1-1f-az5` |
 
 
 
@@ -85,16 +78,16 @@ In most cases, you can use a prefix for the object identifier, with Security Gro
 
 | Resource / Object | Prefix  | Example Name |  Description | 
 |:-|:-|:-|:-|
-| VPC | vpc | `vpc-SLUE-use1` | A VPC is an isolated portion of the AWS Cloud populated by AWS objects, such as Amazon EC2 instances. |
-| Subnet| sb | `sb-SLUE-use1-1a-az4` |  A subnet is a range of IP addresses in your VPC. You can launch AWS resources, such as EC2 instances, into a specific subnet. Subnets can be either public or private. The example details the region and zone. [Info](https://docs.aws.amazon.com/en_us/console/vpc/subnets) |
-| Route Table | rt | `rt-SLUE-use1` | A route table specifies how packets are forwarded between the subnets within your VPC, the internet, and your VPN connection. [Info](https://docs.aws.amazon.com/en_us/console/vpc/route-tables/create-route-table) |
-| Internet Gateway | igw | `igw-SLUE-use1` | An internet gateway is a virtual router that connects a VPC to the internet. [Info](https://docs.aws.amazon.com/en_us/console/vpc/internet-gateways#working-with-igw) |
-| NAT Gateway | nat | `nat-SLUE-use1` | A highly available, managed Network Address Translation (NAT) service that instances in private subnets can use to connect to services in other VPCs, on-premises networks, or the internet. [Info](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html) | 
-| Peering connection | pcx | `pcx-SLUE-use1` | A VPC peering connection is a networking connection between two VPCs that enables you to route traffic between them privately. [Info](https://docs.aws.amazon.com/en_us/console/vpc/peering/create) | 
-| Network ACLs | acl | `acl-SLUE-use1` | A network ACL is an optional layer of security that acts as a firewall for controlling traffic in and out of a subnet. [Info](https://docs.aws.amazon.com/en_us/console/vpc/network-acls#CreateACL) | 
-| Security Group | sg | `SLUE-sg-use1` | A security group acts as a virtual firewall for your instance to control inbound and outbound traffic. It is specific to a region. You can not use **sg** as a prefix, so use your personal identifier as the prefix and then **sg**. [Info](https://docs.aws.amazon.com/en_us/console/ec2/security-groups) | 
-| Key Pair | kp | `kp-SLUE-aws` | A key pair, consisting of a private key and a public key, is a set of security credentials that you use to prove your identity when connecting to an EC2 instance. A key pair results in a private key file format, either a `.pem` or `.ppk` file. You need this file to secure shell (SSH) into a EC2 instance. You need to keep this private key file secure. Only share it internally using Keybase (not Slack, GDrive, or email).  In AWS, you can copy a key pair from one region to another region. For this reason, the example shows the cloud provider name, `aws`, rather than a regional identifier. | 
-| EC2| ec2 | `ec2-SLUE-use1-1a-az4-platform` | With EC2, you can create  virtual machines, or instances, that run on the AWS Cloud. This example includes the region, the zone, and the purpose of the ec2 instances, for example `platform`.|
+| VPC | `vpc` | `vpc-SLUE-use1` | A VPC is an isolated portion of the AWS Cloud populated by AWS objects, such as Amazon EC2 instances. |
+| Subnet| `sb` | `sb-SLUE-use1-1a-az4` |  A subnet is a range of IP addresses in your VPC. You can launch AWS resources, such as EC2 instances, into a specific subnet. Subnets can be either public or private. The example details the region and zone. [Info](https://docs.aws.amazon.com/en_us/console/vpc/subnets) |
+| Route Table | `rt` | `rt-SLUE-use1` | A route table specifies how packets are forwarded between the subnets within your VPC, the internet, and your VPN connection. [Info](https://docs.aws.amazon.com/en_us/console/vpc/route-tables/create-route-table)|
+| Internet Gateway | `igw` | `igw-SLUE-use1` | An internet gateway is a virtual router that connects a VPC to the internet. [Info](https://docs.aws.amazon.com/en_us/console/vpc/internet-gateways#working-with-igw) |
+| NAT Gateway | `nat` | `nat-SLUE-use1` | A highly available, managed Network Address Translation (NAT) service that instances in private subnets can use to connect to services in other VPCs, on-premises networks, or the internet. [Info](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html) | 
+| Peering connection | `pcx` | `pcx-SLUE-use1` | A VPC peering connection is a networking connection between two VPCs that enables you to route traffic between them privately. [Info](https://docs.aws.amazon.com/en_us/console/vpc/peering/create) | 
+| Network ACLs | `acl` | `acl-SLUE-use1` | A network ACL is an optional layer of security that acts as a firewall for controlling traffic in and out of a subnet. [Info](https://docs.aws.amazon.com/en_us/console/vpc/network-acls#CreateACL) | 
+| Security Group | `sg` | `SLUE-sg-use1` | A security group acts as a virtual firewall for your instance to control inbound and outbound traffic. It is specific to a region. You can not use **sg** as a prefix, so use your personal identifier as the prefix and then **sg**. [Info](https://docs.aws.amazon.com/en_us/console/ec2/security-groups) | 
+| Key Pair | `kp` | `kp-SLUE-aws` | A key pair, consisting of a private key and a public key, is a set of security credentials that you use to prove your identity when connecting to an EC2 instance. A key pair results in a private key file format, either a `.pem` or `.ppk` file. You need this file to secure shell (SSH) into a EC2 instance. You need to keep this private key file secure. Only share it internally using Keybase (not Slack, GDrive, or email).  In AWS, you can copy a key pair from one region to another region. For this reason, the example shows the cloud provider name, `aws`, rather than a regional identifier. | 
+| EC2| `ec2` | `ec2-SLUE-use1-1a-az4-platform` | With EC2, you can create  virtual machines, or instances, that run on the AWS Cloud. This example includes the region, the zone, and the purpose of the ec2 instances, for example `platform`.|
 
 
 #### Naming summary
@@ -111,8 +104,9 @@ In this lab, you will create and edit various resources and objects required in 
 - an internet gateway
 - a security group
 - a key pair
-
->Note: In upcoming labs, you will create one or more EC2 instance using a specific AMI.
+- AWS user
+  
+>Note: In upcoming labs, you will create one or more EC2 instances using a specific AMI.
 
 
 ### Sign in to the AWS console
@@ -276,7 +270,7 @@ When you created your subnet, AWS created a Network ACL (Access Control List) fo
 ### Create a Security Group
 A security group acts as a virtual firewall for your instance to control inbound and outbound traffic. It is specific to a region and consists of various rules for allowed traffic over certain internet protocols and ports.
 
-> Note: You can not use **sg** as a prefix for the security group name, so use your personal identifier as the prefix and then **sg**. You can, however, use **sg** as a prefix for the object name.
+> Note: You cannot use `sg` as a prefix for the security group name, so use your personal identifier as the prefix and then `sg`. You can, however, use `sg` as a prefix for the object name.
 
 Here are the steps to create your security group for your VPC:
 * In the left sidebar, in Security, select **Security Groups**.
@@ -356,7 +350,7 @@ You'll now move your `.pem` file to a hidden `.ssh` directory and change the fil
 * Copy the `.pem` to you `.ssh` directory.
 * In the following example, replace `<MY_4_CHAR>` with the first four characters of your @yugabyte.com email address.
 
-```bash
+```
 MY_4_CHAR = '<MY_4_CHAR>'
 echo $MY_4_CHAR
 cd
@@ -374,11 +368,11 @@ In AWS, create an IAM user to generate an AWS access key ID and secret access ke
 > Security Notice: You need your AWS Secrets for programmatic access to kept secure. Do not share these credential outside of Yugabyte. Only share these secrets internally using Keybase (not Slack, GDrive, or email).  
 
 
-Here are the stesp to create a user with AWS secrets: 
+Here are the steps to create a user with AWS secrets: 
 * In the global navigation bar, search for Users, and then select **Features** → **Users**.
 * In **Users** (IAM users), select **Add Users**.
 * In the **Add Users** wizard, for **User name**, enter your email address,<NAME@YUGABYTE.COM>.
-* In **Select AWS credential type*, select **Access key - Programmatic access**.
+* In **Select AWS credential type**, select **Access key - Programmatic access**.
 * Select **Next: Permission**.
 * In **Add user to group**, select **ats-admin**.
 * Select **Next: Tags**.
