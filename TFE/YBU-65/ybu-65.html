@@ -1,0 +1,978 @@
+<style>
+  /*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+  body {
+    font-family: "Segoe WPC", "Segoe UI", "SFUIText-Light",
+      "HelveticaNeue-Light", sans-serif, "Droid Sans Fallback";
+    font-size: 14px;
+    padding: 0 12px;
+    /* line-height: 22px; */
+    word-wrap: break-word;
+  }
+
+  #code-csp-warning {
+    position: fixed;
+    top: 0;
+    right: 0;
+    color: white;
+    margin: 16px;
+    text-align: center;
+    font-size: 12px;
+    font-family: sans-serif;
+    background-color: #444444;
+    cursor: pointer;
+    padding: 6px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+  }
+
+  #code-csp-warning:hover {
+    text-decoration: none;
+    background-color: #007acc;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+  }
+
+  body.scrollBeyondLastLine {
+    margin-bottom: calc(100vh - 22px);
+  }
+
+  body.showEditorSelection .code-line {
+    position: relative;
+  }
+
+  body.showEditorSelection .code-active-line:before,
+  body.showEditorSelection .code-line:hover:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: -12px;
+    height: 100%;
+  }
+
+  body.showEditorSelection li.code-active-line:before,
+  body.showEditorSelection li.code-line:hover:before {
+    left: -30px;
+  }
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  a {
+    color: #4080d0;
+    text-decoration: none;
+  }
+
+  a:focus,
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: 1px solid -webkit-focus-ring-color;
+    outline-offset: -1px;
+  }
+
+  hr {
+    border: 0;
+    height: 2px;
+    border-bottom: 2px solid;
+  }
+
+  h1 {
+    padding-bottom: 0.3em;
+    /* line-height: 1.2; */
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-weight: normal;
+  }
+
+  h1 code,
+  h2 code,
+  h3 code,
+  h4 code,
+  h5 code,
+  h6 code {
+    font-size: inherit;
+    /* line-height: auto; */
+  }
+
+  a:hover {
+    color: #4080d0;
+    text-decoration: underline;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  table > thead > tr > th {
+    text-align: left;
+    border-bottom: 1px solid;
+  }
+
+  table > thead > tr > th,
+  table > thead > tr > td,
+  table > tbody > tr > th,
+  table > tbody > tr > td {
+    padding: 5px 10px;
+  }
+
+  table > tbody > tr + tr > td {
+    border-top: 1px solid;
+  }
+
+  blockquote {
+    margin: 0 7px 0 5px;
+    padding: 0 16px 0 10px;
+    border-left: 5px solid;
+  }
+
+  code {
+    font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New",
+      monospace, "Droid Sans Fallback";
+    font-size: 14px;
+    line-height: 19px;
+  }
+
+  body.wordWrap pre {
+    white-space: pre-wrap;
+  }
+
+  .mac code {
+    font-size: 12px;
+    /* line-height: 18px; */
+  }
+
+  pre:not(.hljs),
+  pre.hljs code > div {
+    padding: 16px;
+    border-radius: 3px;
+    overflow: auto;
+  }
+</style>
+
+<style>
+  /* Tomorrow Theme */
+  /* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+  /* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+  /* Tomorrow Comment */
+  .hljs-comment,
+  .hljs-quote {
+    color: #8e908c;
+  }
+
+  /* Tomorrow Red */
+  .hljs-variable,
+  .hljs-template-variable,
+  .hljs-tag,
+  .hljs-name,
+  .hljs-selector-id,
+  .hljs-selector-class,
+  .hljs-regexp,
+  .hljs-deletion {
+    color: #c82829;
+  }
+
+  /* Tomorrow Orange */
+  .hljs-number,
+  .hljs-built_in,
+  .hljs-builtin-name,
+  .hljs-literal,
+  .hljs-type,
+  .hljs-params,
+  .hljs-meta,
+  .hljs-link {
+    color: #f5871f;
+  }
+
+  /* Tomorrow Yellow */
+  .hljs-attribute {
+    color: #eab700;
+  }
+
+  /* Tomorrow Green */
+  .hljs-string,
+  .hljs-symbol,
+  .hljs-bullet,
+  .hljs-addition {
+    color: #718c00;
+  }
+
+  /* Tomorrow Blue */
+  .hljs-title,
+  .hljs-section {
+    color: #4271ae;
+  }
+
+  /* Tomorrow Purple */
+  .hljs-keyword,
+  .hljs-selector-tag {
+    color: #8959a8;
+  }
+
+  .hljs {
+    display: block;
+    overflow-x: auto;
+    color: #4d4d4c;
+    padding: 0.5em;
+  }
+
+  .hljs-emphasis {
+    font-style: italic;
+  }
+
+  .hljs-strong {
+    font-weight: bold;
+  }
+</style>
+
+<style>
+  /*
+ * Markdown PDF CSS
+ */
+
+  pre {
+    background-color: #f8f8f8;
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+  }
+
+  pre:not(.hljs) {
+    padding: 23px;
+    /* line-height: 19px; */
+  }
+
+  blockquote {
+    background: rgba(127, 127, 127, 0.1);
+    border-color: rgba(0, 122, 204, 0.5);
+  }
+
+  .emoji {
+    height: 1.4em;
+  }
+
+  /* for inline code */
+  :not(pre):not(.hljs) > code {
+    color: #c9ae75; /* Change the old color so it seems less like an error */
+    font-size: inherit;
+  }
+</style>
+
+<h1 id="storage-backup-and-restore-on-yugabyte-platform">
+  Storage Backup and Restore on Yugabyte Platform
+</h1>
+<h2 id="introduction">Introduction</h2>
+<p>
+  In this hands-on lab, you will learn how to create a backup of a database,
+  then restore the database using Yugabyte Platform. The ability to backup and
+  restore data in a straight forward and simple process is important illustrate
+  Yugabyte's ability to weather failures, migrations, or other outage
+  situations. In this lab, you will backup and restore a YSQL database, but
+  understand the process for a YCQL database is nearly identical.
+</p>
+<h3 id="objective">Objective</h3>
+<p>
+  As a sales engineer, I will demonstrate how to create a backup of the database
+  and restore it.
+</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+  <li>
+    <p>
+      A deployed Yugabyte Universe on AWS containing a populated YSQL table. For
+      information on how to deploy a Yugabyte Universe on Platform, review the
+      previous labs on Universe deployment for a multi-zone cluster.
+    </p>
+  </li>
+  <li>
+    <p>
+      The workload <code>SqlInserts</code> has created a table named
+      <code>postgresqlkeyvalue</code> in the Universe. This workload was
+      downloaded along with Platform as a docker container image,
+      <code>yugabytedb/yb-sample-apps</code>. Details on how to run a workload
+      on a Yugabyte Universe can be found in a previous lab.
+    </p>
+  </li>
+  <li>
+    <p>
+      AWS credentials to access the S3 bucket, namely the access key ID and the
+      secret access key for the IAM user account.
+    </p>
+  </li>
+  <li>
+    <p>
+      Yugabyte Platform credentials for the Yugabyte Platform console that is
+      installed on the EC2 instance.
+    </p>
+  </li>
+  <li>
+    <p>
+      The <code>.pem</code> key in order to access the EC2 instance that
+      contains the Yugabyte Platform console.
+    </p>
+  </li>
+</ul>
+<blockquote>
+  <p>
+    <strong>Note:</strong> In this lab, the Universe has been deployed on a
+    <code>c5.4xlarge</code> EC2 instance using a CentOS 7 image.
+  </p>
+</blockquote>
+<h2 id="steps-to-create-and-restore-a-database">
+  Steps to Create and Restore a Database
+</h2>
+<ul>
+  <li>
+    <p>Create an S3 bucket that will store the database backup.</p>
+  </li>
+  <li>
+    <p>
+      Configure the backup and restore location for the Yugabyte Universe as an
+      S3 bucket.
+    </p>
+  </li>
+  <li>
+    <p>Backup the database to the S3 bucket.</p>
+  </li>
+  <li>
+    <p>
+      Drop the table and verify the Yugabyte Universe no longer contains the
+      table.
+    </p>
+  </li>
+  <li>
+    <p>Restore the database.</p>
+  </li>
+  <li>
+    <p>
+      Verify that the table has been restored in the Yugabyte Universe without
+      any data loss.
+    </p>
+  </li>
+</ul>
+<h2 id="create-the-s3-bucket">Create the S3 bucket</h2>
+<p>
+  In this step, you will create an S3 bucket with the proper permissions so the
+  Yugabyte Universe can backup and restore the database.
+</p>
+<p>
+  Navigate to the S3 console in AWS and select the region that contains the
+  Yugabyte Universe. In this lab, it will be <code>us-west-2</code>.
+</p>
+<p>
+  Name the bucket using the first four letters of your email address. For
+  example, <code>mkim-ybu-storage-backup-us-west-2</code>.
+</p>
+<blockquote>
+  <p>
+    <strong>Important:</strong> Bucket names must be unique in a given region.
+  </p>
+</blockquote>
+<p>
+  Next, use the default settings listed below and select the &quot;Create
+  Bucket&quot; button.
+</p>
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>AWS Region</td>
+      <td>us-west-2 (Oregon)</td>
+    </tr>
+    <tr>
+      <td>ACLs</td>
+      <td>Disabled</td>
+    </tr>
+    <tr>
+      <td>Block all public access</td>
+      <td>Enabled</td>
+    </tr>
+    <tr>
+      <td>Bucket Versioning</td>
+      <td>Disable</td>
+    </tr>
+    <tr>
+      <td>Default encryption</td>
+      <td>Disable</td>
+    </tr>
+    <tr>
+      <td>Object Lock</td>
+      <td>Disable</td>
+    </tr>
+  </tbody>
+</table>
+<h3 id="bucket-permissions">Bucket Permissions</h3>
+<p>
+  Once the bucket has been created, you will be navigated to the Buckets list.
+</p>
+<p>
+  Select the bucket that was just created and view the &quot;Permissions&quot;
+  tab.
+</p>
+<p>
+  Review the following image to confirm that the user is able to write and read
+  the objects that will be created in this bucket:
+</p>
+<p>
+  <img
+    src="file:///Users/markkim/Documents/YBU repo/TFE/YBU-65/assets/images/100-s3_bucket_acl_1366x768.png"
+    alt="ACL bucket permission for write and read access for the Yugabyte Universe."
+  />
+</p>
+<p>
+  Note that in the preceding image, you have designated the bucket owner has
+  list and write access to the objects in this S3 bucket. This permission is
+  setup by default. This will allow the Yugabyte Universe to store and upload
+  the database from the S3 bucket.
+</p>
+<p>
+  Keep a copy of the bucket name handy since you will need this when configuring
+  the backup location for the Yugabyte Universe.
+</p>
+<h2 id="create-a-database-backup">Create a Database Backup</h2>
+<p>
+  In the last step, you created an S3 bucket that will store the database
+  backup. In this step, you will create a database backup and store it in the S3
+  bucket you just created.
+</p>
+<h3 id="verify-that-the-universe-contains-a-table">
+  Verify that the Universe Contains a Table
+</h3>
+<p>
+  Navigate to the Yugabyte Platform console on the EC2 instance public IPv4 on
+  port 8800 in the browser. Once you have signed in using your credentials, you
+  will be navigated to the Universe Dashboard page.
+</p>
+<p>
+  Select the Universe that is running the workload, <code>SqlInserts</code>. For
+  information on how to run a sample workload on a Universe, review previous
+  labs for details.
+</p>
+<p>
+  Once a Universe is selected, you will be navigated to the Universe details
+  page that will present the &quot;Overview&quot; tab by default as shown in the
+  following image:
+</p>
+<p>
+  <img
+    src="file:///Users/markkim/Documents/YBU repo/TFE/YBU-65/assets/images/150-universe_overview_1366x768.png"
+    alt="The Universe details page shows the overview of the Universe activity."
+  />
+</p>
+<p>
+  Notice in the preceding image, there is a three node cluster that's running a
+  single YSQL table in the Universe.
+</p>
+<p>
+  Selecting the &quot;Tables&quot; tab, we can verify that the
+  <code>postgresqlkeyvalue</code> table is located in the Yugabyte Universe as
+  shown in the following image:
+</p>
+<p>
+  <img
+    src="file:///Users/markkim/Documents/YBU repo/TFE/YBU-65/assets/images/260-table_1366x768.png"
+    alt="Verification that a table is available in the Universe."
+  />
+</p>
+<p>
+  Note in the preceding image, the table type is YSQL and the keyspace is
+  <code>postgres</code>. Keyspace is another term used for database, where the
+  table is located.
+</p>
+<p>
+  Now that we have verified that the table is currently available in the
+  Yugabyte Universe, you will designate the backup location and create a backup
+  in the S3 bucket you created earlier.
+</p>
+<h3 id="backup-the-database">Backup the Database</h3>
+<p>
+  In the last step, you verified that a YSQL table was available in the Yugabyte
+  Universe. In this step, you will designate the backup location then store the
+  backup of the database in an S3 bucket.
+</p>
+<h3 id="configure-the-backup-location">Configure the Backup Location</h3>
+<p>
+  On the left hand menu of the Yugabyte Platform console, select the
+  &quot;Configs&quot; option which will display the following page:
+</p>
+<p>
+  <img
+    src="file:///Users/markkim/Documents/YBU repo/TFE/YBU-65/assets/images/210-cloud_provider_configs_1600x700.png"
+    alt="The Configs option contains the configuration for the cloud infrastructure, the backup, and the security."
+  />
+</p>
+<p>
+  On the &quot;Configs&quot; page, select the &quot;Backup&quot; tab. Keep the
+  default option for Amazon S3 as shown in the following image:
+</p>
+<p>
+  <img
+    src="file:///Users/markkim/Documents/YBU repo/TFE/YBU-65/assets/images/220-create_s3_backup_1600x700.png"
+    alt="Use the Amazon S3 option to create a database backup."
+  />
+</p>
+<p>
+  On the preceding page, select the &quot;Create S3 Backup&quot; button. This
+  will display the following form:
+</p>
+<p>
+  <img
+    src="file:///Users/markkim/Documents/YBU repo/TFE/YBU-65/assets/images/240-backup_config_1366x768.png"
+    alt="The backup configuration will designate the S3 bucket we created to store the backup."
+  />
+</p>
+<p>Fill out the preceding form with the following values:</p>
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Property Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Configuration Name</td>
+      <td>ybu-storage-backup-us-west-2</td>
+    </tr>
+    <tr>
+      <td>IAM Role</td>
+      <td>Disabled</td>
+    </tr>
+    <tr>
+      <td>Access Key</td>
+      <td>&lt;my-access-key&gt;</td>
+    </tr>
+    <tr>
+      <td>Access Secret</td>
+      <td>&lt;my-access-secret&gt;</td>
+    </tr>
+    <tr>
+      <td>S3 Bucket</td>
+      <td>s3://&lt;email&gt;-ybu-storage-backup-us-west-2</td>
+    </tr>
+    <tr>
+      <td>S3 Bucket Host Base</td>
+      <td>s3:amazonaws.com</td>
+    </tr>
+  </tbody>
+</table>
+<p>Select &quot;Save&quot; to set the S3 bucket as the backup location.</p>
+<p>
+  Now that the S3 bucket has been configured in the Universe as the backup
+  location, the next step will be to designate the database to backup.
+</p>
+<h3 id="assign-the-database-for-backup">Assign the Database for Backup</h3>
+<p>
+  Navigate to the Universes Dashboard page and select the Universe that contains
+  the YSQL table you wish to backup.
+</p>
+<p>
+  Select the &quot;Backups&quot; tab on the Universe details page to display the
+  following image:
+</p>
+<p>
+  <img
+    src="file:///Users/markkim/Documents/YBU repo/TFE/YBU-65/assets/images/300-create_backup_1600x700.png"
+    alt="On the Backups tab, create a backup of the database."
+  />
+</p>
+<p>
+  Select the &quot;Create Backup&quot; button on the preceding page to navigate
+  to a form as shown in the following image:
+</p>
+<p>
+  <img
+    src="file:///Users/markkim/Documents/YBU repo/TFE/YBU-65/assets/images/450-create_backup_form_1600x700.png"
+    alt="Description of this action."
+  />
+</p>
+<p>In the preceding form, enter the following property values:</p>
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Property Value</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Language</td>
+      <td>YSQL</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>Storage</td>
+      <td>S3 Storage</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>Namespace</td>
+      <td>postgres</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>Encrypt Backup</td>
+      <td>Disabled</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>Parallel Threads</td>
+      <td>8</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>Number of Days to Retain Backup</td>
+      <td>n/a</td>
+      <td>Yes</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  Keep all the default values except the Namespace. This designates the name of
+  the database that will be backed up, in this case, <code>postgres</code>, as
+  we noted in the previous step. There is also an option to backup multiple
+  databases if needed.
+</p>
+<blockquote>
+  <p>
+    <strong>Important:</strong> Several backups can be created that target
+    particular databases. Backups can also be set on an automated schedule.
+  </p>
+</blockquote>
+<p>
+  In a few moments, the backup of the database will complete. Refresh the page
+  to update the status of the backup. Once the status is &quot;Completed&quot;,
+  you will proceed to the next steps; to drop the table and restore it from the
+  backup.
+</p>
+<p>
+  To verify the backup was stored in the S3 bucket, go to the S3 console in AWS
+  as shown in the following image:
+</p>
+<p>
+  <img
+    src="file:///Users/markkim/Documents/YBU repo/TFE/YBU-65/assets/images/800-universe_backup_1366x768.png"
+    alt="The backup folder in the S3 bucket has been newly created."
+  />
+</p>
+<p>
+  Now that the backup has been verified, the next step is to drop the table. To
+  do this, you will need to connect to the database with the YSQL shell. Since
+  the table is distributed on the nodes of the Universe, you will need to
+  connect to a node in the cluster first.
+</p>
+<p>
+  To get the SSH command to connect to a node, navigate to the &quot;Nodes&quot;
+  tab on the Universes details page and select the &quot;Actions&quot; drop down
+  located in the Primary Cluster window as shown in the following image:
+</p>
+<p>
+  <img
+    src="file:///Users/markkim/Documents/YBU repo/TFE/YBU-65/assets/images/460-node_connect_1600x700.png"
+    alt="Select the dropdown for a node in the cluster."
+  />
+</p>
+<p>Select &quot;Connect&quot; and copy the command to SSH into this node.</p>
+<pre
+  class="hljs"
+><code><div>sudo ssh -i /opt/yugabyte/yugaware/data/keys/be5f73e4-3bfe-4b55-8c1c-0aa144be10d6/yb-dev-aws_be5f73e4-3bfe-4b55-8c1c-0aa144be10d6-key.pem -ostricthostkeychecking=no -p 22 yugabyte@&lt;node-IP&gt;
+</div></code></pre>
+<p>
+  As can be seen the the preceding statement, the <code>.pem</code> key for the
+  node instance is located on the EC2 instance that contains Yugabyte Platform.
+  This value was automatically generated when the Universe was created. You will
+  be accessing the node through port 22 with the user name
+  <code>yugabyte</code>.
+</p>
+<p>Make a note of this command since you will use it to SSH into the node.</p>
+<h2 id="drop-the-table">Drop the Table</h2>
+<p>
+  In the last step, you created a backup of the database, <code>postgres</code>,
+  that contains the table, <code>postgresqlkeyvalue</code>. In this step, you
+  will drop the table, then restore the table from the backup in the S3 bucket.
+</p>
+<p>
+  In this step, you will need the <code>.pem</code> file to SSH into the EC2
+  instance.
+</p>
+<p>
+  In order to drop the table, you will SSH into the EC2 instance that contains
+  the Yugabyte Platform console, connect to a node, then connect to the YSQL
+  shell to access the database.
+</p>
+<h3 id="connect-to-the-node">Connect to the Node</h3>
+<p>
+  In order to connect to the node, we will first connect to the EC2 instance
+  containing the Yugabyte Platform console. In the CLI, execute the following
+  command if you <code>.pem</code> file is located in the
+  <code>.ssh</code> directory:
+</p>
+<pre
+  class="hljs"
+><code><div>ssh -i <span class="hljs-string">"~/.ssh/ybu-yugaware.pem"</span> centos@&lt;my-EC2-public-IPv4&gt;
+</div></code></pre>
+<p>
+  Once connected to the EC2 instance, paste the SSH command you noted earlier to
+  connect to the node that contains the <code>.pem</code> file for your node. An
+  example of this SSH command is shown in the following command:
+</p>
+<pre
+  class="hljs"
+><code><div>sudo ssh -i /opt/yugabyte/yugaware/data/keys/be5f73e4-3bfe-4b55-8c1c-0aa144be10d6/yb-dev-aws_be5f73e4-3bfe-4b55-8c1c-0aa144be10d6-key.pem -ostricthostkeychecking=no -p 22 yugabyte@&lt;node-IP&gt;
+</div></code></pre>
+<p>
+  The verify the connection with the command prompt change to reflect the user,
+  <code>yugabyte</code>, and the IP address of the node. Here is an example of
+  what the connection will look like:
+</p>
+<pre class="hljs"><code><div>[yugabyte@ip-172-151-37-55 ~]$
+</div></code></pre>
+<h3 id="connect-to-the-database-with-the-ysql-shell">
+  Connect to the Database with the YSQL Shell
+</h3>
+<p>
+  In the last step, you connected to the node. In this step you will open the
+  YSQL shell in order to connect to the database and drop the table.
+</p>
+<p>Run the following command to connect to the YSQL shell:</p>
+<pre
+  class="hljs"
+><code><div>/home/yugabyte/tserver/bin/ysqlsh -h &lt;my-node-IP&gt; -p 5433 -U yugabyte
+</div></code></pre>
+<p>
+  In the preceding command, you ran the binary file <code>ysqlsh</code> with the
+  declarations for the host, port, and user.
+</p>
+<p>
+  Also notice that you are connecting to the <code>tserver</code> process, which
+  is short for tablet server, which is responsible for hosting/serving user data
+  on the tables. For more information on how this process relates to the
+  <code>master</code> process and their relationship to the Raft Consensus
+  algorithm to maintain high availability, take a look at the
+  <a href="https://docs.yugabyte.com/latest/architecture/concepts/universe/"
+    >Yugabyte Official documentation on Universe operations.</a
+  >
+</p>
+<p>
+  You have successfully connected to the YSQL shell if the prompt now looks like
+  this:
+</p>
+<pre class="hljs"><code><div>yugabyte=<span class="hljs-comment">#</span>
+</div></code></pre>
+<p>
+  Now you can directly connect to the table, view logs, and use PostgreSQL DDL
+  or DML statements to make changes to the data layer.
+</p>
+<p>First, run the following command to list the databases:</p>
+<pre class="hljs"><code><div>yugabyte=<span class="hljs-comment"># \l</span>
+</div></code></pre>
+<p>This will result in the following response in the CLI:</p>
+<pre
+  class="hljs"
+><code><div>                                   List of databases
+      Name       |  Owner   | Encoding | Collate |    Ctype    |   Access privileges
+-----------------+----------+----------+---------+-------------+-----------------------
+ postgres        | postgres | UTF8     | C       | en_US.UTF-8 |
+ system_platform | postgres | UTF8     | C       | en_US.UTF-8 |
+ template0       | postgres | UTF8     | C       | en_US.UTF-8 | =c/postgres          +
+                 |          |          |         |             | postgres=CTc/postgres
+ template1       | postgres | UTF8     | C       | en_US.UTF-8 | =c/postgres          +
+                 |          |          |         |             | postgres=CTc/postgres
+ yugabyte        | postgres | UTF8     | C       | en_US.UTF-8 |
+(5 rows)
+</div></code></pre>
+<p>Connect to the <code>postgres</code> database with the following command:</p>
+<div class="highlight"><pre><code class="language-sql">\c postgres</code>
+</pre></div></code>
+<p>The preceding command will return the following result:</p>
+<pre
+  class="hljs"
+><code><div>You are now connected to database <span class="hljs-string">"postgres"</span> as user <span class="hljs-string">"yugabyte"</span>.
+</div></code></pre>
+<blockquote>
+  <p>
+    <strong>Pro Tip:</strong> As a general practice, it is good to turn on the
+    <code>\timing</code> feature to measure response time of the SQL operations.
+  </p>
+</blockquote>
+<p>
+  To list the tables, run the following command in YSQL shell also known as the
+  YSQL shell:
+</p>
+<pre class="hljs"><code><div>postgres=<span class="hljs-comment"># \dt</span>
+</div></code></pre>
+<p>This will result in the following response in the CLI.</p>
+<pre class="hljs"><code><div>               List of relations
+ Schema |        Name        | Type  |  Owner
+--------+--------------------+-------+----------
+ public | postgresqlkeyvalue | table | postgres
+(1 row)
+</div></code></pre>
+<p>Determine the number of rows in this table with the following command:</p>
+<pre
+  class="hljs"
+><code><div>postgres=# <span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">count</span>(*) <span class="hljs-keyword">from</span> postgresqlkeyvalue;
+</div></code></pre>
+<p>This will create the following response in the CLI:</p>
+<pre class="hljs"><code><div>---------
+ 2000001
+(1 row)
+
+Time: 2850.394 ms (00:02.850)
+</div></code></pre>
+<p>Note there are 2,000,001 rows in this table.</p>
+<blockquote>
+  <p>
+    <strong>Deep Dive:</strong>
+    <a href="https://docs.yugabyte.com/latest/admin/ysqlsh/"
+      >For a closer look at the <code>ysqlsh</code> and the shell commands,
+      visit the official Yugabyte docs for more detailed instructions.</a
+    >
+  </p>
+</blockquote>
+<p>
+  Now that you have established the table is present and populated with data,
+  drop this table with the following command:
+</p>
+<pre
+  class="hljs"
+><code><div>postgres=# <span class="hljs-keyword">DROP</span> <span class="hljs-keyword">TABLE</span> postgresqlkeyvalue;
+</div></code></pre>
+<p>This command will result in the following response in the CLI:</p>
+<pre class="hljs"><code><div>DROP TABLE
+Time: 199.763 ms
+</div></code></pre>
+<h3 id="verify-the-table-has-been-dropped">
+  Verify the Table has been Dropped
+</h3>
+<p>
+  Now run the <code>\dt</code> or
+  <code>SELECT count(*) from postgresqlkeyvalue;</code> commands to verify the
+  table is no longer available. The CLI will result in the following response:
+</p>
+<pre class="hljs"><code><div>Did not find any relations
+</div></code></pre>
+<p>
+  Leave this YSQL shell open so later, you can verify the table has been
+  restored.
+</p>
+<p>
+  Navigate back to the Yugabyte Platform console in the browser to verify that
+  the <code>postgresqlkeyvalue</code> table is no longer available. Select the
+  &quot;Tables&quot; tab in the Universe Details page to see the following
+  image:
+</p>
+<p>
+  <img
+    src="file:///Users/markkim/Documents/YBU repo/TFE/YBU-65/assets/images/500-drop_table_1366x768.png"
+    alt="Description of this action."
+  />
+</p>
+<p>
+  Note in the preceding image that there are no longer any available tables in
+  this Universe.
+</p>
+<h2 id="restore-the-table">Restore the Table</h2>
+<p>
+  In the last step, you dropped the table, then verified the table is no longer
+  present in the Universe. In this step, you will restore the table and verify
+  the data remains consistent with the data prior to the DROP command.
+</p>
+<p>
+  On the Yugabyte Platform console, in the Universe details page, select the
+  &quot;Backups&quot; tab. Select the &quot;Actions&quot; button for this backup
+  and choose the &quot;Restore Backup&quot; option as shown in the following
+  image:
+</p>
+<p>
+  <img
+    src="file:///Users/markkim/Documents/YBU repo/TFE/YBU-65/assets/images/700-restore_backup_1600x700.png"
+    alt="Select the backup to restore the table."
+  />
+</p>
+<p>
+  By selecting the &quot;Restore Backup&quot; option, a form will appear as
+  shown in the following image:
+</p>
+<p>
+  <img
+    src="file:///Users/markkim/Documents/YBU repo/TFE/YBU-65/assets/images/750-restore_data_1600x700.png"
+    alt="Restore this backup to the current universe."
+  />
+</p>
+<p>
+  In the preceding form, select the default options for the current Universe and
+  the keyspace or database, <code>postgres</code>, keeping the same number of
+  parallel threads.
+</p>
+<blockquote>
+  <p>
+    <strong>Pro Tip:</strong> Increasing the parallel thread capacity will
+    result in a faster backup or backup restore. This decision depends on the
+    size of the backup as well as the resource capacity of the EC2 instances.
+  </p>
+</blockquote>
+<p>
+  Once the backup restore has completed, check the &quot;Tables&quot; tab in the
+  Universes details page to see if the table has been restored as shown in the
+  following image:
+</p>
+<p>
+  <img
+    src="file:///Users/markkim/Documents/YBU repo/TFE/YBU-65/assets/images/260-table_1366x768.png"
+    alt="Description of this action."
+  />
+</p>
+<p>
+  Note that in the preceding image, the YSQL table has been restored in the
+  Universe.
+</p>
+<h3 id="verify-the-table-has-been-restored">
+  Verify the Table has been Restored
+</h3>
+<p>
+  In the last step, the table was restored. In this step, you will verify the
+  data was restored with no data loss.
+</p>
+<p>
+  Navigate back to the CLI that is connected to the database via the YSQL shell.
+  Run the following command:
+</p>
+<pre
+  class="hljs"
+><code><div>postgres=<span class="hljs-comment"># SELECT count(*) from postgresqlkeyvalue;</span>
+</div></code></pre>
+<p>You will see the following response in the CLI:</p>
+<pre class="hljs"><code><div>---------
+ 2000001
+(1 row)
+</div></code></pre>
+<p>
+  From the preceding SQL query response, we have verified that the table has
+  been restored and there has been no data loss from the backup and restore
+  process.
+</p>
+<h2 id="reflection">Reflection</h2>
+<p>
+  In this lab, you created a backup of the YSQL database and restored it. You
+  also connected to a YSQL shell on the node to access the database in order to
+  remove the table.
+</p>
