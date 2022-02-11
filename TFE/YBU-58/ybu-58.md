@@ -8,7 +8,7 @@ In this hands-on lab, you will run a PostgreSQL workload on a multi-node Yugabyt
 
 As a sales engineer, I want to run a workload on Yugabyte three node Universe on Yugabyte Platform to verify the Universe is functioning properly and to examine the metrics tools on Yugabyte Platform.
 
-## Prerequisites
+## Requirements
 
 * Verify the Universe is running.
 

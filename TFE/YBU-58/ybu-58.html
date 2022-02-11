@@ -38,23 +38,23 @@
 </style>
 <h1 id="run-a-workload-on-a-multi-node-universe">Run a Workload on a Multi-node Universe</h1>
 <h2 id="introduction">Introduction</h2>
-<p>In this hands-on lab, you will run a PostgreSQL workload on a multi-node Yugabyte Universe. In this example, you will
+<p>In this hands-on lab, you will run a YSQL workload on a multi-node Yugabyte Universe. In this example, you will
 	use a three node cluster in a multi-zone topology that was set up in a previous lab. Each node will reside in the
 	same region, but in a different availability zone. The purpose is to validate the Yugabyte Universe is functioning
 	properly as well as examine the metric tools on the Yugabyte Platform.</p>
 <h3 id="objective">Objective</h3>
 <p>As a sales engineer, I want to run a workload on Yugabyte three node Universe on Yugabyte Platform to verify the
-	Universe is functioning properly and to examine the metrics tools on Yugabyte Platform.</p>
+	universe is functioning properly and to examine the metrics tools on Yugabyte Platform.</p>
 <h2 id="prerequisites">Prerequisites</h2>
 <ul>
 	<li>
-		<p>Verify the Universe is running.</p>
+		<p>The Universe is deployed</p>
 	</li>
 	<li>
-		<p>Yugabyte Platform credentials.</p>
+		<p>Yugabyte Platform credentials</p>
 	</li>
 	<li>
-		<p>The <code class=”code-highlight2”>.pem</code> key file to connect the Platform server.</p>
+		<p>The <code class=”code-highlight”>.pem</code> key file to connect the Platform server.</p>
 	</li>
 </ul>
 <h2 id="verify-the-universe-is-operational">Verify the Universe is Operational</h2>
@@ -91,7 +91,7 @@
 	</li>
 </ul>
 <blockquote>
-	<p><strong>Important:</strong> In order for the script to run, <code class=”code-highlight2”>sudo</code> must be prefixed to the proceeding
+	<p><strong>Important:</strong> In order for the script to run, <code class=”code-highlight”>sudo</code> must be prefixed to the proceeding
 		command.</p>
 </blockquote>
 <h2 id="run-a-ysql-workload">Run a YSQL Workload</h2>
@@ -103,7 +103,7 @@
 		href="https://us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#ConnectToInstance:instanceId=i-0fd7ae16524e527a1">review
 		the AWS documentation</a>.</p>
 <blockquote>
-	<p><strong>Important:</strong> In order to connect to the Platform server, you will need the <code class=”code-highlight2”>.pem</code> key
+	<p><strong>Important:</strong> In order to connect to the Platform server, you will need the <code class=”code-highlight”>.pem</code> key
 		that was downloaded when the EC2 instance was launched.</p>
 </blockquote>
 <p>Once connected to the EC2 instance in the CLI, execute the following YSQL script saved from the last step:</p>
@@ -112,18 +112,18 @@
 <blockquote>
 	<p><strong>Important:</strong> In order to run the proceeding workload script on a Universe that has a password
 		authenticated YSQL database or TLS encryption in transit, it is necessary to add the user, password, and path of
-		the locally stored <code class=”code-highlight2”>.crt</code> and <code class=”code-highlight2”>.key</code> files. By default the user is <code class=”code-highlight2”>yugabyte</code>.
+		the locally stored <code class=”code-highlight”>.crt</code> and <code class=”code-highlight”>.key</code> files. By default the user is <code class=”code-highlight”>yugabyte</code>.
 		For more details for <a
 			href="https://docs.yugabyte.com/latest/yugabyte-platform/security/enable-encryption-in-transit/">TLS
 			encryption in transit, review the Yugabyte official docs.</a></p>
 </blockquote>
-<p>The prompt in the CLI will change to reflect the user <code class=”code-highlight2”>centos</code>, if the connection was established.</p>
+<p>The prompt in the CLI will change to reflect the user <code class=”code-highlight”>centos</code>, if the connection was established.</p>
 <p>The proceeding script will run a docker container in the background on each of the three nodes, evidenced by their
-	unique IP addresses on port 5433 in the <code class=”code-highlight2”>--nodes</code> flag.</p>
-<p>This will run the workload <code class=”code-highlight2”>SqlInserts</code>. This is a sample key-value app built on PostgreSQL with
-	concurrent readers and writers. The app inserts unique string keys into the table <code class=”code-highlight2”>postgresqlkeyvalue</code>.
+	unique IP addresses on port 5433 in the <code class=”code-highlight”>--nodes</code> flag.</p>
+<p>This will run the workload <code class=”code-highlight”>SqlInserts</code>. This is a sample key-value app built on PostgreSQL with
+	concurrent readers and writers. The app inserts unique string keys into the table <code class=”code-highlight”>postgresqlkeyvalue</code>.
 </p>
-<p>There are a total of 21 sample workloads that can be run from the <code class=”code-highlight2”>yugabytedb/yb-sample-apps</code> docker
+<p>There are a total of 21 sample workloads that can be run from the <code class=”code-highlight”>yugabytedb/yb-sample-apps</code> docker
 	image. For a full description, visit the <a href="https://github.com/yugabyte/yb-sample-apps">GitHub repo for
 		yb-sample-apps</a>. Note that in addition to PostgreSQL; Cassandra and Redis workloads are also available.</p>
 <h3 id="verify-workload-is-running-in-the-universe">Verify Workload is Running in the Universe</h3>
@@ -135,7 +135,7 @@
 		alt="The Universe details page displays the metrics of the workload."></p>
 <p>On the &quot;Overview&quot; tab, the &quot;Total Ops/Sec&quot; displays the reads and writes being performed by the
 	workload. In the &quot;Tables&quot; window, we can see a YSQL table has been inserted into the database.</p>
-<p>Select the &quot;Tables&quot; tab to see that a table, <code class=”code-highlight2”>postgresqlkeyvalue</code>. Review the &quot;Health&quot;
+<p>Select the &quot;Tables&quot; tab to see that a table, <code class=”code-highlight”>postgresqlkeyvalue</code>. Review the &quot;Health&quot;
 	and &quot;Metrics&quot; tabs to measure the performance of Yugabyte.</p>
 <h2 id="reflection">Reflection</h2>
 <p>The purpose of this lab was to demonstrate how to execute a YSQL workload on the three node multi-zone Universe.</p>
