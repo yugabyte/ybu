@@ -2,108 +2,116 @@
 
 ## Introduction
 
-In this hands-on deployment lab, you will create a Yugabyte Universe that consists of a three node cluster in a multi-zone topology. Each node will reside in the same region, but in a different availability zone. The purpose is to demonstrate Yugabyte Platform's ability to provide high availability and workload distribution. The added resiliency in a multi-zone topology protects against potential failures in case resources in a single availability zone become unavailable. This topology can withstand a single zone failure, but not two or more.
+In this hands-on deployment lab, you will create a Yugabyte universe that consists of a three node cluster in a multi-zone topology. Each node will reside in the same region, but in a different availability zone as shown in the following diagram:
 
-The topology of this three-node database cluster includes a stand-alone server that hosts the Platform management component and an additional driver server that will host test applications and tools. 
+![Architecture Diagram of a Multi-zone Three Node Yugabyte universe](./assets/images/50-multi_zone_topology_1600x700.png)
 
-> **TODO:** Add screenshot of network topology
-<!-- ![Architecture Diagram of a Multi-zone Three Node Yugabyte Universe](./assets/images/50-diagram.png) -->
+The purpose of a creating a multi-zone topology is to demonstrate Yugabyte Platform's ability to provide high availability and workload distribution. The added resiliency in a multi-zone topology protects against potential failures in case resources in a single availability zone become unavailable. This topology can withstand a single zone failure, but not two or more.
+
+### Objective
+
+As an engineer, I want to install Yugabyte Platform on AWS to demonstrate how to deploy a three node cluster in a multi-zone topology.
 ## Prerequisites
 
-Before creating a universe, the cloud provider environment must first be configured according to the specifications found on the [Yugabyte docs page on cloud configuration.](https://docs.yugabyte.com/latest/yugabyte-platform/configure-yugabyte-platform/set-up-cloud-provider/aws/) This is to secure the database as well as create access points in the VPC to allow YugabyteDB to connect and communicate with the different nodes in the cluster.
+Before creating a universe, the cloud provider environment must first be configured according to the specifications found in a previous Yugabyte Technical Field enablement lab. This is to secure the database as well as create access points in the VPC to allow YugabyteDB to connect and communicate with the different nodes in the cluster.
 
 > **Important:** Make a careful note whatever region that contains the VPC will be where the EC2 instance will be launched.
 
-In this lab, we will focus on deployment with AWS.
+In this lab, you will focus on deployment with AWS.
 
-## Checklist of necessary steps to install Yugabyte Platform
+## Checklist of Steps to Install Yugabyte Platform
 
-* Complete AWS prerequisites (IAM role, access keys, Routing Table entry, Security Group, VPC + subnets, Internet Gateway)
+* Complete AWS prerequisites (IAM role, access keys, Routing Table entry, Security Group, VPC + subnets, Internet Gateway). Details can be found in the lab YBU-59.
 
-* Obtain AWS IAM role access ID and secret keys.
+* Obtain the AWS IAM user's access key ID and secret access key. These must specifically be enabled for programmatic access so the Yugabyte Platform can create the nodes in your region. [For more information about the access key ID and secret access key review the AWS docs on AWS credentials.](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html)
 
-* Obtain Yugaware license file (.rli) from a Yugabyte Representative.
+* Obtain the Yugabyte Platform license file (.rli) from a Yugabyte Representative.
 
-* Create AWS EC2 instance to run Yugaware platform.
+* Create an AWS EC2 instance to run the Yugabyte Platform Management Console.
 
-* Deploy the Yugaware platform onto the AWS provider.
+* Deploy Yugabyte Platform onto the cloud provider, AWS.
 
-* Create a YugabyteDB Universe using Yugabyte Platform.
-
-**TODO** ### Important Terminology
-
-* **TODO**Yugaware platform vs Yugabyte Platform 
-
-* Universe vs Cluster: A Universe is the term for a YugabyteDB primary database cluster, plus any associated objects, such as read replicas, backup targets, etc.
+* Create a YugabyteDB universe using Yugabyte Platform.
 
 ### Launch the EC2
 
-Once the VPC, security group, IAM role, subnets, routing table entry, and Internet Gateway have been set up, we can proceed with launching the EC2 instance using an AMI. The EC2 will perform as the server that will host the Yugaware platform.
+Once the VPC, security group, IAM role, subnets, routing table entry, and internet gateway have been set up as required in the region us-west-2, you can proceed with launching the EC2 instance using an AMI. The EC2 instance will perform as the server that will host the Yugabyte Platform Management Console.
 
 To begin, log into the Amazon account and navigate to the EC2 console to launch an instance with the following specifications:
 
-* Instance type: c5.4xlarge
+| Property Type      | Value |
+| ----------- | ----------- |
+| Instance Type      | c5.4xlarge       |
+| AMI   | ami-00e87074e52e6c9f9        |
+| OS   | CentOS 7.9.2009 x86_64        |
+| Region   | us-west-2       |
+| Disk Storage      | 32GiB, gp3       |
+| Network | vpc-(Prerequisite-YBU-59)|
+| Auto-assign Public IP | Enable |
+| IAM role   | YBU-iamrole-usw1        |
+| Security Group   | (Prerequisite-YBU-59)        |
+| Tags   | Name: \<my-first-four-letters-of-gmail-address>-YBU-platform-dev-us-west-2        |
+| Example| Name: mkim-YBU-platform-dev-us-west-2 |
+| SSH access key   | Generate and save       |
+| Security Key Pair  | ybu-yugaware \| RSA  - download from course player    |
 
-* IAM instance template: CentOS 7.9.2009 x86_64 - ami-00e87074e52e6c9f9 or a suitable privately created CentOS 7.9 image.
-  The following image can be found in the AWS marketplace in most regions:
+The following image can be found in the AWS marketplace in most regions:
 
-  ![AWS Marketplace has the CentOS 7 AMI.](./assets/images/60-ec2-ami.png)
+![AWS Marketplace has the CentOS 7 AMI.](./assets/images/60-ec2-ami_1600x700.png)
 
-* Network VPC and subnets: (as created in the prerequisite)
+In this lab, you will use a `c5.4xlarge`, in order to demo production level workloads. The specifications of this instance type allow for the necessary processing power, 16 cores with 32GiB RAM, that are necessary to demonstrate Yugabyte Platform effectively when running production workloads.
 
-* Disk storage: Expand to 32GiB and select gp3 for 3000 IOPS.
+The centOS AMI can be found in the AWS Marketplace.
 
-* VPC network: (as created in the prerequisite)
+> **Important:** When creating the EC2 instance, ensure the Public IP address setting is ENABLED if it is desired to connect to the EC2 instance from outside the AWS VPC (eg. from users’ workstations or applications running in Kubernetes environments).
 
-* Security Group: (as created in the prerequisite)
+The Configure Instance Details page will look similar to the following image:
 
-* SSH access key: (Generate and save a new key if required)
+![EC2 configuration details page will have similar values including the IAM role and auto-assignment of the public IP.](./assets/images/70-configure_ec2_1600x700.png)
 
-In this lab, we will be using a `c5.4xlarge`, in order to demo production level workloads. The specifications of this instance type allow for the necessary processing power, 16 cores expanded to 32GiB RAM, that are necessary to demonstrate Yugabyte Platform effectively when running sample workloads.
+> **Important:** Select "Delete on Termination", when selecting the additional storage for a demo otherwise the EBS volume will continue to  even after the EC2 instance is terminated. 
 
-> **Important:** When creating the EC2 instance, ensure the Public IP address setting is ENABLED if it is desired to connect to the server from outside the AWS VPC (eg. from users’ workstations or applications running in Kubernetes environments).
+SSH into the EC2 once it is running to configure the environment for the Yugabyte Platform Management Console.
 
-SSH into the EC2 once it is running to configure the environment for the Yugaware platform.
-
-## Install the Yugaware Platform
+## Install Yugabyte Platform
 
 In the last step, you launched an EC2 instance using the specification and VPC environment required by Yugabyte Platform.
 
-In this step, you will connect to the server and set up the initial configuration so that you can install Replicated, a third party tool used to verify the Yugabyte license and install Yugaware platform.
+In this step, you will SSH into the EC2 instance and set up the initial configuration so that you can install Replicated, a third party tool used to verify the Yugabyte license and install Yugabyte Platform.
 
 ### Setup the Initial Configuration
 
-Once connected to the server by SSH, perform the initial configuration steps to install the Yugaware platform.
+Once connected to the EC2 instance by SSH in the CLI, perform the initial configuration steps to install the Yugaware platform.
 
 * Set the hostname: `sudo hostnamectl set-hostname platform`
 
-* Update the Operating System on the server: `sudo yum -y update`
+* Update the Operating System on the EC2 instance: `sudo yum -y update`
 
 * Install `wget`: `sudo yum install -y wget`
 
 * Install `curl`: `sudo yum install -y curl`
 
-### Install Replicated on the Server
+### Install Replicated on the EC2 instance
 
-Once the server has been configured, you will use Replicated to pull the Yugaware platform image once the license has been authenticated.
+Once the EC2 instance has been configured and is in the "Running" state, you will use Replicated to pull the Yugabyte Platform image once the license has been authenticated.
 
-The following Replication script will first install the correct version of Docker onto the server, then download and run the required Docker containers from the Replicated repository. 
+The following Replication script will first install the correct version of Docker onto the EC2 instance, then download and run the required Docker containers from the Replicated repository. 
 
-In order to complete the next step, the Platform 2.11 (latest) license file, which ends in a `.rli` extension, must be obtained from a Yugabyte representative.
+In order to complete this step, the Platform 2.11 (latest) license file, which ends in a `.rli` extension, must be obtained from a Yugabyte representative.
 
-Logged in as the user, `centos` (default), runs the following command on the server to install Replicated and Docker:
+Logged in as the user, `centos` (default), runs the following command on the EC2 instance to install Replicated and Docker:
 
 ```bash
 curl -sSL https://get.replicated.com/docker | sudo bash
 ```
 
-Once the script has run, a series of prompts will appear in the terminal.
+Once the script has run, a series of prompts will appear in the CLI.
 
 ```bash
-The installer will use service address '<EC2 public IP address>' (discovered from EC2 metadata service)
-The installer has automatically detected the service IP address of this machine as '<EC2 public IP address>'.
+The installer will use service address '<my EC2 public IP address>' (discovered from EC2 metadata service)
+The installer has automatically detected the service IP address of this machine as '<my EC2 public IP address>'.
 Do you want to:
-[0] default: use '<EC2 public IP address>'
+[0] default: use '<my EC2 public IP address>'
 [1] enter new address
 Enter desired number (0-1): 0
 ```
@@ -113,184 +121,164 @@ Do you need a proxy to connect to the internet?
 No
 ```
 
-Once these questions have been answered, Replicated and Docker will be installed on your server.
+Once these questions have been answered, Replicated and Docker will be installed on your EC2 instance.
 
-To verify the installation on your server has completed, you will receive the following output in your terminal:
+To verify the installation on your EC2 instance has completed, you will receive the following output in your CLI:
 
 ```bash
 Operator installation successful
 To continue the installation, visit the following URL in your browser:
-  http://xx.xxx.xxx.xx:8800
+  http://<my-public-IP>:8800
 To create an alias for the replicated cli command run the following in your current shell or log out and log back in:
   source /etc/replicated.alias
 ```
 
-The url in your message will reflect the public IP of your server. At port 8800, the Replicated console that will allow us to pull the Yugaware image from the Replicated registry.
+The URL in your message will reflect the public IP of your EC2 instance. Navigate to this IP at port 8800 to configure, authenticate, and install Yugabyte Platform on the EC2 instance.
 
 ### Upload the Yugabyte Platform license to Install
 
-In the last step, we configured the server and installed Replicated. In the next step, we will pull the Yugaware platform image from the Replicated registry once the license has been authenticated.
+In the last step, you configured the EC2 instance and installed Replicated. In this step, you will pull the Yugabyte Platform image from the Replicated registry once the license has been authenticated.
 
-Navigate to the IP address of your server at port 8800 in your browser to connect to the Replicated console as noted in the proceeding terminal message.
+Navigate to the IP address of your EC2 instance at port 8800 in your browser to connect to the Replicated console as noted in the proceeding CLI message.
 
 There you will see the following screen:
 
-> **TODO: Image** Replicated UI form
+![Yugabyte Platform uses a self-signed SSL/TLS Certificate to secure the communication between your local machine and the Yugabyte Platform Console during setup. You'll see a warning about this in your browser, but you can be confident that this is secure.](./assets/images/100-replicated_1600x700.png)
+
+Proceed with the Yugabyte Platform installation process with the following instructions:
 
 * Select "Continue to Setup" to begin the installation process.
 
-* Next, you will see a warning page regarding security risks due to a self-signed certificate.
+* Next, you will see a warning message regarding a non private connection.
 
-* Select "Advanced" and then select "Accept the risk and continue". 
+* Select "Advanced" and then select "Proceed to <my public IP(unsafe)>. 
    
-> **Important:** There will not be any security risks in this process since we are used a self-signed SSL/TLS Certificate to secure the communication between your local machine and the Admin Console.
+> **Important:** There will not be any security risks in this process since you will use a self-signed SSL/TLS Certificate to secure the communication between your local machine and the Yugabyte Platform Console.
 
-* On the next screen titled HTTPS for admin console, we will select "Use the Self-Signed Cert".
+* Select "Use the Self-Signed Cert", on the next page titled "HTTPS for admin console" as shown in the following image:
 
-* On the resulting pop-up, select "Continue without a hostname". 
-Once the internal setup has completed, the next screen will prompt you to Upload your license.
+![Assign a self-signed certification.](./assets/images/150-https_warning_1600x700.png)
 
-* Select "Choose license" to upload the `.rli` file from your machine.
+* On the resulting dialog box, select "Continue without a hostname". Once the internal setup has completed, the next page will prompt you to upload the Yugabyte Platform license.
 
-* Once uploaded, select "Online" on the next screen and select "Continue".
+* Select "Choose license" to upload the `<my-license>.rli` file from your machine as shown in the following image:
 
-* The next screen will offer a list of Yugabyte Platform versions covered by the license. Select the "Latest" version, 2.11.
+![Description of this action.](./assets/images/160-license_1600x700.png)
 
-* The next screen will progress through a long list of pre-flight checks which will turn to green once verified. Select "Continue" to proceed with the installation.
+* Once uploaded, select "Online" on the next page and select "Continue".
 
-* The next screen titled Settings will consist of a web form. Make sure that the field "Hostname" contains the server's IPV4 public IP.
+* The next page presents a list of Yugabyte Platform versions covered by the license. Select the "Latest" version, 2.11, then select "Continue with Latest version" as shown in the following page:
 
-* Leave the other fields defaults as-is and select "Save" at the bottom of the screen.
+* On the "Secure the Admin Console" page, create a password. This password will log into the Replicated console to retrieve the license version and navigate to the Yugabyte Platform console.
 
-* A dialog box will appear. Select the button "Settings Saved - Restart Now". This will begin the Yugabyte Platform installation process.
+* The next page progresses through a long list of preflight checks that verifies the EC2 instance has the specs to support Yugabyte Platform. The preflight checks turn green once verified. Select "Continue" to proceed with the Yugabyte Platform configuration.
 
-* The next screen will be the Replicated dashboard that indicates the status of the Yugaware installation. 
-Once the status on the left panel has changed from "Starting" to "Started", select "Open".
+* The next page titled "Settings" will consist the Database Config, Application config, and the Metrics config. In the Application config, make sure that the field "Hostname" contains the EC2 instance's IPV4 public IP.
 
-> **Important:** You may receive a Bad Gateway 500 error the first time or two you select the link. Try the link again to display the Yugabyte Platform console which has been installed on port 80 on the server. Supported web browsers included Chrome, Firefox, and Safari.
+* Leave the other fields defaults as-is and select "Save" at the bottom of the page.
+
+* Select "Restart Now" on the dialog box titled "Settings Saved". This will begin the Yugabyte Platform installation process which will take a few moments to complete.
+
+* Once the installation process begins, you will be navigated to the Replicated dashboard. Here you will see the status of the Yugabyte Platform installation. 
+Once the status on the left panel has changed from "Starting" to "Started", select "Open" as shown in the following image:
+
+![The Replicated dashboard displays the status of the installation and the version number.](./assets/images/250-replicated_dashboard_1600x700.png)
+
+
+
+> **Important:** You may receive a Bad Gateway 500 error the first time or two you select the "Open" link. Try the link again to display the Yugabyte Platform console which has been installed on port 80 on the EC2 instance. Supported web browsers included Chrome, Firefox, and Safari.
 
 ## Add the Cloud Provider
 
-In the last step, you installed Replicated, then used it to install Yugaware onto port 80 on the server. In this step, you will register as a user with Yugabyte Platform, accept the license agreement, add the cloud provider, AWS, and specify the region where the Yugabyte cluster will be deployed. To complete this step, you will need the AWS access and secrets keys to your AWS account to allow Yugabyte Platform to create the AWS infrastructure
+In the last step, you installed Replicated, then used it to install Yugabyte Platform onto port 80 on the EC2 instance. In this step, you will register as a user with Yugabyte Platform, accept the license agreement, add the cloud provider, AWS, and specify the region where the Yugabyte universe will be deployed. To complete this step, you will need the AWS access and secrets keys to your AWS account to allow Yugabyte Platform to create the AWS infrastructure for the three nodes in your cluster.
 
-Once you have navigated to the Yugaware console you will see the following which displays the registration form for the Yugabyte Platform:
+Once you have navigated to the Yugabyte Platform console you will see the following which displays the registration form for the Yugabyte Platform:
 
-<!-- > **TODO:** Add Screenshot Yugabyte Platform Admin Console -->
-![Yugabyte Platform Admin Console](./assets/images/200-admin_console_form.png)
+![Yugabyte Platform Admin Console](./assets/images/200-yugabyte_registration_1600x700.png)
 
-Keep these credentials handy to login since they will be necessary to authenticate into Yugabyte Platform.
+Note these credentials since they will be necessary to authenticate into Yugabyte Platform.
 
 * Select the `dev` Environment for this lab.
 
-* Enter your credentials, check the End User License Agreement, then select "Register"
+* Enter your credentials, check the End User License Agreement, then select "Register".
 
 * On the next screen, enter the email and password then select "Login".
 
 * Once your credentials have been authenticated, you will be navigated to the following screen:
 
-<!-- > **TODO:** Add Screenshot Yugabyte Platform Admin Console -->
-![The Yugabyte Platform Admin Console](./assets/images/300-yugabyte_admin_console.png)
+![The Yugabyte Platform Admin Console](./assets/images/260-yugabyte_console_1600x700.png)
 
 ### Configure the Cloud Provider
 
-> **Important:** To complete this step, you will need your access and secret keys for the EC2 instance.
-
-One or more cloud providers can be configured. A provider is a set of configuration properties for accessing physical resources on which to build YugabyteDB Universes. 
+> **Important:** To complete this step, you will need your access and secret keys for your EC2 instance.
 
 Select the "Configure a Provider" button to add a provider on the Cloud Provider form. 
 This page can also be accessed by selecting the "Configs" option on the left hand menu panel.
 
-In this lab, we will continue using AWS as the cloud provider.
-
-<!-- > **TODO:** Add Screenshot Cloud Provider Configuration Form  -->
-![The Cloud Provider Configuration Form](./assets/images/400-cloud_provider_configuration_form.png)
+![The Cloud Provider Configuration Form](./assets/images/300-cloud_provider_1363x982.png)
 
 > **Important:** Only use lower case characters and hyphens "-".
 
-1. Provider Name: my AWS environment
+Fill the proceeding form with the following values:
 
-2. Credential Type: leave as default: "Input Access and Secret Keys
+| Property Name | Value
+|--------|---------|
+| Provider Name | aws |
+| Credential Type | Input Access and Secret keys |
+| Access Key ID | \<my-aws-account-access-key> |
+| Secret Access Key | \<my-aws-account-secret-key> |
+| Keypairs Management | allow YW to manage key pairs |
+| SSH Port | 22 |
+| SSH User | centos |
+| Enable Hosted Zone | no |
+| Air Gap installation | no |
+| VPC Setup | Create a new VPC |
+| Add region | us-west-2 |
 
-3. Access Key ID: Enter the Access Key
-
-4. Secret Access Key: Enter the Secret Key
-
-5. Keypairs Management: leave at the default “allow YW to manage key pairs”
-
-6. SSH Port: 22
-
-7. SSH User: centos
-
-8. Leave all subsequent fields default. (i.e. create VPC as default)
-
-9. Select “Add region” button. The following dialog box will be displayed:
-
-<!-- > **TODO:** Add screenshot of pop-up -->
-![Add a region](./assets/images/500-add_region.png)
-
-10. Use the dropdown to select the AWS region that contains the server created in the previous steps.
-
-> **Important:** For multi-region deployment, more than one region can be selected.
-
-11. Select "Save" to connect Yugabyte Platform to the cloud provider. 
+Select "Add region", then select "Save".
 ## Create a YugabyteDB Universe in Platform
 
-In the last step, the cloud provider was configured and connected to the Yugabyte platform. In this step, you will deploy a multi-zone cluster in the selected AWS region.
+In the last step, the cloud provider was configured and connected to the Yugabyte Platform. In this step, you will deploy a multi-zone cluster in the selected AWS region.
 
-> **Important:** The process of creating a Universe is essentially the same for all provider types, whether it be AWS, GCP, Azure, VMware, Red Hat, or  On-Prem.
+> **Important:** The process of creating a universe is essentially the same for all provider types, whether it be AWS, GCP, Azure, VMware, Red Hat, or  On-Prem.
 
-1. Select the "Universes" option on the left menu.
+* Select the "Universes" option on the left menu, underneath the Dashboard option.
 
-2. Select "Create Universe" button on the top right of this screen.
+* Select "Create Universe" button underneath the profile icon located in the top right corner of the universe details page.
 
 This will display the following form:
 
-<!-- > **TODO:** Screenshot of Universe Form -->
-![Add a region](./assets/images/600-create_universe.png)
+![Deploy a universe to your cloud provider.](./assets/images/500-create_universe_1276x1146.png)
 
-1. In the "Name" field, enter the name of the Universe: Only use lower case letters and dashes.
+| Property Name | Value |
+|-----|------|
+| Name | \<first four letters in you email address>-ybu-platform-us-west-2 |
+| Provider | aws |
+| Regions | US West (Oregon) |
+| Nodes | 3 |
+| Replication Factor | 3 |
+| Instance Type | c5.large (2 cores 4GB RAM) |
+| Assign Public IP | Enable |
+| Use AWS Time Sync | Enable |
+| Enable YSQL | Enable |
+| Enable YSQL Auth | Disable |
+| Enable YCQL | Enable |
+| Enable YCQL Auth | Disable |
+| Enable YEDIS | Disable |
+| Enable Node-to-Node TLS | Disable |
+| Enable Client-to-Node TLS | Disable |
+| Enable Encryption at Rest | Disable |
 
-2. In the "Provider" field, select the cloud provider from a dropdown list that was created in the previous step.
+Select "Create" to deploy the three node cluster into AWS.
+This process will create three EC2 instances in your region in three separate availability zones.
 
-3. In the “Regions” field, select the same region from the dropdown list that contains the server.
+> **Important:** Password authorization has been disabled for the databases and encryption to the Nodes for demonstration purposes only to facilitate easy access to the databases to demo workloads and benchmarking. It is not recommended for production. In order to enable in-transit encryption and database password authorization, toggle these values on. Note that the default database user is `yugabyte` when accessing the databases with the password.
 
-Once the region has been selected, a new section of the page will appear with the three availability zones as configured in the provider, with the default distribution of one YugabyteDB node in each AZ. Note that since the RF or Replication Factor was set at 3, we will create a 3 node cluster.
+Once the process has begun, a progress bar will update the current status of the universe being created. After several minutes, the process will complete and the status will update to "Ready". If this hasn't occurred after a prolonged amount of time, refresh the page to update the state of the universe. The following image verifies that the universe has been successfully deployed to AWS:
 
-> **TODO:** Add screenshot of each AZ.
+![The three node universe has been deployed and is ready for use.](./assets/images/800-deployed_universe_1600x700.png)
 
-> **Important:** To increase capacity, an option is to change the number of nodes to 2 per zone, to make 6 nodes in total (leave the Replication Factor at the default of 3).
 
-4. In the “Instance Type” field enter the EC2 instance type we created previously in this lab: c5.2xlarge. (8 cores and 16GiB RAM) 
+## Next Steps
 
-The completed form should look similar to the following image:
-
-<!-- > **TODO:** Screenshot of a completed form -->
-![Completed Universe Creation form](./assets/images/700-completed_form.png)
-
-5. Select the "Create" button to deploy the configured universe onto the server.
-
-Once the process has begun, a progress bar will update the current status of the Universe being created. After several minutes, the process will complete and the status will update to "Ready". The following image verifies that the Universe has been successfully completed.
-
-<!-- > **TODO:** Screenshot of a multi-zone three node cluster -->
-![Deployed multi-zone Universe](./assets/images/800-universe.png)
-
-## Automated Tooling
-
-* Automated alerts for failures and warnings that affect capacity.
-
-* Automated monitoring for Reads and Writes.
-
-* Cost monitoring for YugabyteDB Platform.
-
-* Health monitoring
-
-* Backups
-
-* Replication
-
-* Queries
-
-* Nodes
-
-> **TODO:** Troubleshooting
-
+To find out how to run a workload on this universe, review lab YBU-58 for more details.
