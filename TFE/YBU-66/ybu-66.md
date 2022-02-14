@@ -1,6 +1,5 @@
-# Scale the Cluster (up/down) on Yugabyte Platform (Anywhere)
-
-## Introduction
+## Scale the cluster
+### About this lab
 
 In this hands-on lab, you will scale a cluster up and down to demonstrate how a universe using Yugabyte Platform is able to react to a change in the capacity of the cluster.  In the real world, the need to change a cluster's capacity could arise due to any number of reasons including increases in traffic due to a special event or a hardware failure. Demonstrating the dynamic auto load balancing ability of a Yugabyte universe is a critical POC to any client.
 

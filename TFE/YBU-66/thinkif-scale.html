@@ -1,0 +1,131 @@
+<div class="fr-view">
+	<style>
+		td,
+		th,
+		tr {
+			padding: 8px;
+		}
+		
+		blockquote {
+			margin: 10px 0;
+			padding: 15px 0;
+			border: none !important;
+		}
+		
+		blockquote p {
+			box-shadow: 2px 2px 5px grey;
+			padding: 15px;
+			border-left: 2px solid rgb(57, 11, 192);
+			background: grey;
+		}
+		
+		img {
+			border: 1px solid black;
+		}
+		
+		.code-highlight {
+			font-family: "Courier New", monospace;
+			font-size: 16px;
+			padding-left: 4px;
+			color: rgb(217, 0, 0);
+		}
+		
+		.bash {
+			background: black;
+			color: white;
+			font-weight: bold;
+			font-family: "Courier New", monospace;
+			width: 80%;
+			padding: 10px;
+		}
+
+	</style>
+
+	<h2 id="about-this-lab">About this lab</h2>
+
+	<p>In this hands-on lab, you will scale a cluster up and down to demonstrate how a universe using Yugabyte Platform is able to react to a change in the capacity of the cluster. In the real world, the need to change a cluster&#39;s capacity could arise due to any number of reasons including a promotional event or a hardware failure. Demonstrating the dynamic auto load balancing ability of a Yugabyte universe is a critical POC to any client.</p>
+
+	<p>This lab will use a three-node multi-zone single region universe that has run the <code class="code-highlight">SqlInserts</code>, <code class="code-highlight">SqlSecondaryIndex</code>, and <code class="code-highlight">SqlSnapshotTxns</code> key-value YSQL workloads on AWS.</p>
+
+	<h3 id="objective">Objective</h3>
+
+	<p>As a sales engineer, I want to demonstrate the auto load balancing ability of the Yugabyte universe when the cluster is scaled up or scaled down.</p>
+
+	<h2 id="prerequisites">Prerequisites</h2>
+
+	<ul>
+		<li>
+
+			<p>A deployed three node universe on AWS will be used to demonstrate scaling up and down. For information on how to deploy a universe, review a previous lab on multi-zone universe deployment.</p>
+		</li>
+		<li>
+
+			<p>The universe will run the <code class="code-highlight">SqlInserts</code>, <code class="code-highlight">SqlSecondaryIndex</code>, and <code class="code-highlight">SqlSnapshotTxns</code> YSQL key-value workloads from the <a href="https://github.com/yugabyte/yb-sample-apps"><code class="code-highlight">yb-sample-apps</code> repository</a>. For a detailed overview on how to do this, review the lab on running YSQL workloads on a Yugabyte universe.</p>
+		</li>
+	</ul>
+
+	<h2 id="scale-up-a-yugabyte-universe">Scale Up a Yugabyte Universe</h2>
+
+	<p>In this step, you will scale up the Yugabyte universe. You will increase the available capacity by adding a node to the current three node cluster and note the speed at which the universe is able to auto balance the workload.</p>
+
+	<p>Normally scaling up a cluster is necessary whenever the current cluster topology is inadequate to handle a workload. That could be due to an increase in traffic due to a growth in an app&#39;s popularity or there is an expected spike in traffic due to a special event or promotion.</p>
+
+	<p>The first step is to sign into Yugabyte Platform and select the universe that is running the YSQL workloads. Any workload will do for this lab however, but we will use this workload&#39;s usage metrics to illustrate the workload changes for each node.</p>
+
+	<p>You will see the universe details page once the universe has been selected:</p>
+
+	<p><img src="https://files.cdn.thinkific.com/file_uploads/540012/images/327/7ec/2f8/100-universe_overview_1600x700.png" style="width: auto; max-width: 100%; height: auto; margin: 5px auto 5px 0px; text-align: left;" class="fr-fic fr-dib fr-fil" srcset="https://files.cdn.thinkific.com/file_uploads/540012/images/327/7ec/2f8/100-universe_overview_1600x700.png?width=1920 1x, https://files.cdn.thinkific.com/file_uploads/540012/images/327/7ec/2f8/100-universe_overview_1600x700.png?width=1920&dpr=2 2x, https://files.cdn.thinkific.com/file_uploads/540012/images/327/7ec/2f8/100-universe_overview_1600x700.png?width=1920&dpr=3 3x"></p>
+
+	<p>In the preceding image, you can see that this universe is a three node cluster with four tables actively processing writes and reads.</p>
+
+	<p>Select the &quot;Actions&quot; dropdown button located under the profile icon in the upper right corner of the page.</p>
+
+	<p>Select the &quot;Edit Universe&quot; option from the dropdown list to navigate to the following form:</p>
+
+	<p><img src="https://files.cdn.thinkific.com/file_uploads/540012/images/a0b/399/d23/150-add_node_1600x700.png" style="width: auto; max-width: 100%; height: auto; margin: 5px auto 5px 0px; text-align: left;" class="fr-fic fr-dib fr-fil" srcset="https://files.cdn.thinkific.com/file_uploads/540012/images/a0b/399/d23/150-add_node_1600x700.png?width=1920 1x, https://files.cdn.thinkific.com/file_uploads/540012/images/a0b/399/d23/150-add_node_1600x700.png?width=1920&dpr=2 2x, https://files.cdn.thinkific.com/file_uploads/540012/images/a0b/399/d23/150-add_node_1600x700.png?width=1920&dpr=3 3x"></p>
+
+	<p>Notice that in the preceding form the value for the &quot;Nodes&quot; has been increased from three to four. Also note a node was added to one of the availability zones in the universe automatically.</p>
+
+	<p>Select &quot;Save&quot; at the bottom of the page.</p>
+
+	<p>You will then be redirected to the universe details page where a status bar indicates the progress of the new task.</p>
+
+	<p>Select the &quot;Nodes&quot; tab on the universe details page to see that the new node has been added but its status is currently &quot;Unreachable&quot;. Once this process has concluded, you will see that the new node has changed to &quot;Live&quot; status as shown in the following image:</p>
+
+	<p><img src="https://files.cdn.thinkific.com/file_uploads/540012/images/280/6d8/6f7/200-three_node_1600x700.png" style="width: auto; max-width: 100%; height: auto; margin: 5px auto 5px 0px; text-align: left;" class="fr-fic fr-dib fr-fil" srcset="https://files.cdn.thinkific.com/file_uploads/540012/images/280/6d8/6f7/200-three_node_1600x700.png?width=1920 1x, https://files.cdn.thinkific.com/file_uploads/540012/images/280/6d8/6f7/200-three_node_1600x700.png?width=1920&dpr=2 2x, https://files.cdn.thinkific.com/file_uploads/540012/images/280/6d8/6f7/200-three_node_1600x700.png?width=1920&dpr=3 3x"></p>
+
+	<p>Notice in the preceding image that within a few minutes, the new node has successfully begun to rebalance the workload from the other nodes. The new node is actively participating in the universe by receiving read and write operations. The SST or Sorted String Tables have also been distributed to the new node. Notice that the <code class="code-highlight">TServer</code> process, but not the <code class="code-highlight">Master</code> process, is running on the new node. This is due to the Raft consensus algorithm which ties the number of <code class="code-highlight">Master</code> processes in a cluster to the Replication Factor, which is three in this universe. For more details on this, review the <a href="https://blog.yugabyte.com/how-does-the-raft-consensus-based-replication-protocol-work-in-yugabyte-db/">blog post regarding the Raft Consensus Replication Protocol.</a></p>
+
+	<h2 id="scale-down-a-yugabyte-universe">Scale Down a Yugabyte Universe</h2>
+
+	<p>In the last step, you scaled up a Yugabyte universe by adding a node. This demonstrated how a universe is able to auto balance the read and write operations onto the new node. In this step, you will scale the universe down by removing a node.</p>
+
+	<p>Navigate to the &quot;Nodes&quot; tab on the Yugabyte Platform console to view the current configuration of four nodes as shown in the following image:</p>
+
+	<p><img src="https://files.cdn.thinkific.com/file_uploads/540012/images/d44/107/b85/250-four_node_1600x700.png" style="width: auto; max-width: 100%; height: auto; margin: 5px auto 5px 0px; text-align: left;" class="fr-fic fr-dib fr-fil" srcset="https://files.cdn.thinkific.com/file_uploads/540012/images/d44/107/b85/250-four_node_1600x700.png?width=1920 1x, https://files.cdn.thinkific.com/file_uploads/540012/images/d44/107/b85/250-four_node_1600x700.png?width=1920&dpr=2 2x, https://files.cdn.thinkific.com/file_uploads/540012/images/d44/107/b85/250-four_node_1600x700.png?width=1920&dpr=3 3x"></p>
+
+	<p>Select the &quot;Actions&quot; button for the new node that was added in the last step.</p>
+
+	<p>Select &quot;Remove Node&quot; from the dropdown list.</p>
+
+	<p>In a few minutes, the new node will be removed from the universe with the &quot;Removed&quot; status as shown in the following image:</p>
+
+	<p><img src="https://files.cdn.thinkific.com/file_uploads/540012/images/3ca/8e7/cde/400-remove_node_1600x700.png" style="width: auto; max-width: 100%; height: auto; margin: 5px auto 5px 0px; text-align: left;" class="fr-fic fr-dib fr-fil" srcset="https://files.cdn.thinkific.com/file_uploads/540012/images/3ca/8e7/cde/400-remove_node_1600x700.png?width=1920 1x, https://files.cdn.thinkific.com/file_uploads/540012/images/3ca/8e7/cde/400-remove_node_1600x700.png?width=1920&dpr=2 2x, https://files.cdn.thinkific.com/file_uploads/540012/images/3ca/8e7/cde/400-remove_node_1600x700.png?width=1920&dpr=3 3x"></p>
+
+	<p>As the universe removes the node, notice that the read and write operations are automatically rebalanced on the remaining nodes in the cluster. Within a few minutes, the universe has rebalanced the workload including the SST files onto the remaining working nodes.</p>
+
+	<p>Notice on the universe Overview page in the following image, that the latency of the read and write operations were only momentarily affected by the removal of a node:</p>
+
+	<p><img src="https://files.cdn.thinkific.com/file_uploads/540012/images/ad1/aa2/aa3/300-latency_1600x700.png" style="width: auto; max-width: 100%; height: auto; margin: 5px auto 5px 0px; text-align: left;" class="fr-fic fr-dib fr-fil" srcset="https://files.cdn.thinkific.com/file_uploads/540012/images/ad1/aa2/aa3/300-latency_1600x700.png?width=1920 1x, https://files.cdn.thinkific.com/file_uploads/540012/images/ad1/aa2/aa3/300-latency_1600x700.png?width=1920&dpr=2 2x, https://files.cdn.thinkific.com/file_uploads/540012/images/ad1/aa2/aa3/300-latency_1600x700.png?width=1920&dpr=3 3x"></p>
+
+	<blockquote>
+
+		<p><strong>Pro Tip:</strong> Note that a node can also be removed by editing the universe and reducing the number of nodes, similar to the process of adding a node that was completed in a previous step in this lab.</p>
+	</blockquote>
+
+	<h2 id="reflection">Reflection</h2>
+
+	<p>In this lab, you added a node to increase the capacity of a Yugabyte universe and noted how the workloads were auto balanced within a few minutes.</p>
+
+	<p>You also removed a node from the universe and discovered how the SST files and read/write capacity were evenly distributed between the remaining nodes to maintain consistent read and write operations regardless of the cluster&#39;s specific topology.</p>
+</div>
