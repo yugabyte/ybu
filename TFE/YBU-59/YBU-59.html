@@ -1,0 +1,780 @@
+
+           <hr>
+<hr>
+<h2 id="about-this-lab">About this lab</h2>
+<p>In this hands-on lab, you'll create the following AWS cloud infrastructure resources and objects required to deploy Yugabyte Platform and a Yugabyte Universe in a given AWS region.</p>
+<h3 id="lab-requirements">Lab requirements</h3>
+<p>For this lab, you'll need a user account that is associated with the ATS pre-sales AWS account. Connect with IT Support (#it-support Slack channel). The IT Support team will provide access to this AWS account using Okta.</p>
+<h2 id="about-aws-resources-the-name-tag-and-the-recommended-naming-convention">About AWS resources, the Name tag, and the recommended naming convention</h2>
+<p>An object or resource in AWS Cloud has one or more <strong>Tags</strong>. A <strong>Tag</strong> is a key-value pair. Most objects have a default tag, the <strong>Name</strong> tag. The key is <code>Name</code>. You specify the value for this key.</p>
+<p>The Name tag helps you identify the resources and objects that you create. As a matter of practice, always specify a value for the <strong>Name</strong> tag using a recommended naming convention. The recommended naming convention in this lab encapsulates the object type, you as a the creator, and the region and/or availability zone where the resource or object exists.</p>
+<h3 id="why-name-my-resources">Why name my resources?</h3>
+<p>You are responsible for terminating and deleting your cloud resources. Therefore, you need to be able to easily identify the resources and objects that you create. Using the recommended naming convention, you will easily be able to identify what is yours among possibly hundreds of objects in the AWS account.</p>
+<blockquote>
+<p><strong>Warning:</strong> To avoid accidentally terminating or deleting the incorrect resources, please embrace the practice of using a recommended naming conventions.  Don't be the new team member that deletes the resources for a live PoC!!!</p>
+</blockquote>
+<h3 id="recommended-naming-convention">Recommended naming convention</h3>
+<p>Since you'll need to identifiy and later terminate or delete the resources and objects that your create in AWS, you must employ a standardized naming convention for all your resources and objects that you create.</p>
+<p>The recommended naming convention consists of several elements or parts, in this order, when applicable:</p>
+<ul>
+<li>an object or resource abbreviation and prefix</li>
+<li>a personal identifier</li>
+<li>a region abbreviation</li>
+<li>an availability zone abbreviation, when applicable</li>
+</ul>
+<p>The following sections will start with a personal identifier. An object or resource name is typically a composite of all elements or parts.</p>
+<h4 id="personal-identifier-abbreviation">Personal identifier abbreviation</h4>
+<p>For your personal identifier, you'll use the first 4 letters of your Yugabyte email address. If your email is less than four characters, you can add additional letters, A to Z. Here are some examples:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Email</th>
+<th style="text-align:left">Personal identifier abbreviation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>sluersen@yugabyte.com</code></td>
+<td style="text-align:left"><code>SLUE</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>mkim@yugabyte.com</code></td>
+<td style="text-align:left"><code>MKIM</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>rao@yugabyte.com</code></td>
+<td style="text-align:left"><code>RAOZ</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="region-abbreviation">Region abbreviation</h4>
+<p>Using an abbreviation for a region name will help you quickly identify a resource or object in a given region. Quick identification minimizes costly mistakes. Here are examples of region abbreviations for AWS:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Region</th>
+<th style="text-align:left">Region abbreviation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">US East (N. Virginia) us-east-1</td>
+<td style="text-align:left"><code>use1</code></td>
+</tr>
+<tr>
+<td style="text-align:left">US East (Ohio) us-east-2</td>
+<td style="text-align:left"><code>use2</code></td>
+</tr>
+<tr>
+<td style="text-align:left">US West (N. California) us-west-1</td>
+<td style="text-align:left"><code>usw1</code></td>
+</tr>
+<tr>
+<td style="text-align:left">US West (Oregon) us-west-2</td>
+<td style="text-align:left"><code>usw2</code></td>
+</tr>
+<tr>
+<td style="text-align:left">Europe (Frankfurt) eu-central-1</td>
+<td style="text-align:left"><code>euc1</code></td>
+</tr>
+<tr>
+<td style="text-align:left">Europe (Ireland) eu-west-1</td>
+<td style="text-align:left"><code>euw1</code></td>
+</tr>
+<tr>
+<td style="text-align:left">Europe (London) eu-west-2</td>
+<td style="text-align:left"><code>euw2</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="availability-zone-abbreviation">Availability zone abbreviation</h4>
+<p>An availability zone (AZ) represents an data center in a given region. There is often two or more availability zones in a given region. Here are some examples of availability zone abbreviations:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Availability zone</th>
+<th style="text-align:left">AZ short name</th>
+<th style="text-align:left">Region + AZ short name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">US East (N. Virginia) us-east-1a</td>
+<td style="text-align:left"><code>1a-az4</code></td>
+<td style="text-align:left"><code>use1-1a-az4</code></td>
+</tr>
+<tr>
+<td style="text-align:left">US East (N. Virginia) us-east-1b</td>
+<td style="text-align:left"><code>1b-az6</code></td>
+<td style="text-align:left"><code>use1-1b-az6</code></td>
+</tr>
+<tr>
+<td style="text-align:left">US East (N. Virginia) us-east-1c</td>
+<td style="text-align:left"><code>1c-az1</code></td>
+<td style="text-align:left"><code>use1-1c-az1</code></td>
+</tr>
+<tr>
+<td style="text-align:left">US East (N. Virginia) us-east-1d</td>
+<td style="text-align:left"><code>1d-az2</code></td>
+<td style="text-align:left"><code>use1-1d-az2</code></td>
+</tr>
+<tr>
+<td style="text-align:left">US East (N. Virginia) us-east-1e</td>
+<td style="text-align:left"><code>1e-az3</code></td>
+<td style="text-align:left"><code>use1-1e-az3</code></td>
+</tr>
+<tr>
+<td style="text-align:left">US East (N. Virginia) us-east-1f</td>
+<td style="text-align:left"><code>1f-az5</code></td>
+<td style="text-align:left"><code>use1-1f-az5</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="resource-and-object-prefix-and-abbreviations">Resource and object prefix and abbreviations</h4>
+<p>In most cases, you can use a prefix for the object identifier, with Security Group names being one of the exceptions. As such, resource and object tag names are composite names that include your personal identifier, region, and when applicable, an availability zone. Here are some examples:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Resource / Object</th>
+<th style="text-align:left">Prefix</th>
+<th style="text-align:left">Example Name</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">VPC</td>
+<td style="text-align:left"><code>vpc</code></td>
+<td style="text-align:left"><code>vpc-SLUE-use1</code></td>
+<td style="text-align:left">A VPC is an isolated portion of the AWS Cloud populated by AWS objects, such as Amazon EC2 instances.</td>
+</tr>
+<tr>
+<td style="text-align:left">Subnet</td>
+<td style="text-align:left"><code>sb</code></td>
+<td style="text-align:left"><code>sb-SLUE-use1-1a-az4</code></td>
+<td style="text-align:left">A subnet is a range of IP addresses in your VPC. You can launch AWS resources, such as EC2 instances, into a specific subnet. Subnets can be either public or private. The example details the region and zone. <a href="https://docs.aws.amazon.com/en_us/console/vpc/subnets">Info</a></td>
+</tr>
+<tr>
+<td style="text-align:left">Route Table</td>
+<td style="text-align:left"><code>rt</code></td>
+<td style="text-align:left"><code>rt-SLUE-use1</code></td>
+<td style="text-align:left">A route table specifies how packets are forwarded between the subnets within your VPC, the internet, and your VPN connection. <a href="https://docs.aws.amazon.com/en_us/console/vpc/route-tables/create-route-table">Info</a></td>
+</tr>
+<tr>
+<td style="text-align:left">Internet Gateway</td>
+<td style="text-align:left"><code>igw</code></td>
+<td style="text-align:left"><code>igw-SLUE-use1</code></td>
+<td style="text-align:left">An internet gateway is a virtual router that connects a VPC to the internet. <a href="https://docs.aws.amazon.com/en_us/console/vpc/internet-gateways#working-with-igw">Info</a></td>
+</tr>
+<tr>
+<td style="text-align:left">NAT Gateway</td>
+<td style="text-align:left"><code>nat</code></td>
+<td style="text-align:left"><code>nat-SLUE-use1</code></td>
+<td style="text-align:left">A highly available, managed Network Address Translation (NAT) service that instances in private subnets can use to connect to services in other VPCs, on-premises networks, or the internet. <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html">Info</a></td>
+</tr>
+<tr>
+<td style="text-align:left">Peering connection</td>
+<td style="text-align:left"><code>pcx</code></td>
+<td style="text-align:left"><code>pcx-SLUE-use1</code></td>
+<td style="text-align:left">A VPC peering connection is a networking connection between two VPCs that enables you to route traffic between them privately. <a href="https://docs.aws.amazon.com/en_us/console/vpc/peering/create">Info</a></td>
+</tr>
+<tr>
+<td style="text-align:left">Network ACLs</td>
+<td style="text-align:left"><code>acl</code></td>
+<td style="text-align:left"><code>acl-SLUE-use1</code></td>
+<td style="text-align:left">A network ACL is an optional layer of security that acts as a firewall for controlling traffic in and out of a subnet. <a href="https://docs.aws.amazon.com/en_us/console/vpc/network-acls#CreateACL">Info</a></td>
+</tr>
+<tr>
+<td style="text-align:left">Security Group</td>
+<td style="text-align:left"><code>sg</code></td>
+<td style="text-align:left"><code>SLUE-sg-use1</code></td>
+<td style="text-align:left">A security group acts as a virtual firewall for your instance to control inbound and outbound traffic. It is specific to a region. You can not use <strong>sg</strong> as a prefix, so use your personal identifier as the prefix and then <strong>sg</strong>. <a href="https://docs.aws.amazon.com/en_us/console/ec2/security-groups">Info</a></td>
+</tr>
+<tr>
+<td style="text-align:left">Key Pair</td>
+<td style="text-align:left"><code>kp</code></td>
+<td style="text-align:left"><code>kp-SLUE-aws</code></td>
+<td style="text-align:left">A key pair, consisting of a private key and a public key, is a set of security credentials that you use to prove your identity when connecting to an EC2 instance. A key pair results in a private key file format, either a <code>.pem</code> or <code>.ppk</code> file. You need this file to secure shell (SSH) into a EC2 instance. You need to keep this private key file secure. Only share it internally using Keybase (not Slack, GDrive, or email).  In AWS, you can copy a key pair from one region to another region. For this reason, the example shows the cloud provider name, <code>aws</code>, rather than a regional identifier.</td>
+</tr>
+<tr>
+<td style="text-align:left">EC2</td>
+<td style="text-align:left"><code>ec2</code></td>
+<td style="text-align:left"><code>ec2-SLUE-use1-1a-az4-platform</code></td>
+<td style="text-align:left">With EC2, you can create  virtual machines, or instances, that run on the AWS Cloud. This example includes the region, the zone, and the purpose of the ec2 instances, for example <code>platform</code>.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="naming-summary">Naming summary</h4>
+<p>When completing the labs in this course, practice using the recommended naming convention. You'll find that this practice will helps you minimize errors and find objects quickly.</p>
+<hr>
+<hr>
+<h2 id="create-your-aws-cloud-infrastructure">Create your AWS cloud infrastructure</h2>
+<p>In this lab, you will create and edit various resources and objects required in a region to deploy the Yugabyte Platform and a Yugabyte Universe such as:</p>
+<ul>
+<li>a VPC</li>
+<li>a routing table</li>
+<li>a subnet</li>
+<li>an internet gateway</li>
+<li>a security group</li>
+<li>a key pair</li>
+<li>AWS user</li>
+</ul>
+<blockquote>
+<p>Note: In upcoming labs, you will create one or more EC2 instances using a specific AMI.</p>
+</blockquote>
+<h3 id="sign-in-to-the-aws-console">Sign in to the AWS console</h3>
+<p>To sign in using SSO and Okta, follow these steps:</p>
+<ul>
+<li>In Google Chrome, open <a href="https://yugabyte.okta.com/app/UserHome">Yugabyte Okta Applications</a>.</li>
+<li>Select <strong>AWS SSO</strong>.</li>
+<li>In the Single Sign-On AWS App, select <strong>AWS Account → yugabyte-ats-presales → Management console</strong>.</li>
+</ul>
+<h3 id="create-your-vpc-for-the-us-east-1-region">Create your VPC for the us-east-1 region</h3>
+<p>After signing in, you can start creating your resources. The first resource that you will create is your Virtual Private Cloud (VPC). A VPC is an isolated portion of the AWS Cloud populated by your AWS objects, such as Amazon EC2 instances.</p>
+<p>Here are the steps to create your VPC:</p>
+<ul>
+<li>In the AWS Console, in the global navigation bar, in the Region drop down list, select <strong>US East (N. Virginia) us-east-1</strong>.</li>
+<li>In the global navigation bar, search for VPC, and then select <strong>Services</strong> → <strong>VPC</strong>.</li>
+<li>Next, select the <strong>VPCs</strong> card.</li>
+<li>In <strong>Your VPCs</strong>, select <strong>Create VPC</strong>.</li>
+<li>In <strong>Create VPC</strong>, specify the following properties:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Property</th>
+<th style="text-align:left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Name tag</td>
+<td style="text-align:left">Use a composite name for your VPC that includes your prefix and the select region, such as: <code>vpc-&lt;MY_4_CHAR&gt;-use1</code>. Replace <code>&lt;MY_4_CHAR&gt;</code> with the first four characters of your @yugabyte.com email address.</td>
+</tr>
+<tr>
+<td style="text-align:left">IPv4 CIDR block</td>
+<td style="text-align:left"><code>IPv4 CIDR manual inut</code></td>
+</tr>
+<tr>
+<td style="text-align:left">IPv4 CIDR</td>
+<td style="text-align:left">Enter a value for private range that allows for one or more  subnet ranges</td>
+</tr>
+</tbody>
+</table>
+<p>Your VPC requires an IPv4 CIDR block. To determine your IPv4 CIDR block, you can use a command-line tool such as <code>ipcalc</code> in terminal or a website such as <a href="http://jodies.de/ipcalc">IPCALC</a>.</p>
+<p>Subnets are typically private, so use a private range. Here are some examples:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Class</th>
+<th style="text-align:left">Range</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Class A</td>
+<td style="text-align:left"><code>10.0.0.0 – 10.255.255.255</code></td>
+</tr>
+<tr>
+<td style="text-align:left">Class B</td>
+<td style="text-align:left"><code>172.16.0.0 – 172.31.255.255</code></td>
+</tr>
+<tr>
+<td style="text-align:left">Class C</td>
+<td style="text-align:left"><code>192.168.0.0 – 192.168.255.255</code></td>
+</tr>
+</tbody>
+</table>
+<p>Your VPC IPv4 CIDR block must be able to accommodate one or more subnets within the range without create conflicts for the subnet ranges.  Here is an example of a VPC IPv4 Class B private range with non-conflicting ranges for three subnets:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Type</th>
+<th style="text-align:left">IPv4 CIDR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">VPC</td>
+<td style="text-align:left"><code>172.21.0.0/16</code></td>
+</tr>
+<tr>
+<td style="text-align:left">Subnet 1</td>
+<td style="text-align:left"><code>172.21.10.0/24</code></td>
+</tr>
+<tr>
+<td style="text-align:left">Subnet 2</td>
+<td style="text-align:left"><code>172.21.12.0/24</code></td>
+</tr>
+<tr>
+<td style="text-align:left">Subnet 3</td>
+<td style="text-align:left"><code>172.21.14.0/24</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>To continue defining your VPC, leave the following properties set to their default values:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Property</th>
+<th style="text-align:left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">IPv6 CIDR block</td>
+<td style="text-align:left">No IPv6 CIDR block</td>
+</tr>
+<tr>
+<td style="text-align:left">Tenancy</td>
+<td style="text-align:left">Default</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Select <strong>Create VPC</strong>.</li>
+<li>In Details view, select <strong>Actions → Edit DNS hostnames</strong>.</li>
+<li>In Edit DNS hostnames, select <strong>Enable</strong>.</li>
+<li>Select <strong>Save Changes</strong>.</li>
+<li>In the <strong>Your VPCs</strong> list view, find your VPC, and select the <strong>VPC ID</strong> link.</li>
+<li>In Details, select <strong>Actions → Edit DNS resolution</strong>.</li>
+<li>In <strong>Edit DNS resolution</strong>, select <strong>Enable</strong>.</li>
+<li>Select <strong>Save Changes</strong>.</li>
+</ul>
+<h3 id="create-a-subnet-for-your-vpc">Create a subnet for your VPC</h3>
+<p>A subnet is a range of IP addresses in your VPC. You can launch AWS resources, such as EC2 instances, into a specific subnet. Subnets can be either public or private. Here are the steps to create one or more subnets for your VPC:</p>
+<ul>
+<li>In the left sidebar, in Virtual Private Cloud, select <strong>Subnets</strong>.</li>
+<li>In the Subnets list view, select <strong>Create subnet</strong>.</li>
+<li>In <strong>Create subnet</strong>, specify the following properties:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Property</th>
+<th style="text-align:left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">VPC - VPC ID</td>
+<td style="text-align:left">In the drop down list, select your VPC.</td>
+</tr>
+<tr>
+<td style="text-align:left">Subnet settings - Subnet name</td>
+<td style="text-align:left">Specify the name of your subnet using the recommended naming convention for the region and availability zone, for example, <code>sb-&lt;MY_4_CHAR&gt;-use1-1a-az4</code>. Replace <code>&lt;MY_4_CHAR&gt;</code> with the first four characters of your @yugabyte.com email address.</td>
+</tr>
+<tr>
+<td style="text-align:left">Subnet settings - Availability zone</td>
+<td style="text-align:left">Select the availability zone for the subnet. Make sure your Subnet name encodes this selection, for example, <code>sb-&lt;MY_4_CHAR&gt;-use1-1f-az5</code>. Replace <code>&lt;MY_4_CHAR&gt;</code> with the first four characters of your @yugabyte.com email address.</td>
+</tr>
+<tr>
+<td style="text-align:left">Subnet settings -IPv4 CIDR blockInfo</td>
+<td style="text-align:left">Specify the IPv4 CIDR block for the subnet so that is does not conflict with any other subnets</td>
+</tr>
+</tbody>
+</table>
+<p>Here is an example of a VPC IPv4 Class B private range with non-conflicting subnets:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Type</th>
+<th style="text-align:left">IPv4 CIDR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">VPC</td>
+<td style="text-align:left"><code>172.21.0.0/16</code></td>
+</tr>
+<tr>
+<td style="text-align:left">Subnet 1</td>
+<td style="text-align:left"><code>172.21.10.0/24</code></td>
+</tr>
+<tr>
+<td style="text-align:left">Subnet 2</td>
+<td style="text-align:left"><code>172.21.12.0/24</code></td>
+</tr>
+<tr>
+<td style="text-align:left">Subnet 3</td>
+<td style="text-align:left"><code>172.21.14.0/24</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="define-vpc-route-table-properties">Define VPC route table properties</h3>
+<p>A route table specifies how packets are forwarded between the subnets within your VPC, the internet, and your VPN connection. When you created your VPC, AWS automatically creates a main route table for your VPC. You need to give this main route table a name and also explicitly associate your subnet or subnets with it.</p>
+<p>Here are the steps to edit the properties of the existing route table:</p>
+<ul>
+<li>In the left sidebar, in Virtual Private Cloud, select <strong>Your VPCs</strong>.</li>
+<li>In Filter VPCs, enter the name of your VPC, e.g., <code>vpc-SLUE-use1</code>.</li>
+<li>In the list view, select your VPC row.</li>
+<li>In the tabs view, in the Details tab,in Main route table, select the route table link.</li>
+<li>In Route tables, select <strong>Actions → View details</strong>.</li>
+<li>In Details, select <strong>Actions → Manage tags</strong>, and specify a value for the Name key property.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Property</th>
+<th style="text-align:left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Tags - Key - Name</td>
+<td style="text-align:left">Specify the name of your route table using the recommended naming convention for the region, for example, <code>rt-&lt;MY_4_CHAR&gt;-use1</code>.  Replace <code>&lt;MY_4_CHAR&gt;</code> with the first four characters of your @yugabyte.com email address.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Select <strong>Save</strong>.</li>
+<li>In Details, select <strong>Actions → Edit subnet associations</strong>.</li>
+<li>In <strong>Edit subnet associations</strong>, select your subnets in the list view.</li>
+<li>Verify the Selected subnets.</li>
+<li>Select <strong>Save associations</strong>.</li>
+</ul>
+<h3 id="create-an-internet-gateway">Create an Internet gateway</h3>
+<p>An internet gateway is a virtual router that connects your VPC to the internet. Here are the steps to create your internet gateway:</p>
+<ul>
+<li>In the left sidebar, in Virtual Private Cloud, select <strong>Internet Gateways</strong>.</li>
+<li>In Internet Gateways, select <strong>Create internet gateway</strong>.</li>
+<li>In Create internet gateway, specify the following properties:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Property</th>
+<th style="text-align:left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Internet gateway settings - Name tag</td>
+<td style="text-align:left">Specify the name of your internet gateway using the recommended naming convention for the region, for example, <code>igw-&lt;MY_4_CHAR&gt;-use1</code>. Replace <code>&lt;MY_4_CHAR&gt;</code> with the first four characters of your @yugabyte.com email address.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>In the Internet gateway details,  select <strong>Actions → Attach to VPC</strong>.</li>
+<li>In Attach to VPC, in VPC, in the drop down list, select your VPC.</li>
+<li>Select <strong>Attach internet gateway</strong>.</li>
+</ul>
+<h3 id="edit-your-route-table">Edit your route table</h3>
+<p>Now that you have an internet gateway for your VPC, the next steps are to add your internet gateway to your route table:</p>
+<ul>
+<li>In the left sidebar, in Virtual Private Cloud, select <strong>Route Tables</strong>.</li>
+<li>If needed, use the Filter to find your route table.</li>
+<li>Select your route table in the list view.</li>
+<li>In the tab view, first select the <strong>Routes</strong> tab an then select <strong>Edit routes</strong>.</li>
+<li>In Edit routes, select <strong>Add route</strong>.</li>
+<li>In the new row, specific the following column values:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Column</th>
+<th style="text-align:left">Value</th>
+<th style="text-align:left">Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Destination</td>
+<td style="text-align:left"><code>0.0.0.0/0</code></td>
+<td style="text-align:left">This is the IPv4 address for the entire internet, meaning this is a public internet route</td>
+</tr>
+<tr>
+<td style="text-align:left">Target</td>
+<td style="text-align:left"><code>igw-&lt;MY_4_CHAR&gt;-use1</code></td>
+<td style="text-align:left">Replace <code>&lt;MY_4_CHAR&gt;</code> with the first four characters of your @yugabyte.com email address. First select Internet Gateway in the list. Then select your internet gateway that you just created.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Select <strong>Save changes</strong>.</li>
+<li>In the Routes tab view, confirm that there is a noew route destination of <code>0.0.0.0/0</code> with your  internet gateway.</li>
+</ul>
+<h3 id="edit-your-network-acl">Edit your Network ACL</h3>
+<p>When you created your subnet, AWS created a Network ACL (Access Control List) for you. A network ACL is an optional layer of security that acts as a firewall for controlling traffic in and out of a subnet. Follow these steps to identify and name your Network ACL:</p>
+<ul>
+<li>In the left sidebar, in Security, select <strong>Network ACLs</strong>.</li>
+<li>To help identify your Network ACLs, you can filter the list using the name of your VPC or subnet.</li>
+<li>In the list view, select the Network ACL for your subnet.</li>
+<li>Select <strong>Actions → Manage tags</strong>.</li>
+<li>For the key property, enter <code>Name</code>.</li>
+<li>For the value property, enter the name of your Network ACL, such as <code>acl-&lt;MY_4_CHAR&gt;-use1</code> .</li>
+<li>Select <strong>Save</strong>.</li>
+</ul>
+<h3 id="create-a-security-group">Create a Security Group</h3>
+<p>A security group acts as a virtual firewall for your instance to control inbound and outbound traffic. It is specific to a region and consists of various rules for allowed traffic over certain internet protocols and ports.</p>
+<blockquote>
+<p>Note: You cannot use <code>sg</code> as a prefix for the security group name, so use your personal identifier as the prefix and then <code>sg</code>. You can, however, use <code>sg</code> as a prefix for the object name.</p>
+</blockquote>
+<p>Here are the steps to create your security group for your VPC:</p>
+<ul>
+<li>In the left sidebar, in Security, select <strong>Security Groups</strong>.</li>
+<li>In <strong>Security Groups</strong>, select <strong>Create security group</strong>.</li>
+<li>In <strong>Create security group</strong>, in Basic details, specific the following properties:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Property</th>
+<th style="text-align:left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Basic details - Security group name</td>
+<td style="text-align:left">Specify the name of your security group using the recommended naming convention, for example, <code>&lt;MY_4_CHAR&gt;-sg-use1</code>.  Replace <code>&lt;MY_4_CHAR&gt;</code> with the first four characters of your @yugabyte.com email address.</td>
+</tr>
+<tr>
+<td style="text-align:left">Basic details - Description</td>
+<td style="text-align:left">Enter a short description, for example, <code>sg-&lt;MY_4_CHAR&gt;-use1</code>.  Replace <code>&lt;MY_4_CHAR&gt;</code> with the first four characters of your @yugabyte.com email address.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>In Inbound rules, select <strong>Add rule</strong> to create a new rule row for the following:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Type</th>
+<th style="text-align:left">Protocol</th>
+<th style="text-align:right">Port range</th>
+<th style="text-align:left">Source (1)</th>
+<th style="text-align:right">Source (2)</th>
+<th style="text-align:left">Description - optional</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">SSH</td>
+<td style="text-align:left">TCP</td>
+<td style="text-align:right">22</td>
+<td style="text-align:left">Anywhere IpV4</td>
+<td style="text-align:right"><code>0.0.0.0/0 </code></td>
+<td style="text-align:left">SSH</td>
+</tr>
+<tr>
+<td style="text-align:left">HTTP</td>
+<td style="text-align:left">TCP</td>
+<td style="text-align:right">80</td>
+<td style="text-align:left">Anywhere IpV4</td>
+<td style="text-align:right"><code>0.0.0.0/0 </code></td>
+<td style="text-align:left">Web YB Platform</td>
+</tr>
+<tr>
+<td style="text-align:left">HTTPS</td>
+<td style="text-align:left">TCP</td>
+<td style="text-align:right">443</td>
+<td style="text-align:left">Anywhere IpV4</td>
+<td style="text-align:right"><code>0.0.0.0/0 </code></td>
+<td style="text-align:left">Web YB Platform</td>
+</tr>
+<tr>
+<td style="text-align:left">Custom</td>
+<td style="text-align:left">TCP</td>
+<td style="text-align:right">5433</td>
+<td style="text-align:left">Anywhere IpV4</td>
+<td style="text-align:right"><code>0.0.0.0/0 </code></td>
+<td style="text-align:left">API endpoint YSQL</td>
+</tr>
+<tr>
+<td style="text-align:left">Custom TCP</td>
+<td style="text-align:left">TCP</td>
+<td style="text-align:right">9042</td>
+<td style="text-align:left">Anywhere IpV4</td>
+<td style="text-align:right"><code>0.0.0.0/0 </code></td>
+<td style="text-align:left">API endpoint YCQL</td>
+</tr>
+<tr>
+<td style="text-align:left">Custom TCP</td>
+<td style="text-align:left">TCP</td>
+<td style="text-align:right">7000</td>
+<td style="text-align:left">Anywhere IpV4</td>
+<td style="text-align:right"><code>0.0.0.0/0 </code></td>
+<td style="text-align:left">Web YB-Master Admin</td>
+</tr>
+<tr>
+<td style="text-align:left">Custom TCP</td>
+<td style="text-align:left">TCP</td>
+<td style="text-align:right">7100</td>
+<td style="text-align:left">Custom</td>
+<td style="text-align:right">Your VPC IPv4 CIDR Block</td>
+<td style="text-align:left">Inter-nodal RPC YB-Master</td>
+</tr>
+<tr>
+<td style="text-align:left">Custom TCP</td>
+<td style="text-align:left">TCP</td>
+<td style="text-align:right">8080</td>
+<td style="text-align:left">Anywhere IpV4</td>
+<td style="text-align:right"><code>0.0.0.0/0 </code></td>
+<td style="text-align:left">Web YB Platform Http Alternate</td>
+</tr>
+<tr>
+<td style="text-align:left">Custom TCP</td>
+<td style="text-align:left">TCP</td>
+<td style="text-align:right">8800</td>
+<td style="text-align:left">Anywhere IpV4</td>
+<td style="text-align:right"><code>0.0.0.0/0 </code></td>
+<td style="text-align:left">Web Replicated for Platform</td>
+</tr>
+<tr>
+<td style="text-align:left">Custom TCP</td>
+<td style="text-align:left">TCP</td>
+<td style="text-align:right">9000</td>
+<td style="text-align:left">Anywhere IpV4</td>
+<td style="text-align:right"><code>0.0.0.0/0 </code></td>
+<td style="text-align:left">Web YB-TServer Admin</td>
+</tr>
+<tr>
+<td style="text-align:left">Custom TCP</td>
+<td style="text-align:left">TCP</td>
+<td style="text-align:right">9090</td>
+<td style="text-align:left">Anywhere IpV4</td>
+<td style="text-align:right"><code>0.0.0.0/0 </code></td>
+<td style="text-align:left">Web Prometheus</td>
+</tr>
+<tr>
+<td style="text-align:left">Custom TCP</td>
+<td style="text-align:left">TCP</td>
+<td style="text-align:right">9100</td>
+<td style="text-align:left">Custom</td>
+<td style="text-align:right">Your VPC IPv4 CIDR Block</td>
+<td style="text-align:left">Inter-nodal RPC YB-TServer</td>
+</tr>
+<tr>
+<td style="text-align:left">Custom TCP</td>
+<td style="text-align:left">TCP</td>
+<td style="text-align:right">9300</td>
+<td style="text-align:left">Anywhere IpV4</td>
+<td style="text-align:right"><code>0.0.0.0/0 </code></td>
+<td style="text-align:left">Prometheus Node targets</td>
+</tr>
+<tr>
+<td style="text-align:left">Custom TCP</td>
+<td style="text-align:left">TCP</td>
+<td style="text-align:right">12000</td>
+<td style="text-align:left">Custom</td>
+<td style="text-align:right">Your VPC IPv4 CIDR Block</td>
+<td style="text-align:left">YB-TServer API YCQL</td>
+</tr>
+<tr>
+<td style="text-align:left">Custom TCP</td>
+<td style="text-align:left">TCP</td>
+<td style="text-align:right">13000</td>
+<td style="text-align:left">Custom</td>
+<td style="text-align:right">Your VPC IPv4 CIDR Block</td>
+<td style="text-align:left">YB-TServer API YSQL</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>In Outbound rules, leave the <strong>All traffic</strong> <code>0.0.0.0/0 </code>  settings.</li>
+<li>In Tags - optional, select Add new tag.</li>
+<li>In the Tag row, enter <code>Name</code> for the key, and for the value, specify the name of the resource, such as <code>sg-&lt;MY_4_CHAR&gt;-use1</code>.</li>
+<li>Select <strong>Create security group</strong>.</li>
+<li>Verify the successfully creation of the security group.</li>
+</ul>
+<h4 id="additional-resources">Additional resources</h4>
+<p>Here are some helpful links in Yugabyte documentation related to Security Groups:</p>
+<ul>
+<li><a href="https://docs.yugabyte.com/latest/reference/configuration/default-ports/#root">https://docs.yugabyte.com/latest/reference/configuration/default-ports/#root</a></li>
+<li><a href="https://docs.yugabyte.com/latest/reference/configuration/default-ports/#root">https://docs.yugabyte.com/latest/yugabyte-platform/install-yugabyte-platform/prepare-environment/aws/#create-a-new-security-group-optional</a></li>
+</ul>
+<h3 id="create-your-key-pair-for-your-ec2-instances">Create your Key Pair for your EC2 instances</h3>
+<p>A key pair, consisting of a private key and a public key, is a set of security credentials that you use to prove your identity when connecting to an EC2 instance. A key pair results in a private key file format, either a <code>.pem</code> or <code>.ppk</code> file.  A <code>.pem</code> file is for Bash shell. A <code>.ppk</code> file is for <a href="https://www.putty.org/">PuTTY</a>.</p>
+<blockquote>
+<p>Security Notice: You need your private key file to secure shell (SSH) into a EC2 instance. Obviously, you need to keep your private key file secure. Only share it internally using Keybase (not Slack, GDrive, or email).</p>
+</blockquote>
+<p>In AWS, you can copy a key pair from one region to another region. For this reason, the steps here detail how to create and name a global key pair file for AWS Cloud that you can use across regions.</p>
+<ul>
+<li>In the global navigation bar, search for EC2, and then select <strong>Services</strong> → <strong>EC2</strong>.</li>
+<li>In the left sidebar, in Network &amp; Security, select <strong>Key Pairs</strong>.</li>
+<li>In <strong>Key pairs</strong>, select <strong>Create key pair</strong>.</li>
+<li>In <strong>Create key pair</strong>, specify the following properties:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Property</th>
+<th style="text-align:left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Name</td>
+<td style="text-align:left">Specify the name of your key pair using the recommended naming convention, for example, <code>kp-&lt;MY_4_CHAR&gt;-aws</code>. Replace <code>&lt;MY_4_CHAR&gt;</code> with the first four characters of your @yugabyte.com email address.</td>
+</tr>
+<tr>
+<td style="text-align:left">Key pair type</td>
+<td style="text-align:left">Select RSA</td>
+</tr>
+<tr>
+<td style="text-align:left">Private key file format</td>
+<td style="text-align:left">Select<code>.pem</code>.  Using PuTTYGen with Pageant in Windows, you can convert a <code>.pem</code> key into a <code>.ppk</code> file.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Select <strong>Create key pair</strong>.</li>
+<li>Verify that your browser successfully downloaded your <code>.pem</code> file.</li>
+<li>Filter the list view using your key pair name and verify the result.</li>
+</ul>
+<h4 id="move-your-private-key-file-to-a-hidden-ssh-directory">Move your private key file to a hidden ssh directory</h4>
+<p>You'll now move your <code>.pem</code> file to a hidden <code>.ssh</code> directory and change the file permissions. Here are the steps:</p>
+<ul>
+<li>Open Terminal or similar such as <a href="https://iterm2.com/">iTerm2</a>.</li>
+<li>From your user path (default), create a hidden <code>.ssh</code> directory, and confirm that it exists.</li>
+<li>Change the file permissions for you <code>.pem</code> file in your browser download directory.</li>
+<li>Copy the <code>.pem</code> to you <code>.ssh</code> directory.</li>
+<li>In the following example, replace <code>&lt;MY_4_CHAR&gt;</code> with the first four characters of your @yugabyte.com email address.</li>
+</ul>
+<pre><code><code><div>MY_4_CHAR = '&lt;MY_4_CHAR&gt;'
+echo $MY_4_CHAR
+cd
+mkdir .ssh
+ls -a | grep .ssh
+chmod 400 ~/Downloads/kp-${MY_4_CHAR}-aws.pem
+mv ~/Downloads/kp-${MY_4_CHAR}-aws.pem ~/.ssh/kp-${MY_4_CHAR}-aws.pem
+cat ~/.ssh/kp-${MY_4_CHAR}-aws.pem
+</div></code></code></pre>
+<h3 id="create-an-aws-user-for-aws-secrets">Create an AWS User for AWS Secrets</h3>
+<p>In AWS, create an IAM user to generate an AWS access key ID and secret access key.</p>
+<blockquote>
+<p>Security Notice: You need your AWS Secrets for programmatic access to kept secure. Do not share these credential outside of Yugabyte. Only share these secrets internally using Keybase (not Slack, GDrive, or email).</p>
+</blockquote>
+<p>Here are the steps to create a user with AWS secrets:</p>
+<ul>
+<li>In the global navigation bar, search for Users, and then select <strong>Features</strong> → <strong>Users</strong>.</li>
+<li>In <strong>Users</strong> (IAM users), select <strong>Add Users</strong>.</li>
+<li>In the <strong>Add Users</strong> wizard, for <strong>User name</strong>, enter your email address,<a href="mailto:NAME@YUGABYTE.COM">NAME@YUGABYTE.COM</a>.</li>
+<li>In <strong>Select AWS credential type</strong>, select <strong>Access key - Programmatic access</strong>.</li>
+<li>Select <strong>Next: Permission</strong>.</li>
+<li>In <strong>Add user to group</strong>, select <strong>ats-admin</strong>.</li>
+<li>Select <strong>Next: Tags</strong>.</li>
+<li>You do not need to add any additional tags. Select <strong>Next: Review</strong>.</li>
+<li>Select <strong>Create user</strong>.</li>
+<li>Select <strong>Download.cvs</strong>. The name of the download file is <code>new_user_credentials.csv</code>. Keep this file secure.</li>
+<li>Select <strong>Close</strong>.</li>
+</ul>
+<h2 id="all-done">All done!</h2>
+<p>You did it! You created the following AWS cloud infrastructure resources and objects required to deploy Yugabyte Platform and a Yugabyte Universe in a given AWS region:</p>
+<ul>
+<li>VPC</li>
+<li>Routing table</li>
+<li>Subnet</li>
+<li>Internet gateway</li>
+<li>Security group</li>
+<li>Key Pair</li>
+<li>AWS user with AWS secrets</li>
+</ul>
+<p>That was a lot! But now you are now ready to start your journey with installing, configuring, and deploying Yugabyte and Yugabyte Platform.</p>
+<p>In other labs, you'll be asked to create resources in additional AWS regions. If you get stuck, remember to refer back to his lab.</p>
+
+    </body>
+    </html>
