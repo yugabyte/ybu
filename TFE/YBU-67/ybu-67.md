@@ -1,72 +1,8 @@
-<!--  Rolling Configuration Change using G Flags -->
-<!-- Naming convention
-VPC
-vpc-SLUE-use1
-vpc-&lt;MY_4_CHAR&gt;-use1
-
-Subnet
-sb-SLUE-use1-1a-az4
-
-Routing Table
-rt-SLUE-use1
-
-Internet Gateway
-igw-SLUE-use1
-
-Security Group
-sg-SLUE-use1
-S3 Bucket
-s3-SLUE-use1
-s3-&lt;MY_4_CHAR&gt;-use1
-IAM role - EC2
-iamrole-YBU
-
-NAT gateway
-nat-SLUE-use1
-
-Universe
-universe-slue-use1
-
-Peering Connection
-pcx-SLUE-use1
-
-ACL
-acl-SLUE-use1
-
-pem key
-kp-SLUE-use1
-
-ec2-SLUE-use1-1a-az4-platform
-ec2-&lt;MY_4_CHAR&gt;-use1-1a-az4-platform
-
-#### Personal identifier abbreviation
-For your personal identifier, you'll use the first 4 letters of your Yugabyte email address. If your email is less than four characters, you can add additional letters, A to Z. Here are some examples:
-
-| Email | Personal identifier abbreviation |
-|:-|:-|
-| `sluersen@yugabyte.com` | `SLUE` |
-| `mkim@yugabyte.com` | `MKIM` |
-| `rao@yugabyte.com` | `RAOZ` |
-
-MY_4_CHAR = '<MY_4_CHAR>'
-echo $MY_4_CHAR
-cd
-mkdir .ssh
-ls -a | grep .ssh
-chmod 400 ~/Downloads/kp-${MY_4_CHAR}-aws.pem
-mv ~/Downloads/kp-${MY_4_CHAR}-aws.pem ~/.ssh/kp-${MY_4_CHAR}-aws.pem
-cat ~/.ssh/kp-${MY_4_CHAR}-aws.pem
-```
- -->
 ### About this lab
 
-In this hands-on lab, you will perform a rolling configuration change of a cluster on Yugabyte Platform. A rolling configuration change is one method of replacing current nodes for new ones that are required due to an update to the underlying infrastructure. You will accomplish this task by updating the G-flag on the Yugabyte Platform Admin console as well as adding a timeout flag. 
+In this hands-on lab, you will perform a rolling configuration change of a cluster on Yugabyte Platform. A configuration change is a way to change how the cluster is operating. This could be due to a customer request for better performance or for increased functionality. To accomplish a configuration change, you will update the G-flag on the Tablet Servers in the Yugabyte Platform Admin console by adding a timeout for reads and writes. 
 
-The main reason why a cloud environment needs to be updated is because software intrinsically gets stale over time. Whether it's bug fixes, version upgrades, dependency changes, or feature additions; regular maintenance is a required task for highly resilient systems. 
-
-"If you are not moving forward, you are moving backward." ~ Gorbachev
-
-A rolling change is a common method to implement a configuration change to a cluster of nodes since there is minimal change in reliably and performance of the database.
+A rolling change is a common method to implement a configuration change to a cluster of nodes since there is minimal impact on reliably and performance of the database. The reason the impact is limited is because only one node is updated at a time. This means the load is balanced between the remaining active nodes while the one that's being updated has its workload removed.
 
 ### Objective
 
@@ -103,6 +39,77 @@ Once signed in the Yugabyte Platform Admin console, select the YugabyteDB univer
 
 ![The Universe is currently running several workloads.](./assets/images/100-universe_1920x830.png) 
 
-Keeping track of the performance of this app is important in order to test the universe for performance degradation due to the rolling config change.
+> **Troubleshoot:** Having trouble navigating to the Yugabyte Platform Admin console? Make sure the URL address is `http`, not `https`.
 
-On the Universe details page, select the More dropdown located under the profile icon on the top right corner.
+Keeping track of the performance is important in order to monitor the universe for performance degradation due to the rolling config change. This could be increases in latency or maxing out the resources on a node.
+
+### Start a rolling config change
+
+Navigate the Universe details page and execute the following steps:
+
+* Select the **More** drop down located under the profile icon on the top right corner. 
+
+> **Pro-Tip:** If you don't see the **Actions** list, try expanding your window.
+
+* Select **Edit Flags** from the drop down list.
+
+* In the pop up, Flags, select **Add Flags**.
+
+* Select **Add as Free text**.
+
+* Select Add to **T-Server**.
+
+* Select **Add to T-Server**.
+
+* Add the following JSON:
+
+    `{ "client_read_write_timeout_ms": 60000 }`
+
+This flag sets the timeout for a read or write as 60000ms.
+
+* In G-Flags Upgrade Options, select **Rolling**.
+
+* Select OK.
+  
+### Verify a rolling config change
+
+To verify that the rolling config change is taking place, navigate to the Universe details page and select the **Nodes** tab.
+
+As shown in the following image, one of the nodes is slowly shutting down:
+
+![One of the nodes in the cluster is updating its configuration.](./assets/images/200-gflag-1-1099x582.png)
+
+Notice that a few minutes later, once the update has completed and the node has come back online, a different node begins its update as shown in the following image:
+
+![Another different node in the cluster is updating its configuration.](./assets/images/300-gflag-2-1083x587.png)
+
+In this **rolling** config methodology, only one node goes offline to update while the other nodes balance the remaining load. This is how the universe maintains its performance, resiliency, and availability.
+
+One drawback of this method however is that the update does take longer to implement. If this is the more pressing concern, then the **Non-Rolling** option should be considered. This will update all the nodes at once, but will make the YugabyteDB unavailable, therefore causing downtime.
+
+The third option is **Non-Restart** option which uses in-memory cache.
+
+### Verify the configuration was changed
+
+* In the Universe details page, select the **Nodes** tab.
+
+* Select the **Actions** drop down list of the node you wish to connect.
+
+* Select Connect.
+
+* Copy the shell script command.
+
+* SSH into the EC2 instance that is hosting Yugabyte Platform.
+
+* Execute the shell script command.
+  
+* Display the contents of the `server.conf` file with the following command: `cat /home/yugabyte/tserver/conf/server.conf`
+  
+If the G-Flag update was successful, you will see the timeout as shown in the following image:
+
+![Description of this action.](./assets/images/400-timeout_829x706.png)
+
+Nice work, the G-Flag was successfully added to this node.
+### Reflection
+
+In this lab, you implemented a rolling config change to a cluster on Yugabyte Platform. You understand why configuration changes are common and why a rolling config change is better for highly resilient clusters than a non-rolling strategy. 
