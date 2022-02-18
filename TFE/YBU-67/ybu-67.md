@@ -113,3 +113,18 @@ Nice work, the G-Flag was successfully added to this node.
 ### Reflection
 
 In this lab, you implemented a rolling config change to a cluster on Yugabyte Platform. You understand why configuration changes are common and why a rolling config change is better for highly resilient clusters than a non-rolling strategy. 
+
+### Terminate the universe
+
+If you do not plan on continuing the curriculum or decide it will be sometime before you touch this universe for a while, go ahead and terminate this universe so as not to incur unnecessary costs.
+
+• Go to the Universe details page.
+• Select Actions.
+• Select Delete Universe from the drop down list.
+• Enter the name of the universe.
+• Check the Ignore Errors and Force Delete box.
+• Check the Delete Backups box.
+• Select Yes
+
+Deleting a universe will also remove the underlying infrastructure in AWS.
+Pausing a universe however will not.
