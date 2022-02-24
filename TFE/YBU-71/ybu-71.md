@@ -117,7 +117,7 @@ If you do not plan on continuing the curriculum or decide it will be sometime be
 * Enter the name of the universe.
 * Check the Ignore Errors and Force Delete box.
 * Check the Delete Backups box.
-* Select Yes
+* Select Yes.
 
 Deleting a universe will also remove the underlying infrastructure in AWS.
 Pausing a universe however will not.
