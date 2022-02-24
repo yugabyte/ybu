@@ -1,6 +1,29 @@
+<div class="fr-view">
+<style>
+    td,
+    th,
+    tr {
+        padding: 8px;
+    }
+    
+    blockquote {
+        margin: 10px 0;
+        padding: 15px 0;
+        border: none !important;
+    }
+    
+    blockquote p {
+        box-shadow: 2px 2px 10px grey;
+        padding: 15px;
+        border-left: 2px solid rgb(57, 11, 192)
+    }
+    
+    img {
+        border: 1px solid black;
+    }
+</style>
 
-           <hr>
-<hr>
+
 <h2 id="about-this-lab">About this lab</h2>
 <p>In this hands-on lab, you'll create the following AWS cloud infrastructure resources and objects required to deploy Yugabyte Platform and a Yugabyte Universe in a given AWS region.</p>
 <h3 id="lab-requirements">Lab requirements</h3>
@@ -734,7 +757,7 @@
 <li>Copy the <code>.pem</code> to you <code>.ssh</code> directory.</li>
 <li>In the following example, replace <code>&lt;MY_4_CHAR&gt;</code> with the first four characters of your @yugabyte.com email address.</li>
 </ul>
-<pre><code><code><div>MY_4_CHAR = '&lt;MY_4_CHAR&gt;'
+<div class="highlight"><pre><code class="language-bash">MY_4_CHAR = '&lt;MY_4_CHAR&gt;'
 echo $MY_4_CHAR
 cd
 mkdir .ssh
@@ -742,7 +765,7 @@ ls -a | grep .ssh
 chmod 400 ~/Downloads/kp-${MY_4_CHAR}-aws.pem
 mv ~/Downloads/kp-${MY_4_CHAR}-aws.pem ~/.ssh/kp-${MY_4_CHAR}-aws.pem
 cat ~/.ssh/kp-${MY_4_CHAR}-aws.pem
-</div></code></code></pre>
+</code></pre></div>
 <h3 id="create-an-aws-user-for-aws-secrets">Create an AWS User for AWS Secrets</h3>
 <p>In AWS, create an IAM user to generate an AWS access key ID and secret access key.</p>
 <blockquote>
@@ -775,6 +798,4 @@ cat ~/.ssh/kp-${MY_4_CHAR}-aws.pem
 </ul>
 <p>That was a lot! But now you are now ready to start your journey with installing, configuring, and deploying Yugabyte and Yugabyte Platform.</p>
 <p>In other labs, you'll be asked to create resources in additional AWS regions. If you get stuck, remember to refer back to his lab.</p>
-
-    </body>
-    </html>
+</div>
