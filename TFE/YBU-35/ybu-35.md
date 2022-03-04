@@ -2,7 +2,13 @@
 
 ## Introduction
 
-In this hands-on lab, you will run a PostgreSQL workload on a multi-node Yugabyte Universe. In this example, you will use a three node cluster in a multi-zone topology that was set up in a previous lab. Each node will reside in the same region, but in a different availability zone. The purpose is to validate the Yugabyte Universe is functioning properly as well as examine the metric tools on the Yugabyte Platform.
+In this hands-on lab, you will use xCluster replication to connect two independent YugabyteDB universes in a multi-region topology. The reason why a client would want this type of topology is to create high availability and resiliency in different geographical regions.
+
+Up until now, you have created a single cluster that is geographically distributed across different availability zones. You can also stretch a cluster across different geographic regions as well. These topologies are considered synchronous replication.
+
+But clients who often only want to use this backup as an emergency option often can't justify the additional complexity or operational costs involved with a synchronous replication design that will multi-regional. These clients can use the asynchronous replication offered by xCluster to save and simplify, although the trade off is a decrease in consistency from transactional to timeline consistency due to the asynchronous nature of the replication.
+
+For a deeper dive into the different types of regional replication methodologies and their use cases, review the [Yugabyte docs on multi-region deployment](https://docs.yugabyte.com/latest/explore/multi-region-deployments/).
 
 ### Objective
 
