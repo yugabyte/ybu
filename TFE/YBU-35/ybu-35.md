@@ -6,77 +6,73 @@ In this hands-on lab, you will use xCluster replication to connect two independe
 
 Up until now, you have created a single cluster that is geographically distributed across different availability zones. You can also stretch a cluster across different geographic regions as well. These topologies are considered synchronous replication.
 
-But clients who often only want to use this backup as an emergency option often can't justify the additional complexity or operational costs involved with a synchronous replication design that will multi-regional. These clients can use the asynchronous replication offered by xCluster to save and simplify, although the trade off is a decrease in consistency from transactional to timeline consistency due to the asynchronous nature of the replication.
+But many clients often can't justify the additional complexity or operational costs involved with a synchronous replication in a multi-regional topology. These clients can use the asynchronous replication offered by xCluster to save and simplify, although the trade off is a decrease in consistency from transactional to timeline consistency due to the asynchronous nature of the replication.
 
 For a deeper dive into the different types of regional replication methodologies and their use cases, review the [Yugabyte docs on multi-region deployment](https://docs.yugabyte.com/latest/explore/multi-region-deployments/).
 
+In this lab, you will connect two independent three node multi-zone clusters. You will use AWS as the cloud provider to deploy both clusters. One cluster will be in located in us-west-2 and the other will be in the us-east-1. You will begin by implementing unidirectional replication, meaning a source cluster will replicate its data to a target cluster. Any writes made to the source cluster will be replicated to the target cluster. Any writes made to the target cluster however, will not be replicated to the source cluster. Hence the unidirectional data flow only goes from the source to the target, in our case the west to the east. This is known as an Active-Passive set up. 
+
+After that, you will implement a bidirectional replication, meaning both clusters will replicate data changes to the other cluster region. This is known as an Active-Active replication.
+
 ### Objective
 
-As a sales engineer, I want to run a workload on Yugabyte three node Universe on Yugabyte Platform to verify the Universe is functioning properly and to examine the metrics tools on Yugabyte Platform.
+As a sales engineer, I want to connect two YugabyteDB clusters located in different regions to demonstrate xCluster replication.
 
 ## Requirements
 
-* Verify the Universe is running.
+* A deployed YugabyteDB cluster on AWS in us-east-1.
 
-* Yugabyte Platform credentials.
+* A deployed YugabyteDB cluster on AWS in us-west-2.
 
-* The `.pem` key file to connect the Platform server.
+* Both `.pem` key files to connect to both YugabyteDB servers hosting Platform.
 
-## Verify the Universe is Operational
+## Create a Peering Connection
 
-Verify that the Universe is running by navigating to the Yugabyte Platform Console and selecting the Universe that will be running the sample workload. You can get to the Yugabyte Platform Console from the browser by navigating to the public IP of the [EC2 instance](https://us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#Instances:instanceState=running) that hosts Yugabyte Platform management console.
+To connect two regions together in AWS, a peering connection is needed to link the regional VPCs together. This route will allow a cluster to replicate data to the other cluster.
 
-On the Yugabyte Platform, sign in with your credentials to be taken to the Universes dashboard page as shown in the following image:
+A virtual private cloud or VPC is an isolated virtual network located in a region. For more information about [how VPCs work, visit the AWS docs.](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html) 
 
-![Description of this action.](./assets/images/60-universe_dashboard_1600x700.png)
+### Create the peering connection request
 
-Select the Universe that will be running the workload. This will take you to the Universe details page as shown in the following image:
+To create a peering connection you must assign requester and accepter roles to each VPC. In this lab, you will assign the VPC in the west to become the requester and the VPC in the east region to be the accepter. This designation is actually arbitrary and can easily be reversed, but should be designated in order to avoid confusion, especially if more VPCs need to be connected. For a closer look at [VPC peering visit the AWS docs.](https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html)
 
-![Description of this action.](./assets/images/70-universe_details_1600x700.png)
+To create the peering connection request following the instructions:
 
-There will be a green "Ready" displayed next to the Universe name at the top of the page if it is operational. Also verify that the Primary Cluster has 3 nodes whose status is "Live" by selecting the "Nodes" tab.
+* Navigate to the AWS VPC console in the us-west-2 region 
 
-### Retrieve the Workload Script
+* Select the Peering Connections option located on the left menu in the Virtual Private Cloud section as shown in the following image:
 
-In the upper right corner of the page underneath the profile icon on the Universes details page is the "Actions" button. Selecting this will open a drop down menu. 
+![VPC in US West (Oregon).](./assets/images/100-vpc_west_1600x700.png)
 
-Select the "Run Sample Apps" option.
+* Select the **Create peering connection** button on the top right side of the page.
 
-This opens the following dialog box:
+* Name the peering connection using the standard naming convention, pc-<4-letter-username>-usw2-use1, to state the regions that will be connected, for example, **pc-CKIM-usw2-use1**.
 
-![The docker command to run the SqlInserts application.](./assets/images/100-workload_ysql_1366x768.png)
+* Select the local VPC in that region that will be connected, in this case, vpc-CKIM-usw2.
 
-* Select the YSQL option(default view).
+* Once the VPC is selected, note that the CIDR block is automatically populated.
 
-* Copy and make a note of this script to execute later in the CLI, once you SSH into the EC2 instance that contains Yugabyte Platform.
+> **Important:** In order for the peering connections to work, the CIDR blocks cannot overlap. This would cause a conflict and make the peering connection fail.
 
-> **Important:** In order for the script to run, `sudo` must be prefixed to the proceeding command.
+* Select the region that contains the VPC you wish to connect to, in this case us-east-1.
 
-## Run a YSQL Workload
+* Enter the VPC ID of the accepter VPC in the east region.
 
-In the last step, you verified that the Universe is up and running and retrieved the YSQL script that will run the workload. In this step, you will connect to the EC2 instance to run a sample workload on the nodes of the deployed Universe.
+* Add the Name tag, **pc-CKIM-usw2-use1**.
 
-### Connect to the Platform Server
+* Select **Create peering connection**.
 
-SSH into the EC2 instance that hosts Yugabyte Platform using the EC2's public IPv4.  For details on this [review the AWS documentation](https://us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#ConnectToInstance:instanceId=i-0fd7ae16524e527a1). 
+* A success message states that the peering connection request has been created, however to make this connection active, this request must be accepted.
 
-> **Important:** In order to connect to the Platform server, you will need the `.pem` key that was downloaded when the EC2 instance was launched. 
+### Accept the peering connection
 
-Once connected to the EC2 instance in the CLI, execute the following YSQL script saved from the last step:
+* Navigate to the us-east-1 VPC console.
 
-```bash
-sudo docker run -d yugabytedb/yb-sample-apps --workload SqlInserts --nodes <my-node-ip>:5433,<my-node-ip>:5433,<my-node-ip>:5433
-```
+* Select the peering connections option in the menu on the left side of the page.
 
-> **Important:** In order to run the proceeding workload script on a Universe that has a password authenticated YSQL database or TLS encryption in transit, it is necessary to add the user, password, and path of the locally stored `.crt` and `.key` files. By default the user is `yugabyte`. For more details for [TLS encryption in transit, review the Yugabyte official docs.](https://docs.yugabyte.com/latest/yugabyte-platform/security/enable-encryption-in-transit/) 
+* 
 
-The prompt in the CLI will change to reflect the user `centos`, if the connection was established.
 
-The proceeding script will run a docker container in the background on each of the three nodes, evidenced by their unique IP addresses on port 5433 in the `--nodes` flag.
-
-This will run the workload `SqlInserts`. This is a sample key-value app built on PostgreSQL with concurrent readers and writers. The app inserts unique string keys into the table `postgresqlkeyvalue`.
-
-There are a total of 21 sample workloads that can be run from the `yugabytedb/yb-sample-apps` docker image. For a full description, visit the [GitHub repo for yb-sample-apps](https://github.com/yugabyte/yb-sample-apps). Note that in addition to PostgreSQL; Cassandra and Redis workloads are also available.
 
 ### Verify Workload is Running in the Universe
 
