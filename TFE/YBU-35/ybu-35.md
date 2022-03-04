@@ -38,7 +38,9 @@ To create a peering connection you must assign requester and accepter roles to e
 
 To create the peering connection request following the instructions:
 
-* Navigate to the AWS VPC console in the us-west-2 region 
+* Navigate to the AWS VPC console in the us-west-2 region in the browser. 
+
+* Make a note of the VPC id for the requester VPC in the us-west-2 region. You will need this later to accept the peer connection.
 
 * Select the Peering Connections option located on the left menu in the Virtual Private Cloud section as shown in the following image:
 
@@ -54,29 +56,35 @@ To create the peering connection request following the instructions:
 
 > **Important:** In order for the peering connections to work, the CIDR blocks cannot overlap. This would cause a conflict and make the peering connection fail.
 
-* Select the region that contains the VPC you wish to connect to, in this case us-east-1.
+* Select the region that contains the VPC you wish to connect to, in this case **us-east-1**.
 
-* Enter the VPC ID of the accepter VPC in the east region.
+* Enter the VPC ID of the accepter VPC, located in the **us-east-1** region.
 
-* Add the Name tag, **pc-CKIM-usw2-use1**.
+* Add the Name tag, **pc-CKIM-usw2-use1**, to identify the regions being connected.
 
-* Select **Create peering connection**.
+* Select **Create peering connection** to provision this network connection.
 
-* A success message states that the peering connection request has been created, however to make this connection active, this request must be accepted.
+* If successful, a message states that the peering connection request has been created, however to make this connection active, this request must be accepted.
 
-### Accept the peering connection
+### Accept the peering connection request
 
-* Navigate to the us-east-1 VPC console.
+* Navigate to the us-east-1 VPC console in the browser.
 
-* Select the peering connections option in the menu on the left side of the page.
+* Select the **Peering Connections** option in the menu on the left side of the page.
 
-* 
+* Select the radio button of the peering connection that is in the state **Pending acceptance**. The peering connection can further be validated by comparing the VPC IDs of the two VPCs being connected.
+  
+* Select the Action drop down at the top right of the page.
 
+* Select **Accept request**.
 
+* Verify the VPC IDs are correct and select **Accept request**.
 
-### Verify Workload is Running in the Universe
+Now that the peering connection has been created, one last step is needed to ensure this network connection has been made. You need to add the CIDR block to the routing table of each VPC. This ensures that requests will be routed to the correct address.
 
-In the last step, you ran a YSQL workload on our Yugabyte Universe. In this step, you will verify the workload is running and review the metrics tools. 
+### Add the routes
+
+Now that the peering connection has been established, you must add the final step to connect the requests to the correct address. 
 
 Navigate back to the Yugabyte Platform Console and select the Universe that contains the workload. On the Universe details page in the "Overview" tab, you can see following activity:
 
