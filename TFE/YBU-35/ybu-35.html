@@ -37,6 +37,9 @@
 			width: 80%;
 			padding: 10px;
 		}
+		.highlight {
+			width: 80%;
+		}
 
 	</style>
 
@@ -540,10 +543,8 @@
     <ul>
       <li>Next enter the following script command to access the YSQL shell:</li>
     </ul>
-    <pre
-      class="bash"
-    ><code><div>/home/yugabyte/tserver/bin/ysqlsh -h &lt;my-node-IP-address&gt; -p 5433 -U yugabyte
-</div></code></pre>
+    <div class="bash">/home/yugabyte/tserver/bin/ysqlsh -h &lt;my-node-IP-address&gt; -p 5433 -U yugabyte
+</div>
     <p>Use the IP address of the node in the preceding script command.</p>
     <ul>
       <li>
@@ -551,19 +552,15 @@
         command:
       </li>
     </ul>
-    <pre
-      class="bash"
-    ><code><div>yugabyte=# </div></code></pre><div class="highlight"><pre><code class="language-sql">    \c postgres
+    <div class="bash">yugabyte=# </div><div class="highlight"><pre><code class="language-sql">    \c postgres
 </code></pre></div>
     <ul>
       <li>
         Create the <strong>keyvalue</strong> table with the following command:
       </li>
     </ul>
-    <pre
-      class="bash"
-    ><code><div>CREATE TABLE keyvalue (k int, v int, PRIMARY KEY (k));
-</div></code></pre>
+    <div class="highlight"><pre><code class="language-sql">CREATE TABLE keyvalue (k int, v int, PRIMARY KEY (k));
+</code></pre></div>
     <ul>
       <li>Populate the table with data with the following command:</li>
     </ul>
@@ -580,10 +577,10 @@
       If the table and data were populated successfully, you will get the
       following response in the terminal:
     </p>
-    <div class="highlight"><pre><code class="language-sql">k | v
+    <div class="bash">k | v
 ---+---
  1 | 2
-</div></code></pre>
+</div>
     <p>
       Now repeat this process with the other cluster and create and populate the
       identical table with the same data.
@@ -608,17 +605,15 @@
         here is what the node's terminal prompt looks like:
       </li>
     </ul>
-    <div><pre><code class="language-bash">[yugabyte@ip-172-152-110-225 ~]$
-</div></code></pre>
+   <div class="bash">[yugabyte@ip-172-152-110-225 ~]$
+</div>
     <ul>
       <li>
         In the terminal for the node, enter the following command to view the
         configuration for the cluster as shown in the following script command:
       </li>
     </ul>
-    <pre
-      class="bash"
-    ><code><div>[yugabyte@ip-172-152-110-225 ~]$ </div></code></pre><div class="highlight"><pre><code class="language-sql"></code>cat /home/yugabyte/tserver/conf/server.conf</div></code></pre>
+    <div class="bash">[yugabyte@ip-172-152-110-225 ~]$ </div><div class="highlight"><pre><code class="language-sql"></code>cat /home/yugabyte/tserver/conf/server.conf</div></code></pre>
 
     <p>
       This command returns the data needed to assign xCluster replication. The
@@ -626,14 +621,14 @@
       <strong>tserver_master_addrs</strong> and the
       <strong>cluster_uuid</strong> for the SOURCE cluster.
     </p>
-    <div class="highlight"><pre><code class="language-sql">--placement_cloud=aws
+    <div class="bash">--placement_cloud=aws
 ...
 --tserver_master_addrs=172.151.37.55:7100,172.151.62.129:7100,172.151.78.12:7100
 ...
 --cluster_uuid=e069287c-534b-41e8-83c8-c0659c0bacea
 ...
 --leader_failure_max_missed_heartbeat_periods=10
-</div></code></pre>
+</div>
     <blockquote>
       <p>
         <strong>Pro Tip:</strong> These configuration properties, also known as
@@ -729,10 +724,8 @@
       <strong>postgres.keyvalue</strong>.
     </p>
     <p>A successful response will look similar to the following:</p>
-    <pre
-      class="bash"
-    ><code><div>postgres.keyvalue 000033df000030008000000000004005
-</div></code></pre>
+    <div class="bash">postgres.keyvalue 000033df000030008000000000004005
+</div>
     <p>
       Make a note of the source table id. Although they may seem to refer to the
       same table, the target table id and the source table id are not the same.
@@ -790,16 +783,12 @@ setup_universe_replication &lt;my-source-universe_uuid&gt; \
         command:
       </li>
     </ul>
-    <pre
-      class="bash"
-    ><code><div>INSERT INTO keyvalue VALUES (3, 6);
+    <div class="highlight"><pre><code class="language-sql">INSERT INTO keyvalue VALUES (3, 6);
 </div></code></pre>
     <ul>
       <li>Verify the data has populated the table in the source cluster.</li>
     </ul>
-    <pre
-      class="bash"
-    ><code><div>SELECT * FROM keyvalue;
+    <div class="highlight"><pre><code class="language-sql">SELECT * FROM keyvalue;
 </div></code></pre>
     <ul>
       <li>
@@ -807,9 +796,7 @@ setup_universe_replication &lt;my-source-universe_uuid&gt; \
         shell and enter the following command:
       </li>
     </ul>
-    <pre
-      class="bash"
-    ><code><div>SELECT * FROM keyvalue;
+    <div class="highlight"><pre><code class="language-sql">SELECT * FROM keyvalue;
 </div></code></pre>
     <p>
       The response from the table will verify that the last entry has been added
