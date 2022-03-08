@@ -1,6 +1,7 @@
-# Run a Workload on a Multi-node Universe
+⏰ Lab time is 20 min | [slack feedback](https://yugabyte.slack.com/archives/C03176Y6BU0)
+-------------
 
-## Introduction
+## About this lab
 
 In this hands-on lab, you will use xCluster, or cross cluster, replication to connect two independent YugabyteDB universes in a multi-region topology. The reason why a client would want this type of set up is to create high availability and resiliency in different geographical regions. Therefore if a region sustained a large scale outage due to a weather event, power outage, human error, hacker attack, or other natural or political disaster, having cross cluster replication in geographically separate regions would prevent any downtime. YugabyteDB has demonstrated this many times as the most fail safe topology for mission critical performance.
 
