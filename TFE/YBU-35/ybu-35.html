@@ -565,14 +565,14 @@
       <li>Populate the table with data with the following command:</li>
     </ul>
     <div class="highlight"><pre><code class="language-sql">INSERT INTO keyvalue VALUES (1, 2);
-</div></code></pre>
+</code></pre></div>
     <ul>
       <li>
         Verify the table and data are in the table with the following command:
       </li>
     </ul>
     <div class="highlight"><pre><code class="language-sql">SELECT * FROM keyvalue;
-</div></code></pre>
+</code></pre></div>
     <p>
       If the table and data were populated successfully, you will get the
       following response in the terminal:
@@ -613,7 +613,7 @@
         configuration for the cluster as shown in the following script command:
       </li>
     </ul>
-    <div class="bash">[yugabyte@ip-172-152-110-225 ~]$ </div><div class="highlight"><pre><code class="language-sql"></code>cat /home/yugabyte/tserver/conf/server.conf</div></code></pre>
+    <div class="bash">[yugabyte@ip-172-152-110-225 ~]$ </div><div class="highlight"><pre><code class="language-sql"></code>cat /home/yugabyte/tserver/conf/server.conf</code></pre></div>
 
     <p>
       This command returns the data needed to assign xCluster replication. The
@@ -717,7 +717,7 @@
     <div class="highlight"><pre><code class="language-sql">/home/yugabyte/master/bin/yb-admin \
     -master_addresses \ &lt;my master addresses in source cluster&gt; \
     list_tables include_table_id | grep postgres.keyvalue
-</div></code></pre>
+</code></pre></div>
     <p>
       Insert the master addresses in your source cluster in the statement above.
       Note that the list tables search will look for the table
@@ -755,7 +755,7 @@
 setup_universe_replication &lt;my-source-universe_uuid&gt; \
 &lt;my-source_master_addresses&gt; \
 &lt;my-source-table-ids&gt;
-</div></code></pre>
+</code></pre></div>
     <p>
       For more information regarding these attributes visit the
       <a
@@ -784,12 +784,12 @@ setup_universe_replication &lt;my-source-universe_uuid&gt; \
       </li>
     </ul>
     <div class="highlight"><pre><code class="language-sql">INSERT INTO keyvalue VALUES (3, 6);
-</div></code></pre>
+</code></pre></div>
     <ul>
       <li>Verify the data has populated the table in the source cluster.</li>
     </ul>
     <div class="highlight"><pre><code class="language-sql">SELECT * FROM keyvalue;
-</div></code></pre>
+</code></pre></div>
     <ul>
       <li>
         In another terminal window, access the TARGET cluster and open the YSQL
@@ -797,7 +797,7 @@ setup_universe_replication &lt;my-source-universe_uuid&gt; \
       </li>
     </ul>
     <div class="highlight"><pre><code class="language-sql">SELECT * FROM keyvalue;
-</div></code></pre>
+</code></pre></div>
     <p>
       The response from the table will verify that the last entry has been added
       to the <strong>keyvalue</strong> table and xCluster replication is active.
@@ -814,7 +814,7 @@ setup_universe_replication &lt;my-source-universe_uuid&gt; \
 -master_addresses \
 &lt;my-source-master-addresses&gt; \
 setup_universe_replication &lt;my-target-universe_uuid&gt; &lt;my-target_master_addresses&gt; &lt;my-target-table-ids&gt;
-</div></code></pre>
+</code></pre></div>
     <p>
       Validate that bidirectional replication is working by logging into the
       YSQL shell in the leader node terminal of the target cluster and enter
