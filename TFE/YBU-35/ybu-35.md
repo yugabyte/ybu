@@ -129,7 +129,7 @@ To add this route, follow these steps:
 
 * Go the the us-west-2 region and select the VPC in the peering connection.
   
-* Navigate to the routing table using the proceeding steps and add the route with the CIDR block for the accepter VPC in the east region.
+* Navigate to the routing table using the preceding steps and add the route with the CIDR block for the accepter VPC in the east region.
 
 * **Save changes**.
 
@@ -189,7 +189,7 @@ If successful, the prompt will change again to display the IP address and the us
 /home/yugabyte/tserver/bin/ysqlsh -h <my-node-IP-address> -p 5433 -U yugabyte
 ```
 
-Use the IP address of the node in the proceeding script command.
+Use the IP address of the node in the preceding script command.
 
 * Connect to the `postgres` database with the following command:
 
@@ -255,7 +255,7 @@ This command returns the data needed to assign xCluster replication. The key pro
 
 > **Pro Tip:** These configuration properties, also known as G-Flags, enable fine tuning of the YugabyteDB cluster which makes the YugabyteDB run more efficiently and productively to a clients' apps specific needs.
 
-Take special note that the following properties and their values in the proceeding response:
+Take special note that the following properties and their values in the preceding response:
 
 * tserver_master_addrs
 
@@ -295,19 +295,21 @@ A successful response will look similar to the following:
 postgres.keyvalue 000033df000030008000000000004005
 ```
 
-Make a note of this as the source table id. Note that the target table id is different although they may seem to refer to the same table, they are in fact different tables. Now that we have retrieved the values for the source cluster id, source table id, and source master addresses, the next step is to retrieve and note these values for the target cluster. Repeat the proceeding steps for the **target** cluster in the east region in order to create the cross cluster replication.
+Make a note of the source table id. Although they may seem to refer to the same table, the target table id and the source table id are not the same. Now that you have retrieved the values for the source cluster id, source table id, and source master addresses, the next step is to retrieve and note these values for the target cluster. Repeat the preceding steps for the **target** cluster in the east region to execute the command for the cross cluster replication.
 
 ### Configure unidirectional replication
 
-In order to create a replication of the table, **keyvalues**, in a cross cluster asynchronous replication, you will need to configure the target cluster to replicate from the source cluster. You will use **yb-admin** utility to administer this replication pattern.
+In order to create a replication of the table, **keyvalue**, in a cross cluster asynchronous replication, you will need to configure the target cluster to replicate from the source cluster. You will use **yb-admin** utility to administer this replication pattern.
 
-In the **target** cluster's leader node's terminal, populate the following command with the information retrieved from the previous step:
+Connect to the YB-Master's leader node in the **target** cluster and enter the following command with the information retrieved from the previous step:
 
 ```bash
 /home/yugabyte/master/bin/yb-admin \
 -master_addresses \
 <my-target-master-addresses> \
-setup_universe_replication <my-source-universe_uuid> <my-source_master_addresses> <my-source-table-ids>
+setup_universe_replication <my-source-universe_uuid> \
+<my-source_master_addresses> \
+<my-source-table-ids>
 ```
 
 For more information regarding these attributes visit the [Yugabyte Docs regarding setup for universe replication.](https://docs.yugabyte.com/latest/admin/yb-admin/#setup-universe-replication)
@@ -321,26 +323,26 @@ To test that the xCluster replication has been set up successfully, insert data 
 * Access the YSQL shell in the leader node and enter the following command:
 
 ```sql
-INSERT INTO keyvalues VALUES (3, 6);
+INSERT INTO keyvalue VALUES (3, 6);
 ```
 
 * Verify the data has populated the table in the source cluster.
 
 ```sql
-SELECT * FROM keyvalues;
+SELECT * FROM keyvalue;
 ```
 
 * In another terminal window, access the TARGET cluster and open the YSQL shell and enter the following command:
 
 ```sql
-SELECT * FROM keyvalues;
+SELECT * FROM keyvalue;
 ```
 
 The response from the table will verify that the last entry has been added to the **keyvalue** table and xCluster replication is active.
 
 ### Bidirectional replication
 
-Currently if you try to create an entry in the target cluster, the data will not replicate into the source cluster. In order to create bidirectional replication, navigate into the source cluster's leader node terminal and repeat the proceeding steps with the target universe. Use the following command as a guide to enter the universe identifier data:
+Currently if you try to create an entry in the target cluster, the data will not replicate into the source cluster. In order to create bidirectional replication, navigate into the source cluster's leader node terminal and repeat the preceding steps with the target universe. Use the following command as a guide to enter the universe identifier data:
 
 ```bash
 /home/yugabyte/master/bin/yb-admin \
@@ -349,9 +351,8 @@ Currently if you try to create an entry in the target cluster, the data will not
 setup_universe_replication <target-universe_uuid> <target_master_addresses> <target-table-ids>
 ```
 
-Validate that bidirectional replication is working by logging into the YSQL shell in the leader node terminal and enter another row into the **keyvalues** table.
+Validate that bidirectional replication is working by logging into the YSQL shell in the leader node terminal of the target cluster and enter another row into the **keyvalue** table. Check the source cluster to see if this row was added to the table.
 
 ## Reflection
 
-Nice work, you have set up a unidirectional and bidirectional replication using xCluster. This is a powerful topology to create HA and resiliency in the data layer. You have also learned the power of the **yb-admin** utility to retrieve data and manipulate the universe. **yb-admin** can be used to change topologies, create backups, restore backups, and much more. 
-
+Nice work, you have set up a unidirectional and then a bidirectional replication using xCluster. This is a powerful topology to create HA and resiliency in the data layer. You have also learned the power of the **yb-admin** utility to retrieve data and manipulate the universe. **yb-admin** can be used to change topologies, create backups, restore backups, and much more. 
