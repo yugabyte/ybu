@@ -11,6 +11,7 @@ The purpose of a creating a multi-zone topology is to demonstrate Yugabyte Platf
 ### Objective
 
 As an engineer, I want to install Yugabyte Platform on AWS to demonstrate how to deploy a three node cluster in a multi-zone topology.
+
 ## Prerequisites
 
 Before creating a universe, the cloud provider environment must first be configured according to the specifications found in a previous Yugabyte Technical Field enablement lab. This is to secure the database as well as create access points in the VPC to allow YugabyteDB to connect and communicate with the different nodes in the cluster.
@@ -63,7 +64,7 @@ In this lab, you will use a `c5.4xlarge`, in order to demo production level work
 
 The centOS AMI can be found in the AWS Marketplace.
 
-> **Important:** When creating the EC2 instance, ensure the Public IP address setting is ENABLED if it is desired to connect to the EC2 instance from outside the AWS VPC (eg. from users’ workstations or applications running in Kubernetes environments).
+> **Important:** When creating the EC2 instance, ensure the Public IP address setting is ENABLED if it is desired to connect to the EC2 instance from outside the AWS VPC (eg. from users' workstations or applications running in Kubernetes environments).
 
 The Configure Instance Details page will look similar to the following image:
 
