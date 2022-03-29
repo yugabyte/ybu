@@ -6,7 +6,7 @@ In this hands-on lab, you will learn how to create a backup of a database, then 
 
 ### Objective
 
-As a sales engineer, I will demonstrate how to create a backup of the database and restore it. 
+As a sales engineer, I will demonstrate how to create a backup of the database and restore it.
 
 ## Requirements
 
@@ -59,7 +59,7 @@ Next, use the default settings listed below and select the "Create Bucket" butto
 
 ### Bucket Permissions
 
-Once the bucket has been created, you will be navigated to the Buckets list. 
+Once the bucket has been created, you will be navigated to the Buckets list.
 
 Select the bucket that was just created and view the "Permissions" tab.
 
