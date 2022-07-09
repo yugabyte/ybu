@@ -1,0 +1,34 @@
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - name: run
+    before: |
+      yugabyted start --base_dir=$STORE --listen=$HOST_LB
+    command: |
+      gp await-port 5433
+      ysqlsh
+# exposed ports
+ports:
+  - port: 7000
+    onOpen: notify
+  - port: 8200
+    onOpen: notify
+  - port: 37843
+    onOpen: ignore
+  - port: 7100
+    onOpen: ignore
+  - port: 9100
+    onOpen: ignore
+  - port: 5433
+    onOpen: notify
+  - port: 13000
+    onOpen: ignore
+  - port: 9042
+    onOpen: notify
+  - port: 12000
+    onOpen: ignore
+
+vscode:
+  extensions:
+    - GitHub.vscode-pull-request-github

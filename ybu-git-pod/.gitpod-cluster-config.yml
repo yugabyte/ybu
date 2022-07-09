@@ -1,0 +1,51 @@
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - name: run-base
+    before: |
+      yugabyted start --base_dir=$STORE/ybd1 --listen=$HOST_LB --tserver_flags="placement_cloud=ybcloud,placement_region=ap-south-1,placement_zone=ap-south-1a" --master_flags="placement_cloud=ybcloud,placement_region=ap-south-1,placement_zone=ap-south-1a"
+      gp sync-done base
+  - name: run-lb2
+    before: |
+      gp sync-await base
+      yugabyted start --base_dir=$STORE/ybd2 --listen=$HOST_LB2 --join=$HOST_LB --tserver_flags="placement_cloud=ybcloud,placement_region=ap-south-1,placement_zone=ap-south-1b" --master_flags="placement_cloud=ybcloud,placement_region=ap-south-1,placement_zone=ap-south-1b"
+      gp sync-done lb2
+  - name: run-lb3
+    before: |
+      gp sync-await lb2
+      yugabyted start --base_dir=$STORE/ybd3 --listen=$HOST_LB3 --join=$HOST_LB --tserver_flags="placement_cloud=ybcloud,placement_region=ap-south-1,placement_zone=ap-south-1c" --master_flags="placement_cloud=ybcloud,placement_region=ap-south-1,placement_zone=ap-south-1c"
+      gp sync-done lb3
+  - name: cluster-config
+    before: |
+      gp sync-await lb3
+      yb-admin -master_addresses $HOST_LB:7100,$HOST_LB2:7100,$HOST_LB3:7100 modify_placement_info ybcloud.ap-south-1.ap-south-1a,ybcloud.ap-south-1.ap-south-1b,ybcloud.ap-south-1.ap-south-1c 3
+  - name: shell
+    command: |
+      gp await-port 5433
+      ysqlsh
+            
+# exposed ports
+ports:
+  - port: 7000
+    onOpen: notify
+  - port: 8200
+    onOpen: notify
+  - port: 37843
+    onOpen: ignore
+  - port: 7100
+    onOpen: ignore
+  - port: 9100
+    onOpen: ignore
+  - port: 5433
+    onOpen: notify
+  - port: 13000
+    onOpen: ignore
+  - port: 9042
+    onOpen: notify
+  - port: 12000
+    onOpen: ignore
+
+vscode:
+  extensions:
+    - GitHub.vscode-pull-request-github
