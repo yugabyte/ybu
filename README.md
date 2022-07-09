@@ -11,5 +11,5 @@ How to use
 
 - If you do not already have a Github.com account, create one.
 - In another browser tab, open 
-  [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://gitpod.io/#https://github.com/yugabyte/ybu/tree/main/ybu)
+  [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/yugabyte/ybu)
  - Select **Continue with github**
