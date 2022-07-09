@@ -4,7 +4,7 @@ image:
 tasks:
   - name: run
     command: |
-      yugabyted start --base_dir=$STORE --listen=$HOST_LB
+      yugabyted start --base_dir=$STORE --listen=$HOST_LB --tserver_webserver_port=$TSERVER_WEB_PORT
       gp await-port 5433
       ysqlsh
 # exposed ports
@@ -30,4 +30,5 @@ ports:
 
 vscode:
   extensions:
-    - GitHub.vscode-pull-request-github
+    - https://open-vsx.org/api/ms-toolsai/jupyter/2022.7.1001890528/file/ms-toolsai.jupyter-2022.7.1001890528.vsix
+    - https://open-vsx.org/api/ms-python/python/2022.10.0/file/ms-python.python-2022.10.0.vsix
